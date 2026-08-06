@@ -1,0 +1,1841 @@
+/* =======================================================
+   EL MOLINILLO MAGAZINE
+   Hoja de estilos principal
+======================================================= */
+
+:root{
+
+    --color-principal:#1e3a8a;
+    --color-acento:#f59e0b;
+
+    --color-texto:#111827;
+
+    --color-fondo:#f8fafc;
+
+}
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    background:var(--color-fondo);
+
+    color:var(--color-texto);
+
+    font-family:
+        "Inter",
+        Arial,
+        sans-serif;
+
+}
+
+button{
+
+    font-family:inherit;
+
+}
+
+/* =======================================================
+   HERO
+======================================================= */
+
+.hero{
+
+    position:relative;
+
+    width:100%;
+
+    min-height:700px;
+
+    height:80vh;
+
+    overflow:hidden;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+    linear-gradient(
+    135deg,
+    #0f172a,
+    #1e3a8a,
+    #2563eb);
+
+}
+
+
+.hero-fondo{
+
+    position:absolute;
+
+    inset:0;
+
+    background-size:cover;
+
+    background-position:center;
+
+    opacity:.20;
+
+    transform:scale(1);
+
+    filter:brightness(.8);
+
+}
+
+
+.hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+    linear-gradient(
+    to bottom,
+    rgba(15,23,42,.25),
+    rgba(15,23,42,.75));
+
+}
+
+
+.hero-contenido{
+
+    position:relative;
+
+    z-index:5;
+
+    width:min(900px,90%);
+
+    text-align:center;
+
+    color:white;
+
+    animation:aparecer 1.2s ease;
+
+}
+
+
+.hero-revista{
+
+    font-size:18px;
+
+    letter-spacing:6px;
+
+    text-transform:uppercase;
+
+    opacity:.9;
+
+    margin-bottom:18px;
+
+}
+
+
+.hero-fecha{
+
+    font-size:20px;
+
+    font-weight:300;
+
+    margin-bottom:40px;
+
+}
+
+
+.hero-titulo{
+
+    font-size:clamp(42px,7vw,82px);
+
+    line-height:1.05;
+
+    margin-bottom:30px;
+
+    font-weight:800;
+
+}
+
+
+.hero-entradilla{
+
+    font-size:22px;
+
+    line-height:1.7;
+
+    opacity:.95;
+
+    max-width:750px;
+
+    margin:auto;
+
+    margin-bottom:50px;
+
+}
+
+
+.hero-boton{
+
+    background:white;
+
+    color:#0f172a;
+
+    border:none;
+
+    padding:18px 45px;
+
+    border-radius:999px;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.30s;
+
+    box-shadow:
+    0 15px 40px rgba(0,0,0,.25);
+
+}
+
+
+.hero-boton:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 20px 40px rgba(255,255,255,.25);
+
+}
+
+/* =======================================================
+   MENU PRINCIPAL REVISTA
+======================================================= */
+
+.menu{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:100%;
+
+    z-index:100;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:25px 50px;
+
+    color:white;
+
+    background:
+    linear-gradient(
+    to bottom,
+    rgba(15,23,42,.8),
+    transparent);
+
+}
+
+
+.logo{
+
+    font-size:22px;
+
+    font-weight:800;
+
+    letter-spacing:2px;
+
+}
+
+
+.logo span{
+
+    display:block;
+
+    font-size:12px;
+
+    letter-spacing:6px;
+
+    opacity:.8;
+
+}
+
+
+.menu nav{
+
+    display:flex;
+
+    gap:30px;
+
+}
+
+
+.menu nav a{
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+
+.menu nav a:hover{
+
+    opacity:.7;
+
+}
+
+
+/* MOVIL */
+
+@media(max-width:700px){
+
+
+    .menu{
+
+        padding:20px;
+
+    }
+
+
+    .menu nav{
+
+        display:none;
+
+    }
+
+
+}
+
+/* =======================================================
+   MEJORAS PORTADA REVISTA
+======================================================= */
+
+.portada{
+
+    width:100%;
+
+}
+
+
+@keyframes aparecer{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(40px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* =======================================================
+   DESTACADAS REVISTA
+======================================================= */
+
+.revista{
+
+    padding:80px 40px;
+
+    background:#f8fafc;
+
+}
+
+
+.contenedor{
+    width:min(1200px,85%);
+    margin:auto;
+    overflow:visible;
+}
+
+
+.titulo-seccion{
+
+    font-size:38px;
+
+    margin-top:80px;
+
+    margin-bottom:35px;
+
+}
+
+.revista .titulo-seccion:first-child{
+
+    margin-top:0;
+
+}
+
+
+.destacadas{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:30px;
+
+}
+
+.destacada{
+
+    background:white;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.12);
+
+    transition:.3s;
+
+    display:flex;
+
+    flex-direction:column;
+
+    cursor:pointer;
+
+}
+
+
+.destacada:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:
+
+        0 30px 60px rgba(0,0,0,.18);
+
+}
+
+
+.destacada .imagen{
+
+    width:100%;
+
+    height:260px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:#f1f5f9;
+
+    overflow:hidden;
+
+    transition:.5s;
+
+}
+
+
+.destacada .imagen img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:contain;
+
+}
+
+.destacada h3{
+
+    padding:0;
+
+    margin:0;
+
+    font-size:28px;
+
+    line-height:1.25;
+
+    text-align:center;
+
+    flex:1;
+
+}
+
+.linea-destacada{
+
+    border:none;
+
+    border-top:1px solid #e5e7eb;
+
+    margin:25px 0;
+
+}
+
+
+.destacada p{
+
+    padding:0 25px 25px;
+
+    color:#6b7280;
+
+    line-height:1.5;
+
+}
+
+
+@media(max-width:900px){
+
+    .destacadas{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+/* =======================================================
+   ARTÍCULOS
+======================================================= */
+
+.articulos{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:80px;
+
+}
+
+.articulo{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+    transition:.5s;
+
+}
+
+.articulo-imagen{
+
+    width:320px;
+    height:240px;
+
+    object-fit:contain;
+
+    background:white;
+
+    border-radius:16px;
+
+    display:block;
+
+}
+
+.articulo-contenido{
+
+    padding:40px;
+
+}
+
+.articulo-entradilla{
+
+    font-size:24px;
+
+    line-height:1.8;
+
+    color:#374151;
+
+    font-style:italic;
+
+    border-left:6px solid var(--color-acento);
+
+    padding-left:25px;
+
+    margin:35px 0;
+
+}
+
+.articulo-cuerpo{
+
+    font-size:19px;
+
+    line-height:2;
+
+    text-align:justify;
+
+    color:#222;
+
+}
+
+.articulo-cuerpo p{
+
+    margin-bottom:24px;
+
+}
+
+.articulo-cuerpo p::first-letter{
+
+    float:left;
+
+    font-size:72px;
+
+    line-height:.8;
+
+    padding-right:12px;
+
+    padding-top:8px;
+
+    font-weight:700;
+
+    color:var(--color-principal);
+
+}
+
+/* ======================
+   GALERÍA
+====================== */
+
+.foto-galeria:hover{
+
+    transform:scale(1.03);
+
+}
+
+/* ==========================
+      LIGHTBOX
+========================== */
+
+.lightbox{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.92);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.3s;
+
+    z-index:9999;
+
+}
+
+.lightbox.visible{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+.lightbox-img{
+
+    max-width:90%;
+    max-height:90%;
+
+    border-radius:18px;
+
+    transition:.25s;
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.45);
+
+}
+
+.cerrar-lightbox{
+
+    position:absolute;
+
+    top:25px;
+
+    right:35px;
+
+    color:white;
+
+    font-size:55px;
+
+    cursor:pointer;
+
+    user-select:none;
+
+}
+
+/* ==========================
+      MULTIMEDIA
+========================== */
+
+.bloque-multimedia{
+
+    margin-top:40px;
+
+}
+
+.bloque-multimedia h3{
+
+    margin-bottom:20px;
+
+}
+
+.videos,
+.audios{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+
+    gap:20px;
+
+}
+
+.videos iframe,
+.audios iframe{
+
+    width:100%;
+
+    aspect-ratio:16/9;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:#000;
+
+}
+
+.autor{
+
+    font-weight:700;
+
+    font-size:17px;
+
+}
+
+.curso{
+
+    margin-top:6px;
+
+    color:#6b7280;
+
+    font-size:15px;
+
+}
+
+/* ==========================
+      EFECTO ÍNDICE
+========================== */
+
+.resaltar{
+
+    background:#fffbe6;
+
+    box-shadow:
+
+        0 0 0 6px #fde68a,
+
+        0 20px 45px rgba(0,0,0,.15);
+
+}
+
+.destacada:hover .leer-articulo{
+
+    transform:translateX(8px);
+
+}
+
+.contenido-destacada{
+
+    padding:28px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    height:230px;
+
+}
+
+.categoria-destacada{
+
+    font-size:13px;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    color:var(--color-principal);
+
+    text-transform:uppercase;
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+}
+
+.leer-articulo{
+
+    text-align:center;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    color:var(--color-principal);
+
+}
+
+.destacada:hover .imagen{
+
+    transform:scale(1.05);
+
+}
+
+.marca-revista{
+
+    margin-top:18px;
+
+    margin-bottom:25px;
+
+    letter-spacing:5px;
+
+    font-size:12px;
+
+    color:#9ca3af;
+
+    text-transform:uppercase;
+
+}
+
+/*=========================
+   CABECERA ARTÍCULO
+==========================*/
+
+.articulo-seccion{
+
+    display:inline-block;
+
+    background:var(--color-principal);
+
+    color:white;
+
+    padding:8px 18px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    text-transform:uppercase;
+
+    margin-bottom:25px;
+
+}
+
+.autor-articulo .por{
+
+    font-style:italic;
+
+}
+
+.linea-articulo{
+
+    border:none;
+
+    border-top:1px solid #d1d5db;
+
+    margin:35px 0;
+
+}
+
+/*=============================
+   SECCIONES
+==============================*/
+
+.pagina{
+    padding:90px 0 80px;
+}
+
+.grid-secciones{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+    gap:30px;
+
+    margin-top:50px;
+
+}
+
+.tarjeta-seccion{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:40px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.tarjeta-seccion:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.tarjeta-seccion h2{
+
+    font-size:28px;
+
+    margin-bottom:20px;
+
+}
+
+.tarjeta-seccion p{
+
+    color:#6b7280;
+
+}
+
+/*==============================
+      TARJETAS SECCIÓN
+==============================*/
+
+.card-seccion{
+
+    display:grid;
+
+    grid-template-columns:320px 1fr;
+
+    gap:30px;
+
+    align-items:center;
+
+    background:white;
+
+    border-radius:22px;
+
+    padding:20px;
+
+    margin-bottom:35px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+    transition:.30s;
+
+}
+
+.card-seccion:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 18px 45px rgba(0,0,0,.15);
+
+}
+
+.card-seccion img{
+
+    width:100%;
+
+    height:200px;
+
+    border-radius:18px;
+
+    object-fit:cover;
+
+    object-position:center;
+
+    display:block;
+
+}
+
+.card-seccion-contenido{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.card-seccion-categoria{
+
+    display:inline-block;
+
+    width:max-content;
+
+    padding:7px 16px;
+
+    border-radius:999px;
+
+    background:var(--color-principal);
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    margin-bottom:18px;
+
+}
+
+.card-seccion h2{
+
+    font-size:32px;
+
+    margin-bottom:15px;
+
+    line-height:1.2;
+
+}
+
+.card-seccion-meta{
+
+    color:#6b7280;
+
+    font-size:15px;
+
+    margin-bottom:22px;
+
+}
+
+.card-seccion p{
+
+    font-size:18px;
+
+    line-height:1.8;
+
+    color:#374151;
+
+}
+
+.card-seccion .leer-articulo{
+
+    margin-top:25px;
+
+    font-weight:700;
+
+    color:var(--color-principal);
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.card-seccion:hover .leer-articulo{
+
+    transform:translateX(8px);
+
+}
+
+@media(max-width:900px){
+
+    .card-seccion{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .card-seccion img{
+
+        height:240px;
+
+    }
+
+    .card-seccion-contenido{
+
+        padding:30px;
+
+    }
+
+}
+
+.subtitulo-seccion{
+
+    margin-bottom:40px;
+
+    color:#6b7280;
+
+    font-size:18px;
+
+}
+
+/* =======================================================
+   HEMEROTECA
+======================================================= */
+
+.bloque-curso{
+
+    margin-top:60px;
+
+}
+
+.curso-titulo{
+
+    font-size:30px;
+
+    margin-bottom:35px;
+
+    padding-bottom:12px;
+
+    border-bottom:3px solid #e5e7eb;
+
+}
+
+.grid-hemeroteca{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+
+    gap:40px;
+
+}
+
+.card-edicion{
+
+    background:white;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    box-shadow:0 12px 35px rgba(0,0,0,.10);
+
+    cursor:pointer;
+
+    transition:.35s;
+
+}
+
+.card-edicion:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 25px 60px rgba(0,0,0,.18);
+
+}
+
+.card-edicion img{
+
+    width:100%;
+
+    aspect-ratio:3/3.6;
+
+    object-fit:cover;
+
+    display:block;
+
+}
+
+.info-edicion{
+
+    padding:22px;
+
+}
+
+.info-edicion h3{
+
+    font-size:24px;
+
+    margin-bottom:10px;
+
+}
+
+.info-edicion p{
+
+    color:#6b7280;
+
+    font-size:16px;
+
+}
+
+.portada-edicion{
+
+    overflow:hidden;
+
+}
+
+.portada-edicion img{
+
+    transition:.45s;
+
+}
+
+.card-edicion:hover .portada-edicion img{
+
+    transform:scale(1.06);
+
+}
+
+.mes-edicion{
+
+    font-size:28px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    margin-bottom:5px;
+
+}
+
+.linea-edicion{
+
+    width:70px;
+
+    height:4px;
+
+    border-radius:20px;
+
+    background:#2563eb;
+
+    margin-bottom:18px;
+
+}
+
+.articulos-edicion{
+
+    color:#374151;
+
+    margin-bottom:22px;
+
+    font-size:16px;
+
+}
+
+.abrir-edicion{
+
+    color:#2563eb;
+
+    font-weight:700;
+
+    transition:.25s;
+
+}
+
+.card-edicion:hover .abrir-edicion{
+
+    transform:translateX(8px);
+
+}
+
+/*==================================================
+GALERÍA PROFESIONAL
+==================================================*/
+
+.galeria-profesional{
+
+    margin-top:50px;
+
+}
+
+.titulo-galeria{
+
+    margin-bottom:18px;
+
+    font-size:20px;
+
+    font-weight:700;
+
+}
+
+.carrusel-imagenes{
+
+    display:flex;
+
+    gap:18px;
+
+    overflow-x:auto;
+
+    padding-bottom:10px;
+
+    scroll-behavior:smooth;
+
+    scrollbar-width:thin;
+
+}
+
+.carrusel-imagenes::-webkit-scrollbar{
+
+    height:10px;
+
+}
+
+.carrusel-imagenes::-webkit-scrollbar-thumb{
+
+    background:#cbd5e1;
+
+    border-radius:20px;
+
+}
+
+.miniatura-galeria{
+
+    position:relative;
+
+    flex:0 0 auto;
+
+    width:230px;
+
+    height:160px;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    cursor:pointer;
+
+    transition:.30s;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+
+}
+
+.miniatura-galeria:hover{
+
+    transform:translateY(-6px) scale(1.03);
+
+    box-shadow:0 20px 40px rgba(0,0,0,.20);
+
+}
+
+.miniatura-galeria::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:rgba(0,0,0,.35);
+
+    opacity:0;
+
+    transition:.3s;
+
+    z-index:1;
+
+}
+
+
+.miniatura-galeria::after{
+
+    content:"🔍";
+
+    position:absolute;
+
+    top:50%;
+
+    left:50%;
+
+    transform:translate(-50%,-50%) scale(0);
+
+    font-size:42px;
+
+    opacity:0;
+
+    transition:.3s;
+
+    z-index:2;
+
+}
+
+
+.miniatura-galeria:hover::before{
+
+    opacity:1;
+
+}
+
+
+.miniatura-galeria:hover::after{
+
+    transform:translate(-50%,-50%) scale(1);
+
+    opacity:1;
+
+}
+
+.miniatura-galeria img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+    transition:.4s;
+
+}
+
+
+.miniatura-galeria:hover img{
+
+    transform:scale(1.08);
+
+}
+
+/*=========================================
+FLECHAS GALERÍA
+=========================================*/
+
+.flecha-galeria{
+
+    position:absolute;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:white;
+
+    font-size:70px;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    padding:20px;
+
+    transition:.25s;
+
+}
+
+.flecha-galeria:hover{
+
+    transform:translateY(-50%) scale(1.15);
+
+}
+
+.izquierda{
+
+    left:20px;
+
+}
+
+.derecha{
+
+    right:20px;
+
+}
+
+/*=========================================
+CONTADOR GALERÍA
+=========================================*/
+
+.contador-galeria{
+
+    position:absolute;
+
+    bottom:25px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:rgba(0,0,0,.60);
+
+    color:white;
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    backdrop-filter:blur(8px);
+
+    pointer-events:none;
+
+}
+
+.buscador{
+
+    margin:40px 0;
+
+}
+
+
+.buscador input{
+
+    width:100%;
+
+    padding:20px 25px;
+
+    border-radius:50px;
+
+    border:2px solid #e5e7eb;
+
+    font-size:18px;
+
+    outline:none;
+
+}
+
+
+.buscador input:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:
+    0 0 20px rgba(37,99,235,.2);
+
+}
+
+.podcast-player{
+
+    width:100%;
+    height:90px;
+    border:none;
+    border-radius:12px;
+    margin-top:10px;
+
+}
+
+/* =======================================================
+   CABECERA ARTÍCULO
+======================================================= */
+
+.cabecera-articulo{
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+}
+
+.articulo-titulo{
+
+    font-size:42px;
+
+    font-weight:800;
+
+    color:#111827;
+
+    margin:15px 0;
+
+    line-height:1.2;
+
+}
+
+.autor-articulo{
+
+    font-size:16px;
+
+    color:#6b7280;
+
+    margin-top:15px;
+
+    line-height:1.8;
+
+}
+
+.por{
+
+    font-style:italic;
+
+}
+
+.departamento{
+
+    font-size:14px;
+
+    color:#9ca3af;
+
+}
+
+.podcast-audio{
+
+    margin-top:40px;
+
+    padding:25px;
+
+    border-radius:18px;
+
+    background:#f3f4f6;
+
+    border:1px solid #e5e7eb;
+
+}
+
+.podcast-audio h3{
+
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+
+    font-size:22px;
+
+}
+
+.podcast-audio audio{
+
+    width:100%;
+
+}
+
+/*=========================================
+VISTA INDIVIDUAL DE NOTICIA
+=========================================*/
+
+.noticia-individual{
+
+    max-width:900px;
+    margin:auto;
+
+}
+
+
+.titulo-noticia-individual{
+
+    font-size:42px;
+    line-height:1.15;
+    margin:25px 0;
+
+}
+
+
+.meta-noticia-individual{
+
+    color:#64748b;
+    font-size:17px;
+    margin-bottom:30px;
+
+}
+
+
+.imagen-noticia-individual{
+
+    width:100%;
+    max-height:550px;
+    object-fit:cover;
+    border-radius:25px;
+    display:block;
+    margin:30px auto;
+
+}
+
+
+.entradilla-noticia-individual{
+
+    font-size:22px;
+    font-weight:500;
+    line-height:1.6;
+    color:#334155;
+
+}
+
+
+.cuerpo-noticia-individual{
+
+    font-size:18px;
+    line-height:1.8;
+    margin-top:30px;
+
+}
+
+
+.cuerpo-noticia-individual p{
+
+    margin-bottom:20px;
+
+}
+
+
+.boton-volver{
+
+    margin-top:40px;
+    padding:14px 25px;
+    border:none;
+    border-radius:30px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+
+}
+
+.imagen-destacada{
+
+    width:100%;
+
+    height:300px;
+
+    object-fit:cover;
+
+    border-radius:20px;
+
+}
+
+/* NUEVA ESTRUCTURA NOTICIAS */
+
+.cabecera-noticia{
+
+    display:grid;
+    grid-template-columns:320px 1fr;
+    gap:35px;
+    align-items:center;
+
+}
+
+
+.datos-noticia{
+
+    display:flex;
+    flex-direction:column;
+
+}
+
+
+.texto-noticia{
+
+    margin-top:35px;
+
+}
+
+@media(max-width:900px){
+
+    .cabecera-noticia{
+
+        grid-template-columns:1fr;
+
+    }
+
+
+    .articulo-imagen{
+
+        width:100%;
+        height:250px;
+
+    }
+
+}
+
+.video-player{
+    width:100%;
+    aspect-ratio:16/9;
+    border:none;
+    border-radius:16px;
+    margin-top:10px;
+}
+
+.cargando-edicion{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:65vh;
+
+    text-align:center;
+
+}
+
+.spinner-revista{
+
+    width:70px;
+
+    height:70px;
+
+    border:7px solid #e5e7eb;
+
+    border-top:7px solid var(--color-principal);
+
+    border-radius:50%;
+
+    animation:girar 1s linear infinite;
+
+    margin-bottom:25px;
+
+}
+
+.cargando-edicion h2{
+
+    font-size:2rem;
+
+    margin-bottom:10px;
+
+}
+
+.cargando-edicion p{
+
+    color:#666;
+
+    font-size:1.1rem;
+
+}
+
+@keyframes girar{
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+

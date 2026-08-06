@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>El Molinillo Magazine</title>
+
+    <meta name="description"
+        content="Revista digital del IES El Molinillo">
+
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+    <div id="lightbox" class="lightbox">
+
+        <span class="cerrar-lightbox" onclick="cerrarLightbox()">
+            &times;
+        </span>
+
+        <span class="flecha-galeria izquierda"
+            onclick="imagenAnterior(event)">
+            &#10094;
+        </span>
+
+        <img
+            id="imagenLightbox"
+            class="lightbox-img"
+        >
+
+        <span class="flecha-galeria derecha"
+            onclick="imagenSiguiente(event)">
+            &#10095;
+        </span>
+
+
+        <div id="contadorGaleria" class="contador-galeria">
+        </div>
+
+
+    </div>
+
+    <div id="app">
+
+    </div>
+
+        <script src="data/config.js"></script>
+        <script src="data/estado.js"></script>
+
+        <script src="js/multimedia.js"></script>
+        <script src="js/galeria.js"></script>
+
+        <script src="js/render.js"></script>
+        <script src="js/renderNoticias.js"></script>
+        <script src="js/renderPodcasts.js"></script>
+        <script src="js/renderSecciones.js"></script>
+        <script src="js/renderHemeroteca.js"></script>
+
+        <script src="js/vistas.js"></script>
+        <script src="js/app.js"></script>
+
+</body>
+
+</html>
