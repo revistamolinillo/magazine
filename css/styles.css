@@ -1823,3 +1823,488 @@ VISTA INDIVIDUAL DE NOTICIA
 
 }
 
+/* =======================================================
+EL MOLINILLO MAGAZINE
+ADAPTACIÓN MÓVIL
+No modifica el diseño de ordenador
+======================================================= */
+
+@media (max-width: 700px){
+
+```
+/* ==========================
+   ESTRUCTURA GENERAL
+   ========================== */
+
+.contenedor{
+    width:92%;
+    max-width:none;
+}
+
+.revista{
+    padding:50px 0;
+}
+
+.pagina{
+    padding:85px 0 50px;
+}
+
+
+/* ==========================
+   PORTADA / HERO
+   ========================== */
+
+.hero{
+    min-height:100svh;
+    height:auto;
+    padding:110px 20px 70px;
+}
+
+.hero-fondo{
+    opacity:.28;
+    background-size:cover;
+    background-position:center center;
+}
+
+.hero-contenido{
+    width:100%;
+    max-width:100%;
+}
+
+.hero-revista{
+    font-size:13px;
+    letter-spacing:3px;
+    margin-bottom:15px;
+}
+
+.hero-fecha{
+    font-size:17px;
+    margin-bottom:30px;
+}
+
+.hero-titulo{
+    font-size:clamp(36px,11vw,58px);
+    line-height:1.05;
+    margin-bottom:22px;
+}
+
+.hero-entradilla{
+    font-size:18px;
+    line-height:1.55;
+    margin-bottom:35px;
+}
+
+.hero-boton{
+    padding:15px 32px;
+    font-size:16px;
+}
+
+
+/* ==========================
+   MENÚ
+   ========================== */
+
+.menu{
+    padding:16px 20px;
+    background:
+    linear-gradient(
+        to bottom,
+        rgba(15,23,42,.95),
+        rgba(15,23,42,.65)
+    );
+}
+
+.logo{
+    font-size:18px;
+    letter-spacing:1.5px;
+}
+
+.logo span{
+    font-size:9px;
+    letter-spacing:4px;
+}
+
+
+/* ==========================
+   TÍTULOS DE SECCIÓN
+   ========================== */
+
+.titulo-seccion{
+    font-size:28px;
+    margin-top:50px;
+    margin-bottom:25px;
+}
+
+
+/* ==========================
+   DESTACADAS
+   ========================== */
+
+.destacadas{
+    grid-template-columns:1fr;
+    gap:25px;
+}
+
+.destacada{
+    border-radius:18px;
+}
+
+.imagen-destacada{
+    height:230px;
+    object-fit:cover;
+}
+
+.contenido-destacada{
+    padding:22px;
+}
+
+.categoria-destacada{
+    font-size:11px;
+    letter-spacing:1.5px;
+    margin-bottom:14px;
+}
+
+.destacada h3{
+    font-size:24px;
+    line-height:1.2;
+}
+
+.linea-destacada{
+    margin:18px 0;
+}
+
+
+/* ==========================
+   ARTÍCULOS
+   ========================== */
+
+.articulos{
+    gap:35px;
+}
+
+.articulo{
+    padding:16px;
+    border-radius:18px;
+}
+
+.cabecera-noticia{
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+    align-items:stretch;
+}
+
+.articulo-imagen{
+    width:100%;
+    height:auto;
+    aspect-ratio:16/10;
+    object-fit:cover;
+    border-radius:15px;
+}
+
+.datos-noticia{
+    width:100%;
+}
+
+.cabecera-articulo{
+    text-align:center;
+    margin-bottom:5px;
+}
+
+.articulo-seccion{
+    font-size:11px;
+    padding:7px 13px;
+    letter-spacing:1px;
+    margin-bottom:15px;
+}
+
+.articulo-titulo{
+    font-size:28px;
+    line-height:1.15;
+    margin:10px 0;
+}
+
+.autor-articulo{
+    font-size:14px;
+    line-height:1.6;
+    margin-top:10px;
+}
+
+.departamento{
+    font-size:13px;
+}
+
+.texto-noticia{
+    margin-top:20px;
+}
+
+.articulo-contenido{
+    padding:10px;
+}
+
+.linea-articulo{
+    margin:22px 0;
+}
+
+.articulo-entradilla{
+    font-size:18px;
+    line-height:1.55;
+    padding-left:15px;
+    border-left-width:4px;
+    margin:22px 0;
+}
+
+.articulo-cuerpo{
+    font-size:17px;
+    line-height:1.7;
+    text-align:left;
+}
+
+.articulo-cuerpo p{
+    margin-bottom:18px;
+}
+
+.articulo-cuerpo p::first-letter{
+    font-size:52px;
+    padding-right:8px;
+}
+
+
+/* ==========================
+   GALERÍA
+   ========================== */
+
+.galeria-profesional{
+    margin-top:35px;
+}
+
+.titulo-galeria{
+    font-size:18px;
+    margin-bottom:15px;
+}
+
+.carrusel-imagenes{
+    gap:12px;
+}
+
+.miniatura-galeria{
+    width:190px;
+    height:135px;
+    border-radius:14px;
+}
+
+
+/* ==========================
+   VÍDEOS Y AUDIOS
+   ========================== */
+
+.bloque-multimedia{
+    margin-top:30px;
+}
+
+.videos,
+.audios{
+    grid-template-columns:1fr;
+}
+
+.videos iframe,
+.audios iframe{
+    border-radius:12px;
+}
+
+.podcast-player{
+    height:85px;
+}
+
+
+/* ==========================
+   SECCIONES
+   ========================== */
+
+.grid-secciones{
+    grid-template-columns:1fr;
+    gap:18px;
+    margin-top:30px;
+}
+
+.tarjeta-seccion{
+    padding:25px;
+    border-radius:17px;
+}
+
+.tarjeta-seccion h2{
+    font-size:23px;
+    margin-bottom:12px;
+}
+
+
+/* ==========================
+   TARJETAS DE SECCIÓN
+   ========================== */
+
+.card-seccion{
+    grid-template-columns:1fr;
+    gap:18px;
+    padding:14px;
+    border-radius:18px;
+    margin-bottom:22px;
+}
+
+.card-seccion img{
+    height:auto;
+    aspect-ratio:16/10;
+    object-fit:cover;
+    border-radius:14px;
+}
+
+.card-seccion-contenido{
+    padding:8px;
+}
+
+.card-seccion-categoria{
+    font-size:11px;
+    padding:6px 12px;
+    margin-bottom:12px;
+}
+
+.card-seccion h2{
+    font-size:25px;
+    line-height:1.15;
+    margin-bottom:12px;
+}
+
+.card-seccion-meta{
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+.card-seccion p{
+    font-size:16px;
+    line-height:1.6;
+}
+
+
+/* ==========================
+   HEMEROTECA
+   ========================== */
+
+.bloque-curso{
+    margin-top:40px;
+}
+
+.curso-titulo{
+    font-size:25px;
+    margin-bottom:22px;
+}
+
+.grid-hemeroteca{
+    grid-template-columns:1fr;
+    gap:25px;
+}
+
+.card-edicion{
+    border-radius:18px;
+}
+
+.mes-edicion{
+    font-size:24px;
+}
+
+
+/* ==========================
+   BUSCADOR
+   ========================== */
+
+.buscador{
+    margin:25px 0;
+}
+
+.buscador input{
+    padding:16px 20px;
+    font-size:16px;
+}
+
+
+/* ==========================
+   NOTICIA INDIVIDUAL
+   ========================== */
+
+.noticia-individual{
+    max-width:none;
+    width:100%;
+}
+
+.titulo-noticia-individual{
+    font-size:32px;
+    line-height:1.12;
+    margin:18px 0;
+}
+
+.meta-noticia-individual{
+    font-size:14px;
+    margin-bottom:20px;
+}
+
+.imagen-noticia-individual{
+    max-height:none;
+    aspect-ratio:16/10;
+    object-fit:cover;
+    border-radius:18px;
+    margin:20px auto;
+}
+
+.entradilla-noticia-individual{
+    font-size:19px;
+    line-height:1.55;
+}
+
+.cuerpo-noticia-individual{
+    font-size:17px;
+    line-height:1.7;
+    margin-top:22px;
+}
+
+.boton-volver{
+    margin-top:30px;
+    padding:12px 22px;
+    font-size:15px;
+}
+
+
+/* ==========================
+   LIGHTBOX
+   ========================== */
+
+.lightbox-img{
+    max-width:94%;
+    max-height:82%;
+    border-radius:12px;
+}
+
+.cerrar-lightbox{
+    top:15px;
+    right:18px;
+    font-size:42px;
+}
+
+.flecha-galeria{
+    font-size:45px;
+    padding:10px;
+}
+
+.izquierda{
+    left:5px;
+}
+
+.derecha{
+    right:5px;
+}
+
+.contador-galeria{
+    bottom:18px;
+    font-size:14px;
+    padding:8px 14px;
+}
+```
+
+}
