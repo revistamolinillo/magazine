@@ -788,15 +788,10 @@ button{
 }
 
 .contenido-destacada{
-
     padding:28px;
-
     display:flex;
-
     flex-direction:column;
-
-    height:230px;
-
+    min-height:230px;;
 }
 
 .categoria-destacada{
@@ -817,16 +812,13 @@ button{
 
 }
 
+
 .leer-articulo{
-
+    margin-top:auto;
     text-align:center;
-
     font-size:17px;
-
     font-weight:700;
-
     color:var(--color-principal);
-
 }
 
 .destacada:hover .imagen{
