@@ -107,11 +107,16 @@ function obtenerMultimedia(noticia){
 
             ${videos.map(v=>`
 
-                <iframe
-                    class="video-player"
-                    src="https://drive.google.com/file/d/${v.id}/preview"
-                    allow="autoplay">
-                </iframe>
+                <div class="video-contenedor">
+
+                    <iframe
+                        class="video-player"
+                        src="https://drive.google.com/file/d/${v.id}/preview"
+                        allow="autoplay"
+                        allowfullscreen>
+                    </iframe>
+
+                </div>
 
             `).join("")}
 
