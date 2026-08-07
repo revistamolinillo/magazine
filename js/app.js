@@ -106,9 +106,30 @@ async function cargarDatos(){
         edicion.portada.entradilla =
             datos.portada.Entradilla;
 
-        edicion.portada.imagen =
-            datos.portada.ImagenPortada;
-        console.log("IMAGEN PORTADA:", edicion.portada.imagen);
+        // Buscamos la noticia que corresponde a la portada
+        const noticiaPortada = (datos.noticias || []).find(
+            noticia => noticia.Titulo === datos.portada.Titulo
+        );
+
+        if(
+            noticiaPortada &&
+            noticiaPortada.ImagenPrincipal
+        ){
+
+            edicion.portada.imagen =
+                noticiaPortada.ImagenPrincipal;
+
+        }else{
+
+            edicion.portada.imagen =
+                datos.portada.ImagenPortada;
+
+        }
+
+        console.log(
+            "IMAGEN PORTADA:",
+            edicion.portada.imagen
+        );
 
     }
 

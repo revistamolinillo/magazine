@@ -62,11 +62,8 @@ function renderGaleriaImagenes(noticia){
 
     if(imagenes.length <= 1) return "";
 
-    // La imagen principal no se repite en la galería
-    const principal = noticia.ImagenPrincipal;
-
     const imagenesGaleria = imagenes.filter(
-        imagen => imagen.id !== principal
+        imagen => imagen.id !== noticia.ImagenPrincipal
     );
 
     if(imagenesGaleria.length === 0) return "";
@@ -82,27 +79,18 @@ function renderGaleriaImagenes(noticia){
         <div class="carrusel-imagenes">
 
             ${
-            imagenesGaleria.map(imagen => {
-
-                // Buscar la posición real dentro de TODAS las imágenes
-                const indice = imagenes.findIndex(
-                    img => img.id === imagen.id
-                );
-
-                return `
+            imagenesGaleria.map((imagen,index)=>`
 
                 <div
-                    class="miniatura-galeria"
-                    onclick="abrirImagenGaleria('${noticia.ID}',${indice})">
+                class="miniatura-galeria"
+                onclick="abrirImagenGaleria('${noticia.ID}',${index})">
 
                     <img
-                        src="https://drive.google.com/thumbnail?id=${imagen.id}&sz=w800">
+                    src="https://drive.google.com/thumbnail?id=${imagen.id}&sz=w800">
 
                 </div>
 
-                `;
-
-            }).join("")
+            `).join("")
             }
 
         </div>
@@ -158,54 +146,41 @@ function abrirLightbox(event, imagen){
 
 function abrirImagenGaleria(idNoticia, indice){
 
-    let noticia = noticias.find(n=>n.ID===idNoticia);
-
+    let noticia = noticias.find(n => n.ID === idNoticia);
 
     if(!noticia){
 
-        noticia = podcasts.find(n=>n.ID===idNoticia);
+        noticia = podcasts.find(n => n.ID === idNoticia);
 
     }
 
-
     if(!noticia) return;
-
 
     const imagenes = obtenerImagenes(noticia);
 
+    // Quitamos de la galería la imagen que ya aparece como principal
+    const imagenesGaleria = imagenes.filter(
+        imagen => imagen.id !== noticia.ImagenPrincipal
+    );
 
-    galeriaActual = imagenes.map(img =>
+    galeriaActual = imagenesGaleria.map(img =>
         `https://drive.google.com/thumbnail?id=${img.id}&sz=w1600`
     );
 
+    if(galeriaActual.length === 0) return;
 
     indiceActual = indice;
 
-
-    const img=document.getElementById("imagenLightbox");
-
-
-    img.onload = ()=>{
-
-        img.style.opacity=1;
-
-    };
-
-
-    img.style.opacity=0;
+    const img = document.getElementById("imagenLightbox");
 
     img.src = galeriaActual[indiceActual];
 
-
     actualizarContador();
 
-
     document
-    .getElementById("lightbox")
-    .classList.add("visible");
-
+        .getElementById("lightbox")
+        .classList.add("visible");
 }
-
 function imagenAnterior(event){
 
     if(event) event.stopPropagation();
