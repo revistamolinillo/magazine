@@ -2308,3 +2308,101 @@ No modifica el diseño de ordenador
 ```
 
 }
+
+/* =======================================================
+   AJUSTES MÓVILES — PORTADA Y VÍDEOS
+   ======================================================= */
+
+@media (max-width:700px){
+
+    /* ==========================
+       PORTADA MÓVIL
+       ========================== */
+
+    .hero{
+        min-height:100svh;
+        height:100svh;
+
+        padding:
+            95px
+            20px
+            35px;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .hero-contenido{
+        width:100%;
+        max-width:100%;
+        max-height:calc(100svh - 130px);
+
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .hero-revista{
+        font-size:12px;
+        letter-spacing:2.5px;
+        margin-bottom:10px;
+    }
+
+    .hero-fecha{
+        font-size:15px;
+        margin-bottom:18px;
+    }
+
+    .hero-titulo{
+        font-size:clamp(30px,9vw,48px);
+        line-height:1.05;
+        margin-bottom:16px;
+    }
+
+    .hero-entradilla{
+        font-size:16px;
+        line-height:1.45;
+
+        max-width:100%;
+
+        margin-bottom:22px;
+    }
+
+    .hero-boton{
+        padding:13px 28px;
+        font-size:15px;
+    }
+
+
+    /* ==========================
+       VÍDEOS
+       ========================== */
+
+    .videos{
+        display:block;
+        width:100%;
+    }
+
+    .videos iframe,
+    .video-player{
+
+        display:block;
+
+        width:100% !important;
+
+        height:auto !important;
+
+        aspect-ratio:16 / 9;
+
+        min-height:0;
+
+        max-height:none;
+
+        margin:15px 0 0;
+
+        border-radius:12px;
+    }
+
+}
