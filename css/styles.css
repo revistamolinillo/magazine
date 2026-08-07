@@ -2784,3 +2784,76 @@ No modifica el diseño de ordenador
     }
 
 }
+
+/* =======================================================
+   VÍDEOS — CONTENEDOR RESPONSIVE
+======================================================= */
+
+.video-contenedor{
+
+    position:relative;
+
+    width:100%;
+
+    aspect-ratio:16 / 9;
+
+    margin-top:15px;
+
+    overflow:hidden;
+
+    border-radius:16px;
+
+    background:#000;
+
+}
+
+
+.video-contenedor .video-player{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100% !important;
+
+    height:100% !important;
+
+    border:none;
+
+    border-radius:16px;
+
+    display:block;
+
+}
+
+
+/* =======================================================
+   MÓVIL
+======================================================= */
+
+@media (max-width:700px){
+
+    .video-contenedor{
+
+        width:100%;
+
+        aspect-ratio:16 / 9;
+
+        margin-top:15px;
+
+        border-radius:12px;
+
+    }
+
+
+    .video-contenedor .video-player{
+
+        width:100% !important;
+
+        height:100% !important;
+
+        border-radius:12px;
+
+    }
+
+}
