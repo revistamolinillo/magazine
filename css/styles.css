@@ -2958,3 +2958,31 @@ No modifica el diseño de ordenador
     }
 
 }
+
+.video-contenedor{
+    width:100%;
+    max-width:900px;
+    margin:20px auto;
+}
+
+.video-player{
+    display:block;
+    width:100%;
+    height:auto;
+    aspect-ratio:16/9;
+    object-fit:contain;
+    background:#000;
+    border-radius:16px;
+}
+
+.video-contenedor{
+    width:100%;
+    margin:15px 0;
+}
+
+.video-player{
+    width:100%;
+    height:auto;
+    aspect-ratio:16/9;
+    border-radius:12px;
+}

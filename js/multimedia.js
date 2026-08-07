@@ -114,13 +114,12 @@ function obtenerMultimedia(noticia){
                             controls
                             playsinline
                             preload="metadata">
-
+                            
                             <source
                                 src="https://drive.google.com/uc?export=download&id=${v.id}"
-                                type="${v.tipo}">
+                                type="video/mp4">
 
                             Tu navegador no puede reproducir este vídeo.
-
                         </video>
 
                     </div>
