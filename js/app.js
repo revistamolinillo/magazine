@@ -1,3 +1,4 @@
+console.log("Preview cargado:", typeof revistaPreview);
 window.addEventListener("DOMContentLoaded", iniciar);
 
 let vistaActual = "portada";
