@@ -107,22 +107,16 @@ function obtenerMultimedia(noticia){
 
             ${videos.map(v=>`
 
-                    <div class="video-contenedor">
+                <div class="video-contenedor">
 
-                        <video
-                            class="video-player"
-                            controls
-                            playsinline
-                            preload="metadata">
-                            
-                            <source
-                                src="https://drive.google.com/uc?export=download&id=${v.id}"
-                                type="video/mp4">
+                    <iframe
+                        class="video-player"
+                        src="https://drive.google.com/file/d/${v.id}/preview"
+                        allow="autoplay"
+                        allowfullscreen>
+                    </iframe>
 
-                            Tu navegador no puede reproducir este vídeo.
-                        </video>
-
-                    </div>
+                </div>
 
             `).join("")}
 
