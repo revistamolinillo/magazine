@@ -100,26 +100,6 @@ function renderMenu(){
     `;
 }
 
-function toggleMenuMovil(){
-
-    const menu = document.getElementById("menu-navegacion");
-
-    if(!menu) return;
-
-    menu.classList.toggle("menu-movil-abierto");
-
-}
-
-
-function cerrarMenuMovil(){
-
-    const menu = document.getElementById("menu-navegacion");
-
-    if(!menu) return;
-
-    menu.classList.remove("menu-movil-abierto");
-
-}
 
 function renderHero(){
 

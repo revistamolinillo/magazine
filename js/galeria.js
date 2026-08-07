@@ -12,29 +12,6 @@ function actualizarContador(){
 
 }
 
-function obtenerArchivosMultimedia(noticia){
-
-    if(!noticia.Multimedia) return [];
-
-    return noticia.Multimedia
-        .split("\n")
-        .map(linea=>linea.trim())
-        .filter(linea=>linea!=="")
-        .map(linea=>{
-
-            const partes=linea.split("|");
-
-            return{
-
-                id: partes[0],
-                tipo: partes[1] || ""
-
-            };
-
-        });
-
-}
-
 function obtenerImagenes(noticia){
 
     return obtenerArchivosMultimedia(noticia)
