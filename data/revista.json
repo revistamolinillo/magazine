@@ -2,7 +2,7 @@
   "id": "E000002",
   "mes": "Octubre",
   "curso": "2026/2027",
-  "fechaPublicacion": "2026-08-07T14:12:10.502Z",
+  "fechaPublicacion": "2026-08-07T15:24:46.475Z",
   "estado": "PUBLICADA",
   "portada": {
     "ID": "N000008",
@@ -27,6 +27,7 @@
     "FechaPublicacion": "",
     "UltimaModificacion": "2026-08-07T13:05:36.009Z",
     "Editor": "mgoncan@g.educaand.es",
+    "Publicada": "SI",
     "TipoContenido": "NOTICIA",
     "ImagenPortada": "18Yy-TDZEYLam4jJ87ErRd2ppvLu49I77"
   },
@@ -54,6 +55,7 @@
       "FechaPublicacion": "",
       "UltimaModificacion": "2026-08-07T13:05:48.587Z",
       "Editor": "mgoncan@g.educaand.es",
+      "Publicada": "SI",
       "TipoContenido": "NOTICIA"
     },
     {
@@ -79,6 +81,7 @@
       "FechaPublicacion": "",
       "UltimaModificacion": "2026-08-07T13:06:00.287Z",
       "Editor": "mgoncan@g.educaand.es",
+      "Publicada": "SI",
       "TipoContenido": "PODCAST"
     },
     {
@@ -104,6 +107,7 @@
       "FechaPublicacion": "",
       "UltimaModificacion": "2026-08-07T13:05:24.408Z",
       "Editor": "mgoncan@g.educaand.es",
+      "Publicada": "SI",
       "TipoContenido": "NOTICIA"
     },
     {
@@ -129,6 +133,7 @@
       "FechaPublicacion": "",
       "UltimaModificacion": "2026-08-07T13:05:36.009Z",
       "Editor": "mgoncan@g.educaand.es",
+      "Publicada": "SI",
       "TipoContenido": "NOTICIA",
       "ImagenPortada": "18Yy-TDZEYLam4jJ87ErRd2ppvLu49I77"
     }
