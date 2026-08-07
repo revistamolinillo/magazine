@@ -2489,3 +2489,53 @@ No modifica el diseño de ordenador
     }
 
 }
+
+/* =======================================================
+   MENÚ MÓVIL — AJUSTE FINAL
+======================================================= */
+
+@media (max-width:700px){
+
+    .menu{
+        padding:16px 20px;
+        min-height:64px;
+    }
+
+    .menu nav{
+        display:flex;
+        gap:18px;
+        align-items:center;
+    }
+
+    .menu nav a{
+        font-size:13px;
+        white-space:nowrap;
+    }
+
+}
+
+/* =======================================================
+   VÍDEO MÓVIL — AJUSTE FINAL
+======================================================= */
+
+@media (max-width:700px){
+
+    .videos{
+        display:block;
+        width:100%;
+    }
+
+    .videos iframe,
+    .video-player{
+        display:block;
+        width:100% !important;
+        height:220px !important;
+        min-height:220px !important;
+        max-height:none !important;
+        aspect-ratio:auto !important;
+        border:none;
+        border-radius:12px;
+        margin:15px 0 0;
+    }
+
+}
