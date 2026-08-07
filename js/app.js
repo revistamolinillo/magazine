@@ -355,6 +355,19 @@ async function cargarTodasLasNoticias(){
 
     const ediciones = await respuesta.json();
 
+    // Añadir primero la edición actual
+    if(datosEdicionActual && datosEdicionActual.noticias){
+
+        datosEdicionActual.noticias.forEach(noticia=>{
+
+            noticia.Edicion = datosEdicionActual.id;
+
+            todasLasNoticias.push(noticia);
+
+        });
+
+    }
+
     for(const edicion of ediciones){
 
         const respuestaEdicion = await fetch(
@@ -381,5 +394,11 @@ async function cargarTodasLasNoticias(){
         "TOTAL BUSCADOR:",
         todasLasNoticias.length
     );
+
+    console.table(todasLasNoticias.map(n=>({
+        id:n.ID,
+        titulo:n.Titulo,
+        edicion:n.Edicion
+    })));
 
 }

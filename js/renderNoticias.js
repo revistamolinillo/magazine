@@ -165,6 +165,8 @@ function renderDestacadas(){
         noticia.Destacada === "SI"
     );
 
+    console.log(destacadas);
+
     if(destacadas.length===0) return "";
 
     return `
@@ -176,40 +178,51 @@ function renderDestacadas(){
         <div class="destacadas">
 
             ${
-            destacadas.map(noticia=>`
+            destacadas.map(noticia=>{
 
-                <article
-                    class="destacada"
-                    onclick="mostrarVista('noticia-${noticia.ID}')"
+                console.log(
+                    "DESTACADA",
+                    noticia.Titulo,
+                    noticia.ImagenPrincipal,
+                    obtenerImagenURL(noticia)
+                );
 
-                    <img 
-                    class="imagen-destacada"
-                    src="${obtenerImagenURL(noticia)}"
-                    alt="${noticia.Titulo}">
+                return `
 
-                    <div class="contenido-destacada">
+                    <article
+                        class="destacada"
+                        onclick="irANoticia('${noticia.ID}')">
 
-                        <div class="categoria-destacada">
-                            ${noticia.Seccion}
+                        <img
+                            class="imagen-destacada"
+                            src="${obtenerImagenURL(noticia)}"
+                            alt="${noticia.Titulo}">
+
+                        <div class="contenido-destacada">
+
+                            <div class="categoria-destacada">
+                                ${noticia.Seccion}
+                            </div>
+
+                            <h3>
+                                ${noticia.Titulo}
+                            </h3>
+
+                            <hr class="linea-destacada">
+
+                            <div class="leer-articulo">
+
+                                Leer artículo →
+
+                            </div>
+
                         </div>
 
-                        <h3>
-                            ${noticia.Titulo}
-                        </h3>
+                    </article>
 
-                        <hr class="linea-destacada">
+                `;
 
-                        <div class="leer-articulo">
-
-                            Leer artículo →
-
-                        </div>
-
-                    </div>
-
-                </article>
-
-            `).join("")
+            }).join("")
             }
 
         </div>

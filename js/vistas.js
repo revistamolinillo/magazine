@@ -619,29 +619,46 @@ function renderVistaNoticia(id){
 
 }
 
+async function esperarArticulo(id){
+
+    return new Promise(resolve=>{
+
+        const intervalo = setInterval(()=>{
+
+            const articulo =
+                document.getElementById("noticia-" + id);
+
+            if(articulo){
+
+                clearInterval(intervalo);
+                resolve();
+
+            }
+
+        },50);
+
+    });
+
+}
+
 async function irANoticia(id){
 
     const noticia = todasLasNoticias.find(
         n => n.ID === id
     );
 
-
     if(!noticia){
         console.log("No encontrada:", id);
         return;
     }
-
 
     // Si pertenece a otra edición, cargarla primero
     if(
         noticia.Edicion &&
         noticia.Edicion !== idEdicionLeyendo
     ){
-
         await abrirEdicion(noticia.Edicion);
-
     }
-
 
     // Abrir según tipo
     if(
@@ -650,26 +667,19 @@ async function irANoticia(id){
     ){
 
         if(vistaActual!=="podcasts"){
-
             mostrarVista("podcasts");
-
         }
 
     }else{
 
         if(vistaActual!=="portada"){
-
             mostrarVista("portada");
-
         }
 
     }
 
+    await esperarArticulo(id);
 
-    setTimeout(()=>{
-
-        hacerScroll(id);
-
-    },300);
+    hacerScroll(id);
 
 }
