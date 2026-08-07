@@ -60,8 +60,16 @@ function renderGaleriaImagenes(noticia){
 
     const imagenes = obtenerImagenes(noticia);
 
-    if(imagenes.length<=1) return "";
+    if(imagenes.length <= 1) return "";
 
+    // La imagen principal no se repite en la galería
+    const principal = noticia.ImagenPrincipal;
+
+    const imagenesGaleria = imagenes.filter(
+        imagen => imagen.id !== principal
+    );
+
+    if(imagenesGaleria.length === 0) return "";
 
     return `
 
@@ -71,34 +79,37 @@ function renderGaleriaImagenes(noticia){
             📷 Galería
         </h3>
 
-
         <div class="carrusel-imagenes">
 
             ${
-            imagenes.slice(1).map((imagen,index)=>`
+            imagenesGaleria.map(imagen => {
+
+                // Buscar la posición real dentro de TODAS las imágenes
+                const indice = imagenes.findIndex(
+                    img => img.id === imagen.id
+                );
+
+                return `
 
                 <div
-                class="miniatura-galeria"
-                onclick="abrirImagenGaleria('${noticia.ID}',${index+1})">
-
+                    class="miniatura-galeria"
+                    onclick="abrirImagenGaleria('${noticia.ID}',${indice})">
 
                     <img
-                    src="https://drive.google.com/thumbnail?id=${imagen.id}&sz=w800">
-
+                        src="https://drive.google.com/thumbnail?id=${imagen.id}&sz=w800">
 
                 </div>
 
+                `;
 
-            `).join("")
+            }).join("")
             }
-
 
         </div>
 
     </div>
 
     `;
-
 }
 
 document.addEventListener("keydown",function(e){
