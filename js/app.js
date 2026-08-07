@@ -81,7 +81,17 @@ function mostrarVista(vista){
 
 async function cargarDatos(){
 
-    const respuesta = await fetch(CONFIG.urlDatos);
+    const parametros = new URLSearchParams(window.location.search);
+
+    const idPreview = parametros.get("edicion");
+    console.log("EDICIÓN PREVIEW:", idPreview);
+
+    const archivoDatos = idPreview
+        ? "data/preview/revista-preview.json"
+        : CONFIG.urlDatos;
+
+
+    const respuesta = await fetch(archivoDatos);
 
     const datos = await respuesta.json();
     idEdicionActual = datos.id;
