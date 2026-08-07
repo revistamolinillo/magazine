@@ -26,41 +26,98 @@ function renderMenu(){
         </div>
 
 
-        <nav>
+        <button
+            class="menu-hamburguesa"
+            onclick="toggleMenuMovil()"
+            aria-label="Abrir menú">
+
+            ☰
+
+        </button>
+
+
+        <nav id="menu-navegacion">
 
             <a href="#"
-            onclick="volverRevistaActual();return false;">
+            onclick="
+                volverRevistaActual();
+                cerrarMenuMovil();
+                return false;
+            ">
                 Revista
             </a>
 
-            <a href="#" onclick="mostrarVista('secciones');return false;">
+
+            <a href="#"
+            onclick="
+                mostrarVista('secciones');
+                cerrarMenuMovil();
+                return false;
+            ">
                 Secciones
             </a>
+
 
             ${
                 podcasts.length
                 ? `
-                    <a href="#" onclick="mostrarVista('podcasts');return false;">
+                    <a href="#"
+                    onclick="
+                        mostrarVista('podcasts');
+                        cerrarMenuMovil();
+                        return false;
+                    ">
                         Podcasts
                     </a>
                 `
                 : ""
             }
 
-            <a href="#" onclick="mostrarVista('hemeroteca');return false;">
+
+            <a href="#"
+            onclick="
+                mostrarVista('hemeroteca');
+                cerrarMenuMovil();
+                return false;
+            ">
                 Hemeroteca
             </a>
 
-            <a href="#" onclick="mostrarBuscador();return false;">
+
+            <a href="#"
+            onclick="
+                mostrarBuscador();
+                cerrarMenuMovil();
+                return false;
+            ">
                 🔎 Buscar
             </a>
 
         </nav>
 
-
     </header>
 
     `;
+}
+
+function toggleMenuMovil(){
+
+    const menu = document.getElementById("menu-navegacion");
+
+    if(!menu) return;
+
+    menu.classList.toggle("menu-movil-abierto");
+
+}
+
+
+function cerrarMenuMovil(){
+
+    const menu = document.getElementById("menu-navegacion");
+
+    if(!menu) return;
+
+    menu.classList.remove("menu-movil-abierto");
 
 }
 
