@@ -107,8 +107,6 @@ function obtenerMultimedia(noticia){
 
             ${videos.map(v=>`
 
-                <div class="video-contenedor">
-
                     <div class="video-contenedor">
 
                         <video
@@ -126,8 +124,6 @@ function obtenerMultimedia(noticia){
                         </video>
 
                     </div>
-
-                </div>
 
             `).join("")}
 
