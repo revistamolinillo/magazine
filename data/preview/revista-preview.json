@@ -5,5 +5,32 @@
   "fechaPublicacion": "",
   "estado": "ABIERTA",
   "portada": null,
-  "noticias": []
+  "noticias": [
+    {
+      "ID": "N000009",
+      "FechaEnvio": "2026-08-08T18:25:41.829Z",
+      "Estado": "APROBADA",
+      "TipoAutor": "COLABORADOR",
+      "Autor": "Miguel Angel",
+      "CursoDepartamento": "df",
+      "Email": "",
+      "Seccion": "Actualidad",
+      "Titulo": "df",
+      "Entradilla": "df",
+      "Cuerpo": "dfdf",
+      "Multimedia": "",
+      "ImagenPrincipal": "",
+      "CarpetaDrive": "1isnOEzRKOVwZ4Isd-ovaJUFvkxBASIEZ",
+      "Edicion": "E000003",
+      "Portada": "NO",
+      "Destacada": "NO",
+      "Orden": 1,
+      "Observaciones": "",
+      "FechaPublicacion": "",
+      "UltimaModificacion": "2026-08-08T18:26:05.700Z",
+      "Editor": "mgoncan@g.educaand.es",
+      "Publicada": "NO",
+      "TipoContenido": "NOTICIA"
+    }
+  ]
 }
