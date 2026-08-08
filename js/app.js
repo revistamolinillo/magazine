@@ -376,16 +376,22 @@ function buscarNoticias(){
 
 function volverDeNoticia(){
 
+    const posicion = posicionAnteriorNoticia || 0;
+
     mostrarVista(vistaAnterior);
 
-    setTimeout(() => {
+    requestAnimationFrame(() => {
 
-        window.scrollTo({
-            top: posicionScrollAnterior,
-            behavior: "instant"
+        requestAnimationFrame(() => {
+
+            window.scrollTo({
+                top: posicion,
+                behavior: "instant"
+            });
+
         });
 
-    }, 100);
+    });
 
 }
 

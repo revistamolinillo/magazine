@@ -643,7 +643,6 @@ async function esperarArticulo(id){
 
 async function irANoticia(id){
     posicionScrollAnterior = window.scrollY;
-    idNoticiaAnterior = id;
 
     const noticia = todasLasNoticias.find(
         n => n.ID === id
