@@ -103,49 +103,58 @@ function renderMenu(){
 
 function renderHero(){
 
-    return `
+return `
 
-        <main class="portada">
+    <main class="portada">
 
-            <section class="hero">
+        <section class="hero">
 
-                <div 
+            <div class="hero-cabecera">
+
+                <p class="hero-revista">
+                    EL MOLINILLO MAGAZINE
+                </p>
+
+                <p class="hero-fecha">
+                    ${edicion.mes}
+                </p>
+
+            </div>
+
+
+            <div 
                 class="hero-fondo"
                 style="
                 background-image:url('https://drive.google.com/thumbnail?id=${edicion.portada.imagen}&sz=w1200')
                 ">
-                </div>
+            </div>
 
-                <div class="hero-contenido">
 
-                    <p class="hero-revista">
-                        EL MOLINILLO MAGAZINE
-                    </p>
+            <div class="hero-contenido">
 
-                    <p class="hero-fecha">
-                        ${edicion.mes}
-                    </p>
+                <h1 class="hero-titulo">
+                    ${edicion.portada.titulo}
+                </h1>
 
-                    <h1 class="hero-titulo">
-                        ${edicion.portada.titulo}
-                    </h1>
+                <p class="hero-entradilla">
+                    ${edicion.portada.entradilla}
+                </p>
 
-                    <p class="hero-entradilla">
-                        ${edicion.portada.entradilla}
-                    </p>
+                <button
+                    class="hero-boton"
+                    onclick="abrirRevista()">
 
-                    <button class="hero-boton" onclick="abrirRevista()">
-                        Leer revista
-                    </button>
+                    Leer revista
 
-                </div>
+                </button>
 
-            </section>
+            </div>
 
-        </main>
+        </section>
 
-    `;
+    </main>
 
+`;
 }
 
 /*function renderPortada(){

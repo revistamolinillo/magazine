@@ -2951,45 +2951,305 @@ No modifica el diseño de ordenador
 
 
 /* =======================================================
-   AJUSTE MÓVIL
+   PORTADA — NUEVA ESTRUCTURA EDITORIAL
    ======================================================= */
 
-@media (max-width:700px){
+.hero-cabecera{
 
-    .hero-revista{
+    position:absolute;
+
+    top:100px;
+
+    left:0;
+
+    width:100%;
+
+    z-index:6;
+
+    text-align:center;
+
+    color:white;
+
+}
+
+.hero-cabecera .hero-revista{
+
+    margin-bottom:10px;
+
+    font-size:26px;
+
+    font-weight:800;
+
+    letter-spacing:5px;
+
+    text-transform:uppercase;
+
+}
+
+.hero-cabecera .hero-fecha{
+
+    margin:0;
+
+    font-size:22px;
+
+    font-weight:500;
+
+    letter-spacing:3px;
+
+    text-transform:uppercase;
+
+    opacity:.9;
+
+}
+
+.hero-cabecera .hero-fecha::after{
+
+    content:"";
+
+    display:block;
+
+    width:60px;
+
+    height:3px;
+
+    background:var(--color-acento);
+
+    border-radius:10px;
+
+    margin:15px auto 0;
+
+}
+
+
+/* =======================================================
+   ORDENADOR — TITULAR
+   ======================================================= */
+
+.hero-contenido{
+
+    position:relative;
+
+    z-index:5;
+
+    width:min(900px,90%);
+
+    text-align:center;
+
+    color:white;
+
+    animation:aparecer 1.2s ease;
+
+}
+
+.hero-titulo{
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:clamp(42px,5.5vw,64px);
+
+    line-height:1.08;
+
+    font-weight:700;
+
+    letter-spacing:-.5px;
+
+    margin-bottom:22px;
+
+}
+
+.hero-entradilla{
+
+    font-size:19px;
+
+    line-height:1.6;
+
+    max-width:700px;
+
+    margin:0 auto 35px;
+
+}
+
+
+/* =======================================================
+   MÓVIL
+   ======================================================= */
+
+@media(max-width:700px){
+
+    .hero{
+
+        min-height:0;
+
+        height:auto;
+
+        padding:0;
+
+        display:flex;
+
+        flex-direction:column;
+
+        background:#0f172a;
+
+    }
+
+
+    /* CABECERA */
+
+    .hero-cabecera{
+
+        position:relative;
+
+        top:auto;
+
+        left:auto;
+
+        order:1;
+
+        padding:
+            82px
+            20px
+            25px;
+
+        background:#0f172a;
+
+    }
+
+    .hero-cabecera .hero-revista{
+
         font-size:20px;
+
         letter-spacing:4px;
-        margin-bottom:10px;
+
+        margin-bottom:8px;
+
     }
 
-    .hero-fecha{
-        font-size:18px;
+    .hero-cabecera .hero-fecha{
+
+        font-size:17px;
+
         letter-spacing:2px;
-        margin-bottom:28px;
+
     }
 
-    .hero-fecha::after{
-        width:55px;
-        height:3px;
-        margin-top:15px;
+    .hero-cabecera .hero-fecha::after{
+
+        width:45px;
+
+        height:2px;
+
+        margin-top:13px;
+
     }
+
+
+    /* FOTO */
+
+    .hero-fondo{
+
+        position:relative;
+
+        inset:auto;
+
+        order:2;
+
+        width:100%;
+
+        height:58vw;
+
+        min-height:240px;
+
+        max-height:430px;
+
+        background-size:contain;
+
+        background-repeat:no-repeat;
+
+        background-position:center center;
+
+        background-color:#0f172a;
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+
+    /* QUITAMOS EL DEGRADADO SOBRE LA FOTO */
+
+    .hero::before{
+
+        display:none;
+
+    }
+
+
+    /* CONTENIDO */
+
+    .hero-contenido{
+
+        order:3;
+
+        position:relative;
+
+        width:100%;
+
+        max-width:none;
+
+        padding:
+            30px
+            25px
+            45px;
+
+        background:#0f172a;
+
+        color:white;
+
+        text-align:center;
+
+    }
+
 
     .hero-titulo{
-        font-size:clamp(30px,8vw,44px);
-        line-height:1.08;
+
+        font-size:clamp(
+            30px,
+            8vw,
+            44px
+        );
+
+        line-height:1.1;
+
         margin-bottom:18px;
+
     }
+
 
     .hero-entradilla{
+
+        max-width:370px;
+
         font-size:16px;
-        line-height:1.5;
-        max-width:360px;
-        margin-bottom:24px;
+
+        line-height:1.55;
+
+        color:rgba(255,255,255,.82);
+
+        margin:0 auto 25px;
+
     }
 
+
     .hero-boton{
+
         padding:13px 30px;
+
         font-size:15px;
+
     }
 
 }
