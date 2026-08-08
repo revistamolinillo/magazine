@@ -9,6 +9,7 @@ let vistaAnterior = "portada";
 let todasLasNoticias = [];
 let idNoticiaAnterior = null;
 let posicionScrollAnterior = 0;
+let posicionVistaAnterior = 0;
 
 async function iniciar(){
 
@@ -24,8 +25,9 @@ function mostrarVista(vista){
 
         vistaAnterior = vista;
 
-    }
+        posicionVistaAnterior = window.scrollY;
 
+    }
 
     vistaActual = vista;
 
@@ -35,16 +37,8 @@ function mostrarVista(vista){
 
         const id = vista.replace("noticia-","");
 
-        app.innerHTML = renderVistaNoticia(id);
-
-        requestAnimationFrame(() => {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        });
-
-        return;
+        return app.innerHTML =
+            renderVistaNoticia(id);
 
     }
 
@@ -64,6 +58,7 @@ function mostrarVista(vista){
 
             return app.innerHTML = renderHemeroteca();
 
+
         case "podcasts":
 
             return app.innerHTML = renderVistaPodcasts();
@@ -75,7 +70,8 @@ function mostrarVista(vista){
 
         const nombre = vista.replace("seccion-","");
 
-        return app.innerHTML = renderVistaSeccion(nombre);
+        return app.innerHTML =
+            renderVistaSeccion(nombre);
 
     }
 
@@ -376,19 +372,15 @@ function buscarNoticias(){
 
 function volverDeNoticia(){
 
-    const posicion = posicionAnteriorNoticia || 0;
+    const posicion = posicionVistaAnterior || 0;
 
     mostrarVista(vistaAnterior);
 
     requestAnimationFrame(() => {
 
-        requestAnimationFrame(() => {
-
-            window.scrollTo({
-                top: posicion,
-                behavior: "instant"
-            });
-
+        window.scrollTo({
+            top: posicion,
+            behavior: "smooth"
         });
 
     });
