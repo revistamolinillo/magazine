@@ -11,6 +11,7 @@ let idNoticiaAnterior = null;
 let posicionScrollAnterior = 0;
 let posicionVistaAnterior = 0;
 let restaurandoScroll = false;
+let textoBusquedaAnterior = "";
 
 async function iniciar(){
 
@@ -64,6 +65,11 @@ function mostrarVista(vista){
         case "podcasts":
 
             app.innerHTML = renderVistaPodcasts();
+            break;
+
+        case "buscador":
+
+            app.innerHTML = renderBuscador();
             break;
 
     }
@@ -243,6 +249,7 @@ function buscarNoticias(){
     .toLowerCase()
     .trim();
 
+    textoBusquedaAnterior = texto;
 
     const contenedor =
     document.getElementById("resultadosBusqueda");
@@ -383,6 +390,12 @@ function volverDeNoticia(){
 
         requestAnimationFrame(() => {
 
+            if(vistaAnterior === "buscador" && textoBusquedaAnterior){
+
+                buscarNoticias();
+
+            }
+
             window.scrollTo({
                 top: posicion,
                 left: 0,
@@ -392,6 +405,7 @@ function volverDeNoticia(){
         });
 
     });
+
 }
 
 async function cargarTodasLasNoticias(){

@@ -789,6 +789,7 @@ function renderBuscador(){
     id="inputBusqueda"
     type="text"
     placeholder="Busca noticias, autores, secciones..."
+    value="${textoBusquedaAnterior}"
     oninput="buscarNoticias()"
     >
 

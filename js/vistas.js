@@ -406,8 +406,7 @@ function renderCargando(){
 
 function mostrarBuscador(){
 
-    document.getElementById("app").innerHTML =
-        renderBuscador();
+    mostrarVista("buscador");
 
 }
 
