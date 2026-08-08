@@ -312,28 +312,6 @@ button{
 
 }
 
-
-/* MOVIL */
-
-@media(max-width:700px){
-
-
-    .menu{
-
-        padding:20px;
-
-    }
-
-
-    .menu nav{
-
-        display:none;
-
-    }
-
-
-}
-
 /* =======================================================
    MEJORAS PORTADA REVISTA
 ======================================================= */
@@ -1849,57 +1827,6 @@ No modifica el diseño de ordenador
     padding:85px 0 50px;
 }
 
-
-/* ==========================
-   PORTADA / HERO
-   ========================== */
-
-.hero{
-    min-height:100svh;
-    height:auto;
-    padding:110px 20px 70px;
-}
-
-.hero-fondo{
-    opacity:.28;
-    background-size:cover;
-    background-position:center center;
-}
-
-.hero-contenido{
-    width:100%;
-    max-width:100%;
-}
-
-.hero-revista{
-    font-size:13px;
-    letter-spacing:3px;
-    margin-bottom:15px;
-}
-
-.hero-fecha{
-    font-size:17px;
-    margin-bottom:30px;
-}
-
-.hero-titulo{
-    font-size:clamp(36px,11vw,58px);
-    line-height:1.05;
-    margin-bottom:22px;
-}
-
-.hero-entradilla{
-    font-size:18px;
-    line-height:1.55;
-    margin-bottom:35px;
-}
-
-.hero-boton{
-    padding:15px 32px;
-    font-size:16px;
-}
-
-
 /* ==========================
    MENÚ
    ========================== */
@@ -2315,66 +2242,6 @@ No modifica el diseño de ordenador
 
 @media (max-width:700px){
 
-    /* ==========================
-       PORTADA MÓVIL
-       ========================== */
-
-    .hero{
-        min-height:100svh;
-        height:100svh;
-
-        padding:
-            95px
-            20px
-            35px;
-
-        display:flex;
-        align-items:center;
-        justify-content:center;
-    }
-
-    .hero-contenido{
-        width:100%;
-        max-width:100%;
-        max-height:calc(100svh - 130px);
-
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-    }
-
-    .hero-revista{
-        font-size:12px;
-        letter-spacing:2.5px;
-        margin-bottom:10px;
-    }
-
-    .hero-fecha{
-        font-size:15px;
-        margin-bottom:18px;
-    }
-
-    .hero-titulo{
-        font-size:clamp(30px,9vw,48px);
-        line-height:1.05;
-        margin-bottom:16px;
-    }
-
-    .hero-entradilla{
-        font-size:16px;
-        line-height:1.45;
-
-        max-width:100%;
-
-        margin-bottom:22px;
-    }
-
-    .hero-boton{
-        padding:13px 28px;
-        font-size:15px;
-    }
-
 
     /* ==========================
        VÍDEOS
@@ -2536,82 +2403,6 @@ No modifica el diseño de ordenador
         border:none;
         border-radius:12px;
         margin:15px 0 0;
-    }
-
-}
-
-/* =======================================================
-   PORTADA MÓVIL — VERSIÓN COMPACTA
-======================================================= */
-
-@media (max-width:700px){
-
-    .hero{
-        min-height:0;
-        height:auto;
-
-        padding:85px 20px 35px;
-
-        display:flex;
-        align-items:center;
-        justify-content:center;
-    }
-
-    .hero-fondo{
-        position:absolute;
-        inset:0;
-
-        background-size:contain;
-        background-repeat:no-repeat;
-        background-position:center center;
-
-        opacity:.30;
-        background-color:#0f172a;
-    }
-
-    .hero-contenido{
-        width:100%;
-        max-width:420px;
-
-        margin:0 auto;
-
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-
-        text-align:center;
-    }
-
-    .hero-revista{
-        font-size:12px;
-        letter-spacing:2.5px;
-        margin-bottom:10px;
-    }
-
-    .hero-fecha{
-        font-size:15px;
-        margin-bottom:18px;
-    }
-
-    .hero-titulo{
-        font-size:clamp(30px,9vw,46px);
-        line-height:1.05;
-        margin-bottom:15px;
-    }
-
-    .hero-entradilla{
-        max-width:360px;
-
-        font-size:16px;
-        line-height:1.45;
-
-        margin-bottom:22px;
-    }
-
-    .hero-boton{
-        padding:13px 28px;
-        font-size:15px;
     }
 
 }
