@@ -2951,56 +2951,116 @@ No modifica el diseño de ordenador
 
 
 /* =======================================================
-   PORTADA — NUEVA ESTRUCTURA EDITORIAL
+   PORTADA — ESTILO EDITORIAL
+   ======================================================= */
+
+.hero{
+    position:relative;
+    overflow:hidden;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+
+    min-height:700px;
+    height:80vh;
+
+    padding:0 40px 70px;
+}
+
+
+/* =======================================================
+   FOTO DE FONDO
+   ======================================================= */
+
+.hero-fondo{
+
+    position:absolute;
+    inset:0;
+
+    background-size:cover;
+    background-position:center;
+
+    opacity:.28;
+
+    transform:none;
+
+    z-index:0;
+}
+
+
+/* Oscurecemos la parte inferior */
+
+.hero::before{
+
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(15,23,42,.25),
+            rgba(15,23,42,.88)
+        );
+
+    z-index:1;
+}
+
+
+/* =======================================================
+   CABECERA
    ======================================================= */
 
 .hero-cabecera{
 
     position:absolute;
 
-    top:100px;
-
+    top:105px;
     left:0;
 
     width:100%;
 
-    z-index:6;
+    z-index:5;
 
     text-align:center;
 
     color:white;
-
 }
+
 
 .hero-cabecera .hero-revista{
 
-    margin-bottom:10px;
-
-    font-size:26px;
+    font-size:30px;
 
     font-weight:800;
 
     letter-spacing:5px;
 
-    text-transform:uppercase;
+    line-height:1.15;
 
+    margin-bottom:10px;
+
+    text-transform:uppercase;
 }
+
 
 .hero-cabecera .hero-fecha{
 
-    margin:0;
-
-    font-size:22px;
+    font-size:24px;
 
     font-weight:500;
 
     letter-spacing:3px;
 
+    margin:0;
+
     text-transform:uppercase;
 
     opacity:.9;
-
 }
+
 
 .hero-cabecera .hero-fecha::after{
 
@@ -3009,20 +3069,18 @@ No modifica el diseño de ordenador
     display:block;
 
     width:60px;
-
     height:3px;
 
     background:var(--color-acento);
 
     border-radius:10px;
 
-    margin:15px auto 0;
-
+    margin:16px auto 0;
 }
 
 
 /* =======================================================
-   ORDENADOR — TITULAR
+   CONTENIDO PRINCIPAL
    ======================================================= */
 
 .hero-contenido{
@@ -3033,13 +3091,15 @@ No modifica el diseño de ordenador
 
     width:min(900px,90%);
 
+    margin:0 auto;
+
     text-align:center;
 
     color:white;
 
     animation:aparecer 1.2s ease;
-
 }
+
 
 .hero-titulo{
 
@@ -3048,7 +3108,7 @@ No modifica el diseño de ordenador
         "Times New Roman",
         serif;
 
-    font-size:clamp(42px,5.5vw,64px);
+    font-size:clamp(38px,5vw,56px);
 
     line-height:1.08;
 
@@ -3056,20 +3116,30 @@ No modifica el diseño de ordenador
 
     letter-spacing:-.5px;
 
-    margin-bottom:22px;
+    margin:0 auto 20px;
 
+    max-width:850px;
 }
+
 
 .hero-entradilla{
 
-    font-size:19px;
+    font-size:18px;
 
-    line-height:1.6;
+    line-height:1.55;
 
-    max-width:700px;
+    max-width:680px;
 
-    margin:0 auto 35px;
+    margin:0 auto 28px;
 
+}
+
+
+.hero-boton{
+
+    padding:14px 32px;
+
+    font-size:16px;
 }
 
 
@@ -3081,88 +3151,26 @@ No modifica el diseño de ordenador
 
     .hero{
 
-        min-height:0;
+        min-height:100svh;
 
-        height:auto;
-
-        padding:0;
-
-        display:flex;
-
-        flex-direction:column;
-
-        background:#0f172a;
-
-    }
-
-
-    /* CABECERA */
-
-    .hero-cabecera{
-
-        position:relative;
-
-        top:auto;
-
-        left:auto;
-
-        order:1;
+        height:100svh;
 
         padding:
-            82px
+            0
             20px
-            25px;
+            35px;
 
-        background:#0f172a;
-
-    }
-
-    .hero-cabecera .hero-revista{
-
-        font-size:20px;
-
-        letter-spacing:4px;
-
-        margin-bottom:8px;
-
-    }
-
-    .hero-cabecera .hero-fecha{
-
-        font-size:17px;
-
-        letter-spacing:2px;
-
-    }
-
-    .hero-cabecera .hero-fecha::after{
-
-        width:45px;
-
-        height:2px;
-
-        margin-top:13px;
-
+        justify-content:flex-end;
     }
 
 
-    /* FOTO */
+    /* FOTO COMO FONDO */
 
     .hero-fondo{
 
-        position:relative;
+        position:absolute;
 
-        inset:auto;
-
-        order:2;
-
-        width:100%;
-
-        height:58vw;
-
-        min-height:240px;
-
-        max-height:430px;
+        inset:0;
 
         background-size:contain;
 
@@ -3172,45 +3180,74 @@ No modifica el diseño de ordenador
 
         background-color:#0f172a;
 
-        opacity:1;
+        opacity:.30;
 
-        transform:none;
-
+        z-index:0;
     }
 
 
-    /* QUITAMOS EL DEGRADADO SOBRE LA FOTO */
+    /* Degradado */
 
     .hero::before{
 
-        display:none;
+        background:
+            linear-gradient(
+                to bottom,
+                rgba(15,23,42,.55),
+                rgba(15,23,42,.95)
+            );
 
+        z-index:1;
     }
 
 
-    /* CONTENIDO */
+    /* CABECERA */
+
+    .hero-cabecera{
+
+        top:85px;
+
+        padding:0 15px;
+    }
+
+
+    .hero-cabecera .hero-revista{
+
+        font-size:20px;
+
+        letter-spacing:4px;
+
+        margin-bottom:8px;
+    }
+
+
+    .hero-cabecera .hero-fecha{
+
+        font-size:18px;
+
+        letter-spacing:2px;
+    }
+
+
+    .hero-cabecera .hero-fecha::after{
+
+        width:45px;
+
+        height:2px;
+
+        margin-top:13px;
+    }
+
+
+    /* CONTENIDO ABAJO */
 
     .hero-contenido{
 
-        order:3;
-
-        position:relative;
-
         width:100%;
 
-        max-width:none;
+        max-width:420px;
 
-        padding:
-            30px
-            25px
-            45px;
-
-        background:#0f172a;
-
-        color:white;
-
-        text-align:center;
-
+        margin:0 auto;
     }
 
 
@@ -3225,22 +3262,20 @@ No modifica el diseño de ordenador
         line-height:1.1;
 
         margin-bottom:18px;
-
     }
 
 
     .hero-entradilla{
 
-        max-width:370px;
-
         font-size:16px;
 
-        line-height:1.55;
+        line-height:1.5;
 
-        color:rgba(255,255,255,.82);
+        max-width:370px;
 
-        margin:0 auto 25px;
+        margin-bottom:24px;
 
+        color:rgba(255,255,255,.85);
     }
 
 
@@ -3249,7 +3284,6 @@ No modifica el diseño de ordenador
         padding:13px 30px;
 
         font-size:15px;
-
     }
 
 }
