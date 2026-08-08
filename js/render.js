@@ -824,3 +824,22 @@ function cerrarMenuMovil(){
 
 }
 
+document.addEventListener("click", function(event){
+
+    const menu = document.getElementById("menu-navegacion");
+    const boton = document.querySelector(".menu-hamburguesa");
+
+    if(!menu || !boton) return;
+
+    if(
+        menu.classList.contains("menu-abierto") &&
+        !menu.contains(event.target) &&
+        !boton.contains(event.target)
+    ){
+
+        menu.classList.remove("menu-abierto");
+
+    }
+
+});
+
