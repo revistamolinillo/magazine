@@ -2278,7 +2278,7 @@ No modifica el diseño de ordenador
    PORTADA EN MÓVIL
    ======================================================= */
 
-@media (max-width: 700px){
+/*@media (max-width: 700px){
 
     .hero{
         min-height:100svh;
@@ -2353,6 +2353,88 @@ No modifica el diseño de ordenador
         font-size:16px;
 
         margin:0 auto;
+    }
+
+}*/
+
+/* =======================================================
+   PORTADA MÓVIL — NUEVA COMPOSICIÓN
+   ======================================================= */
+
+@media (max-width:700px){
+
+    .hero{
+        min-height:0;
+        height:auto;
+        padding:80px 20px 35px;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        background:#0f172a;
+    }
+
+    .hero-fondo{
+        position:absolute;
+        inset:0;
+
+        background-size:contain;
+        background-repeat:no-repeat;
+        background-position:center center;
+
+        opacity:.30;
+        background-color:#0f172a;
+    }
+
+    .hero-contenido{
+        position:relative;
+        z-index:5;
+
+        width:100%;
+        max-width:420px;
+
+        margin:auto;
+
+        display:flex;
+        flex-direction:column;
+
+        align-items:center;
+
+        text-align:center;
+    }
+
+    .hero-revista{
+        font-size:13px;
+        letter-spacing:3px;
+        margin-bottom:8px;
+    }
+
+    .hero-fecha{
+        font-size:16px;
+        margin-bottom:25px;
+    }
+
+    .hero-titulo{
+        font-size:clamp(30px,9vw,46px);
+        line-height:1.05;
+
+        margin-top:25px;
+        margin-bottom:15px;
+    }
+
+    .hero-entradilla{
+        max-width:370px;
+
+        font-size:16px;
+        line-height:1.5;
+
+        margin-bottom:22px;
+    }
+
+    .hero-boton{
+        padding:13px 28px;
+        font-size:15px;
     }
 
 }
