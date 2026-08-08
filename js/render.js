@@ -103,11 +103,25 @@ function renderMenu(){
 
 function renderHero(){
 
-return `
+    return `
 
     <main class="portada">
 
         <section class="hero">
+
+            <!-- FOTO DE PORTADA -->
+
+            <div
+                class="hero-fondo"
+                style="
+                    background-image:url(
+                        'https://drive.google.com/thumbnail?id=${edicion.portada.imagen}&sz=w1200'
+                    )
+                ">
+            </div>
+
+
+            <!-- CABECERA -->
 
             <div class="hero-cabecera">
 
@@ -122,13 +136,7 @@ return `
             </div>
 
 
-            <div 
-                class="hero-fondo"
-                style="
-                background-image:url('https://drive.google.com/thumbnail?id=${edicion.portada.imagen}&sz=w1200')
-                ">
-            </div>
-
+            <!-- CONTENIDO DE LA NOTICIA -->
 
             <div class="hero-contenido">
 
@@ -154,7 +162,7 @@ return `
 
     </main>
 
-`;
+    `;
 }
 
 /*function renderPortada(){
