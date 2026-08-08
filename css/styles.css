@@ -2618,25 +2618,93 @@ No modifica el diseño de ordenador
 
 /* =======================================================
    MENÚ HAMBURGUESA MÓVIL
-======================================================= */
+   ======================================================= */
 
 .menu-hamburguesa{
-
     display:none;
 
     background:none;
-
     border:none;
 
     color:white;
 
-    font-size:32px;
-
+    font-size:30px;
     line-height:1;
 
     cursor:pointer;
 
-    padding:4px;
+    padding:5px;
+
+    z-index:110;
+}
+
+
+/* =======================================================
+   MENÚ EN MÓVIL
+   ======================================================= */
+
+@media (max-width:700px){
+
+    .menu{
+        padding:15px 20px;
+
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+
+        background:
+        linear-gradient(
+            to bottom,
+            rgba(15,23,42,.98),
+            rgba(15,23,42,.85)
+        );
+    }
+
+    .menu-hamburguesa{
+        display:block;
+    }
+
+    .menu nav{
+        display:none;
+
+        position:absolute;
+
+        top:100%;
+        left:0;
+
+        width:100%;
+
+        padding:10px 20px 20px;
+
+        background:rgba(15,23,42,.98);
+
+        flex-direction:column;
+
+        gap:0;
+
+        box-shadow:
+            0 15px 30px rgba(0,0,0,.25);
+    }
+
+    .menu nav.menu-abierto{
+        display:flex;
+    }
+
+    .menu nav a{
+        display:block;
+
+        width:100%;
+
+        padding:16px 10px;
+
+        border-bottom:1px solid rgba(255,255,255,.12);
+
+        font-size:16px;
+    }
+
+    .menu nav a:last-child{
+        border-bottom:none;
+    }
 
 }
 
