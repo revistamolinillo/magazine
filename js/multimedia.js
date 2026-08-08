@@ -118,6 +118,23 @@ function obtenerMultimedia(noticia){
 
                 </div>
 
+                <div class="video-movil">
+
+                    <a
+                        href="https://drive.google.com/file/d/${v.id}/view"
+                        target="_blank"
+                        rel="noopener">
+
+                        <span class="icono-video">▶</span>
+
+                        <strong>Ver vídeo</strong>
+
+                        <small>Se abrirá el reproductor</small>
+
+                    </a>
+
+                </div>
+
             `).join("")}
 
         </div>

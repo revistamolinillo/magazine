@@ -2975,6 +2975,14 @@ No modifica el diseño de ordenador
     border-radius:16px;
 }
 
+/* =======================================================
+   VÍDEOS EN MÓVIL
+   ======================================================= */
+
+.video-movil{
+    display:none;
+}
+
 .video-contenedor{
     width:100%;
     max-width:900px;
@@ -2992,19 +3000,81 @@ No modifica el diseño de ordenador
     background:#000;
 }
 
-@media (max-width:700px){
+@media(max-width:700px){
 
+    /* Ocultamos el reproductor de Drive */
     .video-contenedor{
-        width:100%;
-        margin:15px 0;
-        border-radius:12px;
+        display:none;
     }
 
-    .video-player{
-        width:100% !important;
-        height:420px !important;
-        border:none;
-        border-radius:12px;
+    /* Mostramos el botón */
+    .video-movil{
+        display:block;
+        width:100%;
+        margin:15px 0 25px;
+    }
+
+    .video-movil a{
+
+        display:flex;
+
+        flex-direction:column;
+
+        align-items:center;
+
+        justify-content:center;
+
+        min-height:180px;
+
+        padding:25px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0f172a,
+                #1e3a8a
+            );
+
+        color:white;
+
+        text-decoration:none;
+
+        border-radius:18px;
+
+        gap:10px;
+
+        box-shadow:
+            0 10px 30px rgba(0,0,0,.15);
+
+    }
+
+    .icono-video{
+
+        width:65px;
+        height:65px;
+
+        display:flex;
+
+        align-items:center;
+        justify-content:center;
+
+        border-radius:50%;
+
+        background:#2563eb;
+
+        font-size:28px;
+
+        padding-left:4px;
+
+    }
+
+    .video-movil strong{
+        font-size:20px;
+    }
+
+    .video-movil small{
+        font-size:13px;
+        opacity:.7;
     }
 
 }
