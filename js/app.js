@@ -10,6 +10,7 @@ let todasLasNoticias = [];
 let idNoticiaAnterior = null;
 let posicionScrollAnterior = 0;
 let posicionVistaAnterior = 0;
+let restaurandoScroll = false;
 
 async function iniciar(){
 
@@ -24,8 +25,6 @@ function mostrarVista(vista){
     if(!vista.startsWith("noticia-")){
 
         vistaAnterior = vista;
-
-        posicionVistaAnterior = window.scrollY;
 
     }
 
@@ -46,37 +45,39 @@ function mostrarVista(vista){
 
         case "portada":
 
-            return app.innerHTML = renderPortada();
+            app.innerHTML = renderPortada();
+            break;
 
 
         case "secciones":
 
-            return app.innerHTML = renderSecciones();
+            app.innerHTML = renderSecciones();
+            break;
 
 
         case "hemeroteca":
 
-            return app.innerHTML = renderHemeroteca();
+            app.innerHTML = renderHemeroteca();
+            break;
 
 
         case "podcasts":
 
-            return app.innerHTML = renderVistaPodcasts();
+            app.innerHTML = renderVistaPodcasts();
+            break;
 
     }
 
 
     if(vista.startsWith("seccion-")){
 
-        const nombre = vista.replace("seccion-","");
+        const nombre =
+            vista.replace("seccion-","");
 
-        return app.innerHTML =
+        app.innerHTML =
             renderVistaSeccion(nombre);
 
     }
-
-
-    app.innerHTML = renderPortada();
 
 }
 
@@ -372,19 +373,25 @@ function buscarNoticias(){
 
 function volverDeNoticia(){
 
-    const posicion = posicionVistaAnterior || 0;
+    const posicion = posicionScrollAnterior || 0;
+
+    restaurandoScroll = true;
 
     mostrarVista(vistaAnterior);
 
     requestAnimationFrame(() => {
 
-        window.scrollTo({
-            top: posicion,
-            behavior: "smooth"
+        requestAnimationFrame(() => {
+
+            window.scrollTo({
+                top: posicion,
+                left: 0,
+                behavior: "smooth"
+            });
+
         });
 
     });
-
 }
 
 async function cargarTodasLasNoticias(){

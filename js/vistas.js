@@ -162,10 +162,10 @@ function renderVistaSeccion(nombre){
                                 </p>
 
                                 <div
-                                class="leer-articulo"
-                                onclick="mostrarVista('noticia-${noticia.ID}')">
+                                    class="leer-articulo"
+                                    onclick="irANoticia('${noticia.ID}')">
 
-                                Leer artículo →
+                                    Leer artículo →
 
                                 </div>
 
@@ -619,33 +619,13 @@ function renderVistaNoticia(id){
 
 }
 
-async function esperarArticulo(id){
-
-    return new Promise(resolve=>{
-
-        const intervalo = setInterval(()=>{
-
-            const articulo =
-                document.getElementById("noticia-" + id);
-
-            if(articulo){
-
-                clearInterval(intervalo);
-                resolve();
-
-            }
-
-        },50);
-
-    });
-
-}
-
 async function irANoticia(id){
+
+    // Guardamos dónde estaba el usuario
     posicionScrollAnterior = window.scrollY;
 
     const noticia = todasLasNoticias.find(
-        n => n.ID === id
+        n => String(n.ID) === String(id)
     );
 
     if(!noticia){
@@ -653,7 +633,8 @@ async function irANoticia(id){
         return;
     }
 
-    // Si pertenece a otra edición, cargarla primero
+    // Si la noticia pertenece a otra edición,
+    // cargamos primero esa edición
     if(
         noticia.Edicion &&
         noticia.Edicion !== idEdicionLeyendo
@@ -661,29 +642,21 @@ async function irANoticia(id){
         await abrirEdicion(noticia.Edicion);
     }
 
-    // Abrir según tipo
-    if(
-        noticia.Seccion &&
-        noticia.Seccion.toLowerCase()==="podcast"
-    ){
+    // Abrimos la noticia
+    mostrarVista("noticia-" + id);
 
-        if(vistaActual!=="podcasts"){
-            mostrarVista("podcasts");
-        }
+    // Esperamos a que el DOM se haya actualizado
+    requestAnimationFrame(() => {
 
-    }else{
+        requestAnimationFrame(() => {
 
-        if(vistaActual!=="portada"){
-            mostrarVista("portada");
-        }
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: "smooth"
+            });
 
-    }
+        });
 
-    await esperarArticulo(id);
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
     });
-
 }

@@ -190,8 +190,7 @@ function renderDestacadas(){
                 return `
 
                     <article
-                        class="destacada"
-                        onclick="irANoticia('${noticia.ID}')">
+                        class="destacada">
 
                         <img
                             class="imagen-destacada"
@@ -210,7 +209,9 @@ function renderDestacadas(){
 
                             <hr class="linea-destacada">
 
-                            <div class="leer-articulo">
+                            <div
+                                class="leer-articulo"
+                                onclick="event.stopPropagation(); hacerScroll('${noticia.ID}')">
 
                                 Leer artículo →
 
