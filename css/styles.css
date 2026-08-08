@@ -2880,3 +2880,116 @@ No modifica el diseño de ordenador
     }
 
 }
+
+/* =======================================================
+   NUEVO ESTILO GENERAL DE PORTADA
+   ======================================================= */
+
+.hero-revista{
+    font-size:26px;
+    letter-spacing:5px;
+    font-weight:800;
+    margin-bottom:12px;
+    text-transform:uppercase;
+}
+
+.hero-fecha{
+    font-size:23px;
+    font-weight:500;
+    letter-spacing:3px;
+    margin-bottom:35px;
+    text-transform:uppercase;
+    opacity:.95;
+}
+
+/* Línea decorativa debajo de la fecha */
+
+.hero-fecha::after{
+    content:"";
+
+    display:block;
+
+    width:65px;
+    height:3px;
+
+    background:var(--color-acento);
+
+    border-radius:10px;
+
+    margin:18px auto 0;
+}
+
+/* Titular principal */
+
+.hero-titulo{
+    font-size:clamp(42px,5.5vw,64px);
+    line-height:1.08;
+    font-weight:800;
+
+    max-width:900px;
+
+    margin:5px auto 22px;
+}
+
+/* Entradilla */
+
+.hero-entradilla{
+    font-size:19px;
+    line-height:1.6;
+
+    max-width:700px;
+
+    margin:0 auto 35px;
+}
+
+/* Botón */
+
+.hero-boton{
+    padding:15px 35px;
+    font-size:16px;
+}
+
+
+/* =======================================================
+   AJUSTE MÓVIL
+   ======================================================= */
+
+@media (max-width:700px){
+
+    .hero-revista{
+        font-size:20px;
+        letter-spacing:4px;
+        margin-bottom:10px;
+    }
+
+    .hero-fecha{
+        font-size:18px;
+        letter-spacing:2px;
+        margin-bottom:28px;
+    }
+
+    .hero-fecha::after{
+        width:55px;
+        height:3px;
+        margin-top:15px;
+    }
+
+    .hero-titulo{
+        font-size:clamp(30px,8vw,44px);
+        line-height:1.08;
+        margin-bottom:18px;
+    }
+
+    .hero-entradilla{
+        font-size:16px;
+        line-height:1.5;
+        max-width:360px;
+        margin-bottom:24px;
+    }
+
+    .hero-boton{
+        padding:13px 30px;
+        font-size:15px;
+    }
+
+}
