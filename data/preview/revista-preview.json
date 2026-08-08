@@ -2,8 +2,8 @@
   "id": "E000002",
   "mes": "Octubre",
   "curso": "2026/2027",
-  "fechaPublicacion": "",
-  "estado": "ABIERTA",
+  "fechaPublicacion": "2026-08-08T18:15:55.996Z",
+  "estado": "PUBLICADA",
   "portada": {
     "ID": "N000006",
     "FechaEnvio": "2026-08-08T18:08:30.882Z",
@@ -24,10 +24,10 @@
     "Destacada": "NO",
     "Orden": 2,
     "Observaciones": "",
-    "FechaPublicacion": "",
+    "FechaPublicacion": "2026-08-08T18:15:56.636Z",
     "UltimaModificacion": "2026-08-08T18:09:33.308Z",
     "Editor": "mgoncan@g.educaand.es",
-    "Publicada": "NO",
+    "Publicada": "SI",
     "TipoContenido": "NOTICIA",
     "ImagenPortada": "1f3teN3hPWRBMycpFDOOVweQkuMtStprn"
   },
@@ -52,10 +52,10 @@
       "Destacada": "NO",
       "Orden": 1,
       "Observaciones": "",
-      "FechaPublicacion": "",
+      "FechaPublicacion": "2026-08-08T18:15:56.624Z",
       "UltimaModificacion": "2026-08-08T18:09:12.638Z",
       "Editor": "mgoncan@g.educaand.es",
-      "Publicada": "NO",
+      "Publicada": "SI",
       "TipoContenido": "PODCAST"
     },
     {
@@ -78,10 +78,10 @@
       "Destacada": "SI",
       "Orden": 1,
       "Observaciones": "",
-      "FechaPublicacion": "",
+      "FechaPublicacion": "2026-08-08T18:15:56.630Z",
       "UltimaModificacion": "2026-08-08T18:09:24.585Z",
       "Editor": "mgoncan@g.educaand.es",
-      "Publicada": "NO",
+      "Publicada": "SI",
       "TipoContenido": "NOTICIA"
     },
     {
@@ -104,10 +104,10 @@
       "Destacada": "NO",
       "Orden": 2,
       "Observaciones": "",
-      "FechaPublicacion": "",
+      "FechaPublicacion": "2026-08-08T18:15:56.636Z",
       "UltimaModificacion": "2026-08-08T18:09:33.308Z",
       "Editor": "mgoncan@g.educaand.es",
-      "Publicada": "NO",
+      "Publicada": "SI",
       "TipoContenido": "NOTICIA",
       "ImagenPortada": "1f3teN3hPWRBMycpFDOOVweQkuMtStprn"
     },
@@ -131,10 +131,10 @@
       "Destacada": "NO",
       "Orden": 2,
       "Observaciones": "",
-      "FechaPublicacion": "",
+      "FechaPublicacion": "2026-08-08T18:15:56.645Z",
       "UltimaModificacion": "2026-08-08T18:10:40.340Z",
       "Editor": "mgoncan@g.educaand.es",
-      "Publicada": "NO",
+      "Publicada": "SI",
       "TipoContenido": "PODCAST"
     },
     {
@@ -157,10 +157,10 @@
       "Destacada": "NO",
       "Orden": 3,
       "Observaciones": "",
-      "FechaPublicacion": "",
+      "FechaPublicacion": "2026-08-08T18:15:56.641Z",
       "UltimaModificacion": "2026-08-08T18:09:42.854Z",
       "Editor": "mgoncan@g.educaand.es",
-      "Publicada": "NO",
+      "Publicada": "SI",
       "TipoContenido": "NOTICIA"
     }
   ]
