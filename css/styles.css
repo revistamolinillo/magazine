@@ -89,7 +89,7 @@ button{
 
     background-position:center;
 
-    opacity:.20;
+    opacity:.28;
 
     transform:scale(1);
 
@@ -134,7 +134,7 @@ button{
 
 .hero-revista{
 
-    font-size:18px;
+    font-size:24px;
 
     letter-spacing:6px;
 
@@ -143,18 +143,16 @@ button{
     opacity:.9;
 
     margin-bottom:18px;
-
 }
 
 
 .hero-fecha{
 
-    font-size:20px;
+    font-size:26px;
 
     font-weight:300;
 
     margin-bottom:40px;
-
 }
 
 
