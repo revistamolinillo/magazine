@@ -642,6 +642,7 @@ async function esperarArticulo(id){
 }
 
 async function irANoticia(id){
+    idNoticiaAnterior = id;
 
     const noticia = todasLasNoticias.find(
         n => n.ID === id
