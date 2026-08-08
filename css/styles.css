@@ -2665,16 +2665,20 @@ No modifica el diseño de ordenador
     }
 
     .menu nav{
+
         display:none;
 
-        position:absolute;
+        position:fixed;
 
-        top:100%;
-        left:0;
+        top:0;
+        right:0;
 
-        width:100%;
+        width:78%;
+        max-width:330px;
 
-        padding:10px 20px 20px;
+        height:100svh;
+
+        padding:90px 25px 30px;
 
         background:rgba(15,23,42,.98);
 
@@ -2683,7 +2687,10 @@ No modifica el diseño de ordenador
         gap:0;
 
         box-shadow:
-            0 15px 30px rgba(0,0,0,.25);
+            -15px 0 40px rgba(0,0,0,.35);
+
+        z-index:10001;
+
     }
 
     .menu nav.menu-abierto{
