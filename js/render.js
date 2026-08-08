@@ -799,3 +799,28 @@ function renderBuscador(){
 
 }
 
+// =======================================================
+// MENÚ MÓVIL
+// =======================================================
+
+function toggleMenuMovil(){
+
+    const menu = document.getElementById("menu-navegacion");
+
+    if(!menu) return;
+
+    menu.classList.toggle("menu-abierto");
+
+}
+
+
+function cerrarMenuMovil(){
+
+    const menu = document.getElementById("menu-navegacion");
+
+    if(!menu) return;
+
+    menu.classList.remove("menu-abierto");
+
+}
+
