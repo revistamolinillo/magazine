@@ -8,6 +8,7 @@ let datosEdicionActual = null;
 let vistaAnterior = "portada";
 let todasLasNoticias = [];
 let idNoticiaAnterior = null;
+let posicionScrollAnterior = 0;
 
 async function iniciar(){
 
@@ -373,19 +374,18 @@ function buscarNoticias(){
 
 }
 
-async function volverDeNoticia(){
-
-    const id = idNoticiaAnterior;
+function volverDeNoticia(){
 
     mostrarVista(vistaAnterior);
 
-    if(id){
+    setTimeout(() => {
 
-        await esperarArticulo(id);
+        window.scrollTo({
+            top: posicionScrollAnterior,
+            behavior: "instant"
+        });
 
-        hacerScroll(id);
-
-    }
+    }, 100);
 
 }
 
