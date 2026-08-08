@@ -680,6 +680,9 @@ async function irANoticia(id){
 
     await esperarArticulo(id);
 
-    hacerScroll(id);
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 
 }
