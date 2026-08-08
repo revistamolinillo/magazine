@@ -142,6 +142,11 @@ function renderHero(){
 
             </section>
 
+            <div class="separador-movil">
+                <span>EL MOLINILLO MAGAZINE</span>
+                <small>La actualidad de nuestro centro, en un vistazo</small>
+            </div>
+
         </main>
 
     `;

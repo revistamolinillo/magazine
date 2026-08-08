@@ -3078,3 +3078,58 @@ No modifica el diseño de ordenador
     }
 
 }
+
+/* =======================================================
+   SEPARADOR ENTRE PORTADA Y DESTACADAS — SOLO MÓVIL
+   ======================================================= */
+
+.separador-movil{
+    display:none;
+}
+
+@media (max-width:700px){
+
+    .separador-movil{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+
+        text-align:center;
+
+        padding:28px 20px 24px;
+
+        background:#f8fafc;
+
+        color:#1e3a8a;
+    }
+
+    .separador-movil span{
+        font-size:12px;
+        font-weight:800;
+        letter-spacing:3px;
+        text-transform:uppercase;
+
+        margin-bottom:8px;
+    }
+
+    .separador-movil small{
+        font-size:13px;
+        color:#64748b;
+        line-height:1.4;
+    }
+
+    .separador-movil::after{
+        content:"";
+
+        width:55px;
+        height:3px;
+
+        margin-top:16px;
+
+        border-radius:10px;
+
+        background:#f59e0b;
+    }
+
+}
