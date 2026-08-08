@@ -8,9 +8,9 @@ function obtenerArchivosMultimedia(noticia){
         .filter(l=>l!=="")
         .map(l=>{
 
-            const partes=l.split("|");
+            const partes = l.split("|");
 
-            return{
+            return {
 
                 id: partes[0],
                 tipo: (partes[1] || "").toLowerCase(),
