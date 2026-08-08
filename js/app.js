@@ -186,10 +186,11 @@ async function cargarDatos(){
 
 async function cargarHemeroteca(){
 
-    const respuesta = await fetch(CONFIG.urlHemeroteca);
+    const respuesta = await fetch(
+        CONFIG.urlHemeroteca + "?v=" + Date.now()
+    );
 
     hemeroteca = await respuesta.json();
-
 }
 
 function abrirRevista(){
