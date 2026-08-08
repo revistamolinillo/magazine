@@ -27,19 +27,22 @@ function mostrarVista(vista){
 
     vistaActual = vista;
 
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
-
     const app = document.getElementById("app");
 
     if(vista.startsWith("noticia-")){
 
         const id = vista.replace("noticia-","");
 
-        return app.innerHTML =
-            renderVistaNoticia(id);
+        app.innerHTML = renderVistaNoticia(id);
+
+        requestAnimationFrame(() => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+
+        return;
 
     }
 
