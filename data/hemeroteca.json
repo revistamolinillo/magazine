@@ -5,22 +5,21 @@
     "nombre": "Noviembre",
     "fecha": "2026-08-08T18:31:17.962Z",
     "imagen": "",
-    "articulos": 1
+    "articulos": 0
   },
   {
     "id": "E000002",
     "curso": "2026/2027",
     "nombre": "Octubre",
     "fecha": "2026-08-08T18:15:55.996Z",
-    "imagen": "1f3teN3hPWRBMycpFDOOVweQkuMtStprn",
-    "articulos": 5
+    "imagen": "",
+    "articulos": 1
   },
   {
     "id": "E000001",
     "curso": "2026/2027",
     "nombre": "Septiembre",
     "fecha": "2026-08-07T18:31:27.109Z",
-    "imagen": "1URqK789ijJ8DuVo68YeEjq0FK8gyw1VR",
     "articulos": 3
   }
 ]
