@@ -107,6 +107,14 @@ function renderVistaSeccion(nombre){
 
             <div class="contenedor">
 
+                <button
+                    class="boton-volver"
+                    onclick="volverDeSeccion()">
+
+                    ← Volver
+
+                </button>
+
                 <h1 class="titulo-seccion">
 
                     ${iconoSeccion(nombre)}
@@ -300,7 +308,7 @@ function renderCurso(curso, listaHemeroteca){
 
 }
 
-async function abrirEdicion(id){
+async function abrirEdicion(id, vistaFinal = "portada"){
 
     document.getElementById("app").innerHTML =
         renderCargando();
@@ -319,38 +327,61 @@ async function abrirEdicion(id){
 
     }
 
+    console.log("URL que voy a cargar:", url);
+
     const respuesta = await fetch(url);
 
+    console.log("Respuesta recibida:", respuesta.status, respuesta.ok);
+
     const datos = await respuesta.json();
+
+    console.log("JSON recibido correctamente:", datos);
 
     idEdicionLeyendo = id;
 
     console.log("Edición recibida:", datos);
+    console.log("PASO 1: voy a limpiar noticias y podcasts");
 
     // Limpiar noticias y podcasts
     noticias.length = 0;
     podcasts.length = 0;
 
+    console.log("PASO 2: noticias y podcasts limpiados");
 
-    datos.noticias.forEach(noticia=>{
+    datos.noticias.forEach((noticia, indice) => {
+            console.log(
+            "PROCESANDO NOTICIA",
+            indice,
+            noticia.ID,
+            noticia.Titulo,
+            noticia.Seccion
+        );
         noticia.Edicion = datos.id;
 
-        const seccion = (noticia.Seccion || "")
-            .trim()
-            .toLowerCase();
+        const archivos = obtenerArchivosMultimedia(noticia);
 
+        const esPodcast =
+            (noticia.TipoContenido || "").trim().toLowerCase() === "podcast"
+            ||
+            archivos.some(a => a.tipo.startsWith("audio"));
 
-        if(seccion === "podcast"){
+        if (esPodcast) {
 
             podcasts.push(noticia);
 
-        }else{
+        } else {
 
             noticias.push(noticia);
 
         }
 
     });
+    console.log(
+        "PASO 3: noticias cargadas:",
+        noticias.length,
+        "podcasts:",
+        podcasts.length
+    );
 
     // Actualizar portada
     edicion.mes = datos.mes;
@@ -368,7 +399,11 @@ async function abrirEdicion(id){
 
     }
 
-    mostrarVista("portada");
+    if (vistaFinal === "portada") {
+
+        mostrarVista("portada");
+
+    }
 
 }
 
@@ -499,11 +534,136 @@ function mostrarBuscador(){
 function renderVistaNoticia(id){
 
     const noticia = noticias.find(
-        n => n.ID === id
+        n => String(n.ID) === String(id)
+    );
+
+    if(!noticia){
+
+        return `
+
+            ${renderMenu()}
+
+            <main class="pagina">
+
+                <div class="contenedor">
+
+                    <h1>
+                        Noticia no encontrada
+                    </h1>
+
+                </div>
+
+            </main>
+
+        `;
+
+    }
+
+
+    return `
+
+        ${renderMenu()}
+
+        <main class="pagina">
+
+            <div class="contenedor">
+
+                <article class="noticia-individual">
+
+
+                    <div class="articulo-seccion">
+
+                        ${iconoSeccion(noticia.Seccion)}
+                        ${noticia.Seccion}
+
+                    </div>
+
+
+                    <h1 class="titulo-noticia-individual">
+
+                        ${noticia.Titulo}
+
+                    </h1>
+
+
+                    <div class="meta-noticia-individual">
+
+                        ✍️
+
+                        <span class="autor-noticia">
+                            ${noticia.Autor}
+                        </span>
+
+                        ${
+                            noticia.CursoDepartamento
+                            ?
+                            " · 🏫 " + noticia.CursoDepartamento
+                            :
+                            ""
+                        }
+
+                    </div>
+
+
+                    <img
+                        class="imagen-noticia-individual"
+                        src="${obtenerImagenURL(noticia)}"
+                        onclick="abrirImagenPrincipal('${noticia.ID}')"
+                    >
+
+
+                    ${
+                        noticia.Entradilla
+                        ?
+                        `
+                        <p class="entradilla-noticia-individual">
+
+                            ${noticia.Entradilla}
+
+                        </p>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    <div class="cuerpo-noticia-individual">
+
+                        ${noticia.Cuerpo || ""}
+
+                    </div>
+
+
+                    ${renderGaleriaImagenes(noticia)}
+
+
+                    <button
+                        class="boton-volver"
+                        onclick="volverDeNoticia()">
+
+                        ← Volver
+
+                    </button>
+
+
+                </article>
+
+            </div>
+
+        </main>
+
+    `;
+
+}
+
+function renderVistaPodcast(id){
+
+    const podcast = podcasts.find(
+        p => String(p.ID) === String(id)
     );
 
 
-    if(!noticia){
+    if(!podcast){
 
         return `
 
@@ -512,7 +672,7 @@ function renderVistaNoticia(id){
             <div class="contenedor">
 
                 <h1>
-                Noticia no encontrada
+                    Podcast no encontrado
                 </h1>
 
             </div>
@@ -528,91 +688,98 @@ function renderVistaNoticia(id){
 
     ${renderMenu()}
 
-
     <main class="pagina">
 
         <div class="contenedor">
 
-
             <article class="noticia-individual">
 
 
-                <span class="card-seccion-categoria">
+                <div class="podcast-tipo">
 
-                    ${iconoSeccion(noticia.Seccion)}
-                    ${noticia.Seccion}
+                    🎙 Podcast
 
-                </span>
-
+                </div>
 
 
                 <h1 class="titulo-noticia-individual">
 
-                    ${noticia.Titulo}
+                    ${podcast.Titulo}
 
                 </h1>
 
 
-
                 <div class="meta-noticia-individual">
 
-                    ✍️ ${noticia.Autor}
+                    🎙️
+
+                    <span class="nombre-autor">
+
+                        ${podcast.Autor}
+
+                    </span>
 
                     ${
-                    noticia.CursoDepartamento
-                    ?
-                    " · 🏫 " + noticia.CursoDepartamento
-                    :
-                    ""
+                        podcast.CursoDepartamento
+                        ?
+                        " · 🏫 " + podcast.CursoDepartamento
+                        :
+                        ""
                     }
 
                 </div>
 
 
-
-                <img
-                class="imagen-noticia-individual"
-                src="${obtenerImagenURL(noticia)}"
-                >
-
+                ${
+                    obtenerImagenPodcast(podcast)
+                    ?
+                    `
+                    <img
+                        class="imagen-noticia-individual"
+                        src="${obtenerImagenPodcast(podcast)}"
+                        alt="${podcast.Titulo}"
+                    >
+                    `
+                    :
+                    ""
+                }
 
 
                 <p class="entradilla-noticia-individual">
 
-                    ${noticia.Entradilla || ""}
+                    ${podcast.Entradilla || ""}
 
                 </p>
 
 
-
                 <div class="cuerpo-noticia-individual">
 
-                    ${noticia.Cuerpo || ""}
+                    ${podcast.Cuerpo || ""}
 
                 </div>
 
 
+                ${renderGaleriaImagenes(podcast)}
 
-                ${renderGaleriaImagenes(noticia)}
+
+                ${renderAudioPodcast(podcast)}
+
 
                 <button
-                class="boton-volver"
-                onclick="volverDeNoticia()">
+                    class="boton-volver"
+                    onclick="volverDePodcast()"
+                >
 
-                ← Volver
+                    ← Volver
 
                 </button>
 
 
-
             </article>
-
 
         </div>
 
-
     </main>
-
 
     `;
 
@@ -620,42 +787,184 @@ function renderVistaNoticia(id){
 
 async function irANoticia(id){
 
-    // Guardamos dónde estaba el usuario
-    posicionScrollAnterior = window.scrollY;
+    // ==========================================
+    // GUARDAR ORIGEN
+    // ==========================================
 
-    const noticia = todasLasNoticias.find(
-        n => String(n.ID) === String(id)
-    );
+    posicionOrigenArticulo = window.scrollY;
 
-    if(!noticia){
+    origenArticulo = vistaActual;
+
+
+    // Si venimos del buscador, guardamos el texto
+    if(vistaActual === "buscador"){
+
+        const input =
+            document.getElementById("inputBusqueda");
+
+        textoOrigenArticulo =
+            input
+                ? input.value.trim()
+                : textoBusquedaAnterior;
+
+    }else{
+
+        textoOrigenArticulo = "";
+
+    }
+
+
+    // ==========================================
+    // BUSCAR PUBLICACIÓN
+    // ==========================================
+
+    const publicacion =
+        todasLasNoticias.find(
+            n => String(n.ID) === String(id)
+        );
+
+
+    if(!publicacion){
+
         console.log("No encontrada:", id);
+
         return;
+
     }
 
-    // Si la noticia pertenece a otra edición,
-    // cargamos primero esa edición
+
+    // ==========================================
+    // ¿ES PODCAST?
+    // ==========================================
+
+    const esPodcast =
+        (publicacion.TipoContenido || "")
+            .trim()
+            .toLowerCase() === "podcast"
+        ||
+        obtenerAudios(publicacion).length > 0;
+
+
+    const vistaDestino =
+        esPodcast
+            ? "podcast-" + id
+            : "noticia-" + id;
+
+
+    // ==========================================
+    // ABRIR
+    // ==========================================
+
     if(
-        noticia.Edicion &&
-        noticia.Edicion !== idEdicionLeyendo
+        publicacion.Edicion &&
+        publicacion.Edicion !== idEdicionLeyendo
     ){
-        await abrirEdicion(noticia.Edicion);
+
+        await abrirEdicion(
+            publicacion.Edicion,
+            vistaDestino
+        );
+
+    }else{
+
+        mostrarVista(vistaDestino);
+
     }
 
-    // Abrimos la noticia
-    mostrarVista("noticia-" + id);
 
-    // Esperamos a que el DOM se haya actualizado
+    // ==========================================
+    // AL ABRIR, SIEMPRE ARRIBA
+    // ==========================================
+
     requestAnimationFrame(() => {
 
         requestAnimationFrame(() => {
 
             window.scrollTo({
+
                 top: 0,
                 left: 0,
-                behavior: "smooth"
+                behavior: "instant"
+
             });
 
         });
 
     });
+
+}
+
+function abrirImagenPrincipal(idNoticia){
+
+    let noticia =
+        noticias.find(
+            n => String(n.ID) === String(idNoticia)
+        );
+
+    if(!noticia){
+
+        noticia =
+            podcasts.find(
+                n => String(n.ID) === String(idNoticia)
+            );
+
+    }
+
+    if(!noticia) return;
+
+    const imagenes =
+        obtenerImagenes(noticia);
+
+    if(imagenes.length === 0) return;
+
+    galeriaActual = imagenes.map(
+        imagen =>
+            `https://drive.google.com/thumbnail?id=${imagen.id}&sz=w1600`
+    );
+
+    /*
+     * La imagen principal es la primera que se muestra
+     * en el lightbox.
+     */
+
+    let indicePrincipal = 0;
+
+    if(noticia.ImagenPrincipal){
+
+        const posicion =
+            imagenes.findIndex(
+                imagen =>
+                    imagen.id === noticia.ImagenPrincipal
+            );
+
+        if(posicion !== -1){
+
+            indicePrincipal = posicion;
+
+        }
+
+    }
+
+    indiceActual = indicePrincipal;
+
+    const img =
+        document.getElementById("imagenLightbox");
+
+    if(!img) return;
+
+    img.src =
+        galeriaActual[indiceActual];
+
+    actualizarContador();
+
+    document
+        .getElementById("lightbox")
+        .classList.add("visible");
+
+}
+
+function volverDeSeccion(){
+
+    mostrarVista("secciones");
+
 }

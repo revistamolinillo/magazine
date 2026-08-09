@@ -231,3 +231,52 @@ function renderDestacadas(){
     `;
 
 }
+
+function volverDeNoticia(){
+
+    const vista =
+        vistaAnterior || "portada";
+
+    const posicion =
+        posicionScrollAnterior || 0;
+
+    mostrarVista(vista);
+
+    requestAnimationFrame(() => {
+
+        requestAnimationFrame(() => {
+
+            if(
+                vista === "buscador" &&
+                textoBusquedaAnterior
+            ){
+
+                const input =
+                    document.getElementById("inputBusqueda");
+
+                if(input){
+
+                    input.value =
+                        textoBusquedaAnterior;
+
+                }
+
+                buscarNoticias();
+
+            }
+
+            window.scrollTo({
+
+                top: posicion,
+
+                left: 0,
+
+                behavior: "smooth"
+
+            });
+
+        });
+
+    });
+
+}

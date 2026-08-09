@@ -12,6 +12,14 @@ let posicionScrollAnterior = 0;
 let posicionVistaAnterior = 0;
 let restaurandoScroll = false;
 let textoBusquedaAnterior = "";
+let vistaAnteriorPodcast = "podcasts";
+let posicionPodcastAnterior = 0;
+let origenPodcast = null;
+let posicionOrigenPodcast = 0;
+let busquedaOrigenPodcast = "";
+let origenArticulo = "portada";
+let posicionOrigenArticulo = 0;
+let textoOrigenArticulo = "";
 
 async function iniciar(){
 
@@ -23,7 +31,10 @@ async function iniciar(){
 
 function mostrarVista(vista){
 
-    if(!vista.startsWith("noticia-")){
+    if(
+        !vista.startsWith("noticia-") &&
+        !vista.startsWith("podcast-")
+    ){
 
         vistaAnterior = vista;
 
@@ -39,6 +50,14 @@ function mostrarVista(vista){
 
         return app.innerHTML =
             renderVistaNoticia(id);
+
+    }
+    if(vista.startsWith("podcast-")){
+
+        const id = vista.replace("podcast-","");
+
+        return app.innerHTML =
+            renderVistaPodcast(id);
 
     }
 
@@ -65,6 +84,7 @@ function mostrarVista(vista){
         case "podcasts":
 
             app.innerHTML = renderVistaPodcasts();
+
             break;
 
         case "buscador":
@@ -148,17 +168,18 @@ async function cargarDatos(){
 
     datos.noticias.forEach(noticia=>{
 
-        const seccion = (noticia.Seccion || "")
-            .trim()
-            .toLowerCase();
+        const archivos = obtenerArchivosMultimedia(noticia);
 
-        console.log("[" + seccion + "]");
+        const esPodcast =
+            (noticia.TipoContenido || "").trim().toLowerCase() === "podcast"
+            ||
+            archivos.some(a => a.tipo.startsWith("audio"));
 
-        if(seccion === "podcast"){
+        if (esPodcast) {
 
             podcasts.push(noticia);
 
-        }else{
+        } else {
 
             noticias.push(noticia);
 
@@ -244,36 +265,47 @@ async function volverRevistaActual(){
 
 function buscarNoticias(){
 
+    const input =
+        document.getElementById("inputBusqueda");
+
+    if(!input) return;
+
+
     const texto =
-    document.getElementById("inputBusqueda")
-    .value
-    .toLowerCase()
-    .trim();
+        input.value
+            .toLowerCase()
+            .trim();
+
 
     textoBusquedaAnterior = texto;
 
-    const contenedor =
-    document.getElementById("resultadosBusqueda");
 
-    if(todasLasNoticias.length===0){
+    const contenedor =
+        document.getElementById("resultadosBusqueda");
+
+    if(!contenedor) return;
+
+
+    if(todasLasNoticias.length === 0){
 
         contenedor.innerHTML =
         `
         <p class="subtitulo-seccion">
-        Preparando buscador...
+            Preparando buscador...
         </p>
         `;
 
         return;
 
     }
+
 
     if(!texto){
 
         contenedor.innerHTML =
         `
         <p class="subtitulo-seccion">
-        Escribe algo para comenzar la búsqueda.
+            Escribe algo para comenzar la búsqueda.
         </p>
         `;
 
@@ -281,126 +313,181 @@ function buscarNoticias(){
 
     }
 
-
-    const todo = todasLasNoticias.length
-    ? todasLasNoticias
-    : [...noticias, ...podcasts];
 
     const resultados =
-    todo.filter(noticia=>{
+        todasLasNoticias.filter(noticia => {
+
+            const contenido =
+            `
+            ${noticia.Titulo || ""}
+            ${noticia.Entradilla || ""}
+            ${noticia.Cuerpo || ""}
+            ${noticia.Autor || ""}
+            ${noticia.Seccion || ""}
+            ${noticia.TipoContenido || ""}
+            `
+            .toLowerCase();
 
 
-        const contenido =
-        `
-        ${noticia.Titulo}
-        ${noticia.Entradilla}
-        ${noticia.Cuerpo}
-        ${noticia.Autor}
-        ${noticia.Seccion}
-        `
-        .toLowerCase();
+            return contenido.includes(texto);
+
+        });
 
 
-        return contenido.includes(texto);
+    if(resultados.length === 0){
 
-
-    });
-
-
-
-    if(resultados.length===0){
-
-        contenedor.innerHTML=
+        contenedor.innerHTML =
         `
         <p class="subtitulo-seccion">
-        No se han encontrado noticias.
+            No se han encontrado noticias.
         </p>
         `;
 
         return;
 
     }
-
 
 
     contenedor.innerHTML =
 
-    resultados.map(noticia=>`
+    resultados.map(noticia => {
 
-    <article class="card-seccion">
-
-
-        <img
-        src="${
-            noticia.Seccion?.toLowerCase()==="podcast"
-            ? obtenerImagenPodcast(noticia)
-            : obtenerImagenURL(noticia)
-        }">
+        const esPodcast =
+            (noticia.TipoContenido || "")
+                .trim()
+                .toLowerCase() === "podcast"
+            ||
+            obtenerAudios(noticia).length > 0;
 
 
-        <div class="card-seccion-contenido">
+        return `
+
+        <article class="card-seccion">
 
 
-            <span class="card-seccion-categoria">
-
-            ${iconoSeccion(noticia.Seccion)}
-            ${noticia.Seccion}
-
-            </span>
-
-
-            <h2>
-            ${noticia.Titulo}
-            </h2>
+            <img
+                src="${
+                    esPodcast
+                        ? obtenerImagenPodcast(noticia)
+                        : obtenerImagenURL(noticia)
+                }"
+                alt="${noticia.Titulo}"
+            >
 
 
-            <p>
-            ${noticia.Entradilla || ""}
-            </p>
+            <div class="card-seccion-contenido">
 
 
-            <div
-            class="leer-articulo"
-            onclick="irANoticia('${noticia.ID}')">
+                <span class="card-seccion-categoria">
 
-            Leer artículo →
+                    ${
+                        esPodcast
+                            ? "🎙 Podcast"
+                            : iconoSeccion(noticia.Seccion)
+                    }
+
+                    ${
+                        esPodcast
+                            ? ""
+                            : noticia.Seccion
+                    }
+
+                </span>
+
+
+                <h2>
+                    ${noticia.Titulo}
+                </h2>
+
+
+                <p>
+                    ${noticia.Entradilla || ""}
+                </p>
+
+
+                <div
+                    class="leer-articulo"
+                    onclick="irANoticia('${noticia.ID}')">
+
+                    ${
+                        esPodcast
+                            ? "Escuchar episodio →"
+                            : "Leer artículo →"
+                    }
+
+                </div>
+
 
             </div>
 
 
-        </div>
+        </article>
 
+        `;
 
-    </article>
-
-
-    `).join("");
-
+    }).join("");
 
 }
 
-function volverDeNoticia(){
+function volverDePodcast(){
 
-    const posicion = posicionScrollAnterior || 0;
+    const destino =
+        origenArticulo || "podcasts";
 
-    restaurandoScroll = true;
+    const posicion =
+        posicionOrigenArticulo || 0;
 
-    mostrarVista(vistaAnterior);
+    const busqueda =
+        textoOrigenArticulo || "";
+
+
+    mostrarVista(destino);
+
 
     requestAnimationFrame(() => {
 
         requestAnimationFrame(() => {
 
-            if(vistaAnterior === "buscador" && textoBusquedaAnterior){
+
+            // ==========================================
+            // SI VENÍAMOS DEL BUSCADOR
+            // ==========================================
+
+            if(
+                destino === "buscador" &&
+                busqueda
+            ){
+
+                const input =
+                    document.getElementById("inputBusqueda");
+
+                if(input){
+
+                    input.value = busqueda;
+
+                }
 
                 buscarNoticias();
 
             }
 
-            window.scrollTo({
-                top: posicion,
-                left: 0,
-                behavior: "smooth"
+
+            // ==========================================
+            // RESTAURAR POSICIÓN
+            // ==========================================
+
+            requestAnimationFrame(() => {
+
+                window.scrollTo({
+
+                    top: posicion,
+
+                    left: 0,
+
+                    behavior: "instant"
+
+                });
+
             });
 
         });
