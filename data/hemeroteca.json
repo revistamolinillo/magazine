@@ -1,19 +1,27 @@
 [
   {
+    "id": "E000004",
+    "curso": "2026/2027",
+    "nombre": "Diciembre",
+    "fecha": "2026-08-09T17:47:28.692Z",
+    "imagen": "",
+    "articulos": 4
+  },
+  {
     "id": "E000003",
     "curso": "2026/2027",
     "nombre": "Noviembre",
     "fecha": "2026-08-08T18:31:17.962Z",
     "imagen": "",
-    "articulos": 0
+    "articulos": 1
   },
   {
     "id": "E000002",
     "curso": "2026/2027",
     "nombre": "Octubre",
     "fecha": "2026-08-08T18:15:55.996Z",
-    "imagen": "",
-    "articulos": 1
+    "imagen": "1ORwJrh1znC3328WvV-xPkXc5PaJFfG7g",
+    "articulos": 5
   },
   {
     "id": "E000001",
