@@ -575,6 +575,7 @@ function renderVistaPodcasts(){
 
 function renderVistaPodcast(id){
 
+    console.log("🎙️ RENDER VISTA PODCAST:", id);
     const podcast = podcasts.find(
         p => String(p.ID) === String(id)
     );
@@ -698,8 +699,28 @@ function renderVistaPodcast(id){
 
                     ${renderGaleriaImagenes(podcast)}
 
-
                     ${renderAudioPodcast(podcast)}
+
+
+                    <div class="acciones-noticia">
+
+                        <button
+                            class="boton-compartir"
+                            onclick="compartirNoticia('${podcast.ID}')">
+
+                            📤 Compartir
+
+                        </button>
+
+                        <button
+                            class="boton-copiar-enlace"
+                            onclick="copiarEnlaceNoticia('${podcast.ID}')">
+
+                            🔗 Copiar enlace
+
+                        </button>
+
+                    </div>
 
 
                     <button
@@ -709,8 +730,6 @@ function renderVistaPodcast(id){
                         ← Volver
 
                     </button>
-
-
                 </article>
 
             </div>

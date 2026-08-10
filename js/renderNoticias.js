@@ -135,9 +135,27 @@ function renderNoticias(){
 
                         ${renderGaleriaImagenes(noticia)}
 
-
-
                         ${obtenerMultimedia(noticia)}
+
+                        <div class="acciones-noticia">
+
+                            <button
+                                class="boton-compartir"
+                                onclick="compartirNoticia('${noticia.ID}')">
+
+                                📤 Compartir
+
+                            </button>
+
+                            <button
+                                class="boton-copiar-enlace"
+                                onclick="copiarEnlaceNoticia('${noticia.ID}')">
+
+                                🔗 Copiar enlace
+
+                            </button>
+
+                        </div>
 
 
 
@@ -237,41 +255,91 @@ function volverDeNoticia(){
     const vista =
         vistaAnterior || "portada";
 
+
     const posicion =
         posicionScrollAnterior || 0;
 
+
+    console.log(
+        "VOLVIENDO A:",
+        vista
+    );
+
+    console.log(
+        "RESTAURANDO POSICIÓN:",
+        posicion
+    );
+
+
+    // ==========================================
+    // VOLVER A LA VISTA ANTERIOR
+    // ==========================================
+
     mostrarVista(vista);
+
+
+    // ==========================================
+    // ESPERAR A QUE SE RENDERICE
+    // ==========================================
 
     requestAnimationFrame(() => {
 
         requestAnimationFrame(() => {
 
+
+            // ==========================================
+            // SI VENÍAMOS DEL BUSCADOR
+            // ==========================================
+
             if(
                 vista === "buscador" &&
-                textoBusquedaAnterior
+                textoOrigenArticulo
             ){
 
                 const input =
-                    document.getElementById("inputBusqueda");
+                    document.getElementById(
+                        "inputBusqueda"
+                    );
+
 
                 if(input){
 
                     input.value =
-                        textoBusquedaAnterior;
+                        textoOrigenArticulo;
 
                 }
+
 
                 buscarNoticias();
 
             }
 
-            window.scrollTo({
 
-                top: posicion,
+            // ==========================================
+            // RESTAURAR SCROLL
+            // ==========================================
 
-                left: 0,
+            requestAnimationFrame(() => {
 
-                behavior: "smooth"
+                requestAnimationFrame(() => {
+
+                    window.scrollTo({
+
+                        top: posicion,
+
+                        left: 0,
+
+                        behavior: "instant"
+
+                    });
+
+
+                    console.log(
+                        "SCROLL RESTAURADO:",
+                        posicion
+                    );
+
+                });
 
             });
 

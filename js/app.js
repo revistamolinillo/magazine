@@ -30,10 +30,31 @@ async function iniciar(){
 
     await cargarDatos();
 
+
+    const parametros =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const noticia =
+        parametros.get("noticia");
+
+
+    if(noticia){
+
+        await irANoticia(
+            noticia
+        );
+
+        return;
+
+    }
+
+
     mostrarVista("portada");
 
 }
-
 function mostrarVista(vista){
 
     if(
@@ -1030,5 +1051,160 @@ async function cargarTodasLasNoticias(){
             edicion: p.Edicion
         }))
     );
+
+}
+
+// =======================================================
+// COMPARTIR NOTICIA
+// =======================================================
+
+function obtenerEnlaceNoticia(id){
+
+    const url =
+        new URL(
+            window.location.href
+        );
+
+    url.search = "";
+
+    url.searchParams.set(
+        "noticia",
+        id
+    );
+
+    return url.toString();
+
+}
+
+
+// =======================================================
+// COMPARTIR CON EL MENÚ NATIVO
+// =======================================================
+
+async function compartirNoticia(id){
+
+    const noticia =
+        todasLasNoticias.find(
+            n =>
+                String(n.ID) ===
+                String(id)
+        );
+
+    if(!noticia) return;
+
+
+    const url =
+        obtenerEnlaceNoticia(id);
+
+
+    // Si el dispositivo permite compartir
+    if(navigator.share){
+
+        try{
+
+            await navigator.share({
+
+                title:
+                    noticia.Titulo,
+
+                text:
+                    noticia.Entradilla ||
+                    "Mira esta noticia de El Molinillo Magazine",
+
+                url:
+                    url
+
+            });
+
+        }catch(error){
+
+            // El usuario simplemente canceló
+            console.log(
+                "Compartir cancelado"
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    // Si no existe navigator.share,
+    // copiamos el enlace
+
+    copiarTexto(
+        url
+    );
+
+}
+
+
+// =======================================================
+// COPIAR ENLACE
+// =======================================================
+
+async function copiarEnlaceNoticia(id){
+
+    const url =
+        obtenerEnlaceNoticia(id);
+
+    copiarTexto(url);
+
+}
+
+
+// =======================================================
+// COPIAR TEXTO AL PORTAPAPELES
+// =======================================================
+
+async function copiarTexto(texto){
+
+    try{
+
+        await navigator.clipboard.writeText(
+            texto
+        );
+
+
+        alert(
+            "🔗 Enlace copiado"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "No se pudo copiar el enlace:",
+            error
+        );
+
+
+        // Método alternativo
+
+        const textarea =
+            document.createElement("textarea");
+
+        textarea.value =
+            texto;
+
+        document.body.appendChild(
+            textarea
+        );
+
+        textarea.select();
+
+        document.execCommand(
+            "copy"
+        );
+
+        textarea.remove();
+
+
+        alert(
+            "🔗 Enlace copiado"
+        );
+
+    }
 
 }

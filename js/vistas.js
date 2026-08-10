@@ -797,6 +797,26 @@ function renderVistaNoticia(id){
 
                     ${renderGaleriaImagenes(noticia)}
 
+                    <div class="acciones-noticia">
+
+                        <button
+                            class="boton-compartir"
+                            onclick="compartirNoticia('${noticia.ID}')">
+
+                            📤 Compartir noticia
+
+                        </button>
+
+                        <button
+                            class="boton-copiar-enlace"
+                            onclick="copiarEnlaceNoticia('${noticia.ID}')">
+
+                            🔗 Copiar enlace
+
+                        </button>
+
+                    </div>
+
 
                     <button
                         class="boton-volver"
@@ -926,6 +946,32 @@ function renderVistaPodcast(id){
                 ${renderAudioPodcast(podcast)}
 
 
+                <!-- ======================================
+                     ACCIONES DEL PODCAST
+                     ====================================== -->
+
+                <div class="acciones-noticia">
+
+                    <button
+                        class="boton-compartir"
+                        onclick="compartirNoticia('${podcast.ID}')">
+
+                        📤 Compartir podcast
+
+                    </button>
+
+
+                    <button
+                        class="boton-copiar-enlace"
+                        onclick="copiarEnlaceNoticia('${podcast.ID}')">
+
+                        🔗 Copiar enlace
+
+                    </button>
+
+                </div>
+
+
                 <button
                     class="boton-volver"
                     onclick="volverDePodcast()"
@@ -955,13 +1001,29 @@ async function irANoticia(id){
     posicionOrigenArticulo =
         window.scrollY;
 
+    posicionScrollAnterior =
+        window.scrollY;
 
     origenArticulo =
         vistaActual;
 
+    vistaAnterior =
+        vistaActual;
+
+
+    console.log(
+        "ORIGEN NOTICIA:",
+        vistaActual
+    );
+
+    console.log(
+        "POSICIÓN GUARDADA:",
+        posicionScrollAnterior
+    );
+
 
     // ==========================================
-    // GUARDAR BÚSQUEDA
+    // SI VENIMOS DEL BUSCADOR
     // ==========================================
 
     if(vistaActual === "buscador"){
@@ -970,7 +1032,6 @@ async function irANoticia(id){
             document.getElementById(
                 "inputBusqueda"
             );
-
 
         textoOrigenArticulo =
             input
@@ -985,21 +1046,21 @@ async function irANoticia(id){
 
 
     // ==========================================
-    // BUSCAR PUBLICACIÓN EN MEMORIA
+    // BUSCAR LA PUBLICACIÓN
     // ==========================================
 
     const publicacion =
         todasLasNoticias.find(
-            noticia =>
-                String(noticia.ID) ===
+            n =>
+                String(n.ID) ===
                 String(id)
         );
 
 
     if(!publicacion){
 
-        console.warn(
-            "Publicación no encontrada:",
+        console.log(
+            "No encontrada:",
             id
         );
 
@@ -1008,28 +1069,21 @@ async function irANoticia(id){
     }
 
 
-    console.log(
-        "PUBLICACIÓN SELECCIONADA:",
-        publicacion.Titulo
-    );
-
-
     // ==========================================
     // ¿ES PODCAST?
     // ==========================================
 
     const esPodcast =
-        (
-            publicacion.TipoContenido || ""
-        )
+        (publicacion.TipoContenido || "")
             .trim()
-            .toLowerCase() ===
-            "podcast"
+            .toLowerCase() === "podcast"
         ||
-        obtenerAudios(
-            publicacion
-        ).length > 0;
+        obtenerAudios(publicacion).length > 0;
 
+
+    // ==========================================
+    // DESTINO
+    // ==========================================
 
     const vistaDestino =
         esPodcast
@@ -1038,7 +1092,7 @@ async function irANoticia(id){
 
 
     // ==========================================
-    // ¿PERTENECE A OTRA EDICIÓN?
+    // ABRIR
     // ==========================================
 
     if(
@@ -1047,63 +1101,12 @@ async function irANoticia(id){
         idEdicionLeyendo
     ){
 
-        console.log(
-            "Cambiando a edición:",
-            publicacion.Edicion
+        await abrirEdicion(
+            publicacion.Edicion,
+            vistaDestino
         );
 
-
-        // ======================================
-        // LA EDICIÓN YA ESTÁ EN MEMORIA
-        // ======================================
-
-        const datosEdicion =
-            datosEdicionesCargadas[
-                publicacion.Edicion
-            ];
-
-
-        if(datosEdicion){
-
-            console.log(
-                "Edición encontrada en memoria. Sin fetch."
-            );
-
-
-            // Cambiar la edición actual
-
-            await abrirEdicion(
-                publicacion.Edicion,
-                vistaDestino
-            );
-
-
-        }else{
-
-            // ==================================
-            // CASO EXCEPCIONAL
-            // ==================================
-            // Si por alguna razón no está
-            // en memoria, abrirEdicion() la
-            // cargará.
-
-            console.log(
-                "Edición no encontrada en memoria."
-            );
-
-
-            await abrirEdicion(
-                publicacion.Edicion,
-                vistaDestino
-            );
-
-        }
-
     }else{
-
-        // ==========================================
-        // MISMA EDICIÓN
-        // ==========================================
 
         mostrarVista(
             vistaDestino
@@ -1113,7 +1116,7 @@ async function irANoticia(id){
 
 
     // ==========================================
-    // IR ARRIBA
+    // SIEMPRE ARRIBA AL ABRIR EL ARTÍCULO
     // ==========================================
 
     requestAnimationFrame(() => {
@@ -1123,9 +1126,7 @@ async function irANoticia(id){
             window.scrollTo({
 
                 top: 0,
-
                 left: 0,
-
                 behavior: "instant"
 
             });
