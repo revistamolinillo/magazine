@@ -1310,15 +1310,10 @@ async function instalarPWA(){
 
     if(esIOS){
 
-        alert(
-            "📱 Para instalar El Molinillo Magazine:\n\n" +
-            "1. Pulsa el botón Compartir ↗️ de Safari.\n\n" +
-            "2. Busca «Añadir a pantalla de inicio».\n\n" +
-            "3. Pulsa «Añadir».\n\n" +
-            "¡Y listo! Tendrás la revista como una aplicación."
-        );
+        mostrarInstruccionesIOS();
 
         return;
+
     }
 
 
@@ -1351,5 +1346,195 @@ async function instalarPWA(){
 
 
     instalacionPWA = null;
+
+}
+
+function mostrarInstruccionesIOS(){
+
+    const existente =
+        document.getElementById(
+            "modal-instalar-ios"
+        );
+
+    if(existente){
+
+        existente.classList.add("visible");
+
+        return;
+
+    }
+
+
+    const modal =
+        document.createElement("div");
+
+    modal.id =
+        "modal-instalar-ios";
+
+    modal.className =
+        "modal-instalar-ios";
+
+
+    modal.innerHTML = `
+
+        <div
+            class="modal-instalar-ios-contenido"
+            onclick="event.stopPropagation()"
+        >
+
+            <button
+                class="cerrar-modal-ios"
+                onclick="cerrarInstruccionesIOS()"
+                aria-label="Cerrar">
+
+                ×
+
+            </button>
+
+
+            <div class="icono-instalar-ios">
+
+                📱
+
+            </div>
+
+
+            <h2>
+
+                Instala la revista
+
+            </h2>
+
+
+            <p class="modal-ios-intro">
+
+                Ten <strong>El Molinillo Magazine</strong>
+                siempre a mano en tu iPhone.
+
+            </p>
+
+
+            <div class="pasos-ios">
+
+                <div class="paso-ios">
+
+                    <span class="numero-paso-ios">
+                        1
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Pulsa Compartir
+                        </strong>
+
+                        <p>
+                            Pulsa el botón
+                            <strong>Compartir ↗️</strong>
+                            de Safari.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="paso-ios">
+
+                    <span class="numero-paso-ios">
+                        2
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Añadir a pantalla de inicio
+                        </strong>
+
+                        <p>
+                            Busca y selecciona
+                            <strong>«Añadir a pantalla de inicio»</strong>.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="paso-ios">
+
+                    <span class="numero-paso-ios">
+                        3
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Pulsa Añadir
+                        </strong>
+
+                        <p>
+                            Confirma pulsando
+                            <strong>«Añadir»</strong>.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="boton-cerrar-ios"
+                onclick="cerrarInstruccionesIOS()">
+
+                Entendido
+
+            </button>
+
+        </div>
+
+    `;
+
+
+    modal.onclick = function(){
+
+        cerrarInstruccionesIOS();
+
+    };
+
+
+    document.body.appendChild(modal);
+
+
+    requestAnimationFrame(() => {
+
+        modal.classList.add("visible");
+
+    });
+
+}
+
+
+function cerrarInstruccionesIOS(){
+
+    const modal =
+        document.getElementById(
+            "modal-instalar-ios"
+        );
+
+
+    if(!modal) return;
+
+
+    modal.classList.remove("visible");
+
+
+    setTimeout(() => {
+
+        modal.remove();
+
+    }, 250);
 
 }
