@@ -148,22 +148,35 @@ function obtenerMultimedia(noticia){
 
         html += `
 
-        <div class="podcast-audio">
+            <div class="podcast-audio">
 
-            <h3>🎧 Audios</h3>
+                <h3>🎧 Audio</h3>
 
-            ${audios.map(a => `
+                ${audios.map((a, indice) => `
 
-                <iframe
-                    class="podcast-player"
-                    src="https://drive.google.com/file/d/${a.id}/preview"
-                    allow="autoplay"
-                    loading="lazy">
-                </iframe>
+                    <div class="podcast-player-wrapper">
 
-            `).join("")}
+                        <div class="podcast-player-cargando">
 
-        </div>
+                            <span class="podcast-spinner"></span>
+
+                            Cargando reproductor...
+
+                        </div>
+
+                        <iframe
+                            class="podcast-player"
+                            src="https://drive.google.com/file/d/${a.id}/preview"
+                            allow="autoplay"
+                            loading="lazy"
+                            onload="this.parentElement.classList.add('cargado')">
+                        </iframe>
+
+                    </div>
+
+                `).join("")}
+
+            </div>
 
         `;
 
@@ -177,26 +190,39 @@ function renderAudioPodcast(podcast){
 
     const audios = obtenerAudios(podcast);
 
-    if(audios.length===0) return "";
+    if(audios.length === 0) return "";
 
     return `
 
-    <div class="podcast-audio">
+        <div class="podcast-audio">
 
-        <h3>🎧 Escucha el episodio</h3>
+            <h3>🎧 Escucha el episodio</h3>
 
-        ${audios.map(a=>`
+            ${audios.map((a, indice) => `
 
-            <iframe
-                class="podcast-player"
-                src="https://drive.google.com/file/d/${a.id}/preview"
-                allow="autoplay">
-            </iframe>
+                <div class="podcast-player-wrapper">
 
-        `).join("")}
+                    <div class="podcast-player-cargando">
 
-    </div>
+                        <span class="podcast-spinner"></span>
+
+                        Cargando reproductor...
+
+                    </div>
+
+                    <iframe
+                        class="podcast-player"
+                        src="https://drive.google.com/file/d/${a.id}/preview"
+                        allow="autoplay"
+                        loading="lazy"
+                        onload="this.parentElement.classList.add('cargado')">
+                    </iframe>
+
+                </div>
+
+            `).join("")}
+
+        </div>
 
     `;
-
 }
