@@ -1300,6 +1300,27 @@ window.addEventListener("beforeinstallprompt", (event) => {
 async function instalarPWA(){
 
     // ==========================================
+    // ¿YA ESTÁ ABIERTA COMO APP?
+    // ==========================================
+
+    const estaEnModoApp =
+        window.matchMedia(
+            "(display-mode: standalone)"
+        ).matches
+        ||
+        window.navigator.standalone === true;
+
+
+    if(estaEnModoApp){
+
+        mostrarMensajeInstalada();
+
+        return;
+
+    }
+
+
+    // ==========================================
     // IPHONE / IPAD
     // ==========================================
 
@@ -1307,6 +1328,7 @@ async function instalarPWA(){
         /iphone|ipad|ipod/i.test(
             navigator.userAgent
         );
+
 
     if(esIOS){
 
@@ -1323,9 +1345,7 @@ async function instalarPWA(){
 
     if(!instalacionPWA){
 
-        alert(
-            "La instalación de la revista no está disponible en este dispositivo o navegador."
-        );
+        mostrarMensajeInstalada();
 
         return;
 
@@ -1345,7 +1365,192 @@ async function instalarPWA(){
     );
 
 
+    if(resultado.outcome === "accepted"){
+
+        actualizarBotonInstalacion();
+
+    }
+
+
     instalacionPWA = null;
+
+}
+
+function mostrarMensajeInstalada(){
+
+    const existente =
+        document.getElementById(
+            "modal-revista-instalada"
+        );
+
+
+    if(existente){
+
+        existente.classList.add("visible");
+
+        return;
+
+    }
+
+
+    const modal =
+        document.createElement("div");
+
+
+    modal.id =
+        "modal-revista-instalada";
+
+
+    modal.className =
+        "modal-instalar-ios";
+
+
+    modal.innerHTML = `
+
+        <div
+            class="modal-instalar-ios-contenido"
+            onclick="event.stopPropagation()"
+        >
+
+            <button
+                class="cerrar-modal-ios"
+                onclick="cerrarMensajeInstalada()"
+                aria-label="Cerrar">
+
+                ×
+
+            </button>
+
+
+            <div class="icono-instalar-ios">
+
+                ✅
+
+            </div>
+
+
+            <h2>
+
+                Revista instalada
+
+            </h2>
+
+
+            <p class="modal-ios-intro">
+
+                <strong>
+                    El Molinillo Magazine
+                </strong>
+
+                ya está instalada en este dispositivo.
+
+            </p>
+
+
+            <p
+                style="
+                    text-align:center;
+                    color:#64748b;
+                    line-height:1.5;
+                "
+            >
+
+                Puedes acceder a ella directamente
+                desde tu pantalla de inicio o
+                aplicaciones.
+
+            </p>
+
+
+            <button
+                class="boton-cerrar-ios"
+                onclick="cerrarMensajeInstalada()">
+
+                Entendido
+
+            </button>
+
+        </div>
+
+    `;
+
+
+    modal.onclick = function(){
+
+        cerrarMensajeInstalada();
+
+    };
+
+
+    document.body.appendChild(modal);
+
+
+    requestAnimationFrame(() => {
+
+        modal.classList.add("visible");
+
+    });
+
+}
+
+
+function cerrarMensajeInstalada(){
+
+    const modal =
+        document.getElementById(
+            "modal-revista-instalada"
+        );
+
+
+    if(!modal) return;
+
+
+    modal.classList.remove("visible");
+
+
+    setTimeout(() => {
+
+        modal.remove();
+
+    },250);
+
+}
+
+function actualizarBotonInstalacion(){
+
+    const boton =
+        document.getElementById(
+            "boton-instalar-app"
+        );
+
+
+    if(!boton) return;
+
+
+    const estaEnModoApp =
+        window.matchMedia(
+            "(display-mode: standalone)"
+        ).matches
+        ||
+        window.navigator.standalone === true;
+
+
+    if(estaEnModoApp){
+
+        boton.innerHTML =
+            "✅ Revista instalada";
+
+
+        boton.disabled = true;
+
+
+        boton.style.opacity = "0.7";
+
+
+        boton.style.cursor =
+            "default";
+
+    }
 
 }
 
