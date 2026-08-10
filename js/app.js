@@ -388,8 +388,12 @@ async function cargarDatos(){
         : CONFIG.urlDatos;
 
 
+    /*const respuesta =
+        await fetch(archivoDatos);*/
     const respuesta =
-        await fetch(archivoDatos);
+    await fetch(archivoDatos + "?v=" + Date.now(), {
+        cache: "no-store"
+    });
 
 
     const datos =
