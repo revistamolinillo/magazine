@@ -148,16 +148,17 @@ function obtenerMultimedia(noticia){
 
         html += `
 
-        <div class="bloque-multimedia">
+        <div class="podcast-audio">
 
-            <h3>🎧 Escuchar podcast</h3>
+            <h3>🎧 Audios</h3>
 
-            ${audios.map(a=>`
+            ${audios.map(a => `
 
                 <iframe
                     class="podcast-player"
                     src="https://drive.google.com/file/d/${a.id}/preview"
-                    allow="autoplay">
+                    allow="autoplay"
+                    loading="lazy">
                 </iframe>
 
             `).join("")}
