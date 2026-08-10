@@ -175,87 +175,131 @@ function renderFooter(){
 
     return `
 
-    <footer class="footer">
+<footer class="footer">
 
-        <div class="footer-contenido">
+    <div class="footer-contenido">
 
-            <div class="footer-bloque">
+        <!-- IDENTIDAD -->
 
-                <div class="footer-logo">
-                    EL MOLINILLO
-                    <span>MAGAZINE</span>
-                </div>
+        <div class="footer-bloque">
 
-                <p>
-                    Revista digital del IES El Molinillo
-                </p>
-
+            <div class="footer-logo">
+                EL MOLINILLO
+                <span>MAGAZINE</span>
             </div>
 
-
-            <div class="footer-bloque">
-
-                <h3>
-                    Revista
-                </h3>
-
-                <a href="#"
-                    onclick="volverRevistaActual(); return false;">
-                    📰 Revista
-                </a>
-
-                <a href="#"
-                    onclick="mostrarVista('secciones'); return false;">
-                    📚 Secciones
-                </a>
-
-                <a href="#"
-                    onclick="mostrarVista('hemeroteca'); return false;">
-                    🗂️ Hemeroteca
-                </a>
-
-            </div>
-
-
-            <div class="footer-bloque">
-
-                <h3>
-                    Revista en tu dispositivo
-                </h3>
-
-                <p>
-                    Lleva El Molinillo Magazine contigo.
-                </p>
-
-                <button
-                    id="boton-instalar-app"
-                    class="boton-instalar-app"
-                    onclick="instalarPWA()">
-
-                    📱 Instalar revista
-
-                </button>
-
-            </div>
+            <p>
+                Revista digital del IES El Molinillo
+            </p>
 
         </div>
 
 
-        <div class="footer-abajo">
+        <!-- REVISTA -->
 
-            <span>
-                © 2026 El Molinillo Magazine
-            </span>
+        <div class="footer-bloque">
 
-            <span>
-                IES El Molinillo · Guillena
-            </span>
+            <h3>
+                Revista
+            </h3>
+
+            <a href="#"
+                onclick="volverRevistaActual(); return false;">
+                📰 Revista
+            </a>
+
+            <a href="#"
+                onclick="mostrarVista('secciones'); return false;">
+                📚 Secciones
+            </a>
+
+            <a href="#"
+                onclick="mostrarVista('hemeroteca'); return false;">
+                🗂️ Hemeroteca
+            </a>
+
+            <a href="#"
+                onclick="mostrarBuscador(); return false;">
+                🔎 Buscar
+            </a>
 
         </div>
 
-    </footer>
 
-    `;
+        <!-- PARTICIPA -->
+
+        <div class="footer-bloque">
+
+            <h3>
+                Participa
+            </h3>
+
+            <a
+                href="https://script.google.com/macros/s/AKfycbzqWxMfGJTtSSepWnKGb10YKs1Got-BRC2QLc7dXJ3R7GG8h3_3KdJMyydkKjaoBGpd/exec"
+                target="_blank"
+                rel="noopener">
+                📝 Añadir noticia
+            </a>
+
+            <a
+                href="mailto:revismol@gmail.com">
+                ✉️ Contacta con nosotros
+            </a>
+
+            <a
+                href="#"
+                onclick="return false;"
+                title="Instagram próximamente">
+                📸 Instagram
+            </a>
+
+        </div>
+
+
+        <!-- INSTALAR -->
+
+        <div class="footer-bloque">
+
+            <h3>
+                Revista en tu dispositivo
+            </h3>
+
+            <p>
+                Lleva El Molinillo Magazine contigo.
+            </p>
+
+            <button
+                id="boton-instalar-app"
+                class="boton-instalar-app"
+                onclick="instalarPWA()">
+
+                📱 Instalar revista
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- PIE FINAL -->
+
+    <div class="footer-abajo">
+
+        <span>
+            © 2026 El Molinillo Magazine
+        </span>
+
+        <span>
+            IES El Molinillo · Guillena
+        </span>
+
+    </div>
+
+</footer>
+
+`;
+
 }
 
 /*function renderPortada(){
