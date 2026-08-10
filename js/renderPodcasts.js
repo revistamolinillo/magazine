@@ -1,74 +1,117 @@
 function renderPodcasts(){
 
-    if(podcasts.length === 0) return "";
+    if(todosLosPodcasts.length === 0){
+
+        return "";
+
+    }
+
 
     const subsecciones = [
         ...new Set(
-            podcasts
-                .map(p => (p.SubseccionPodcast || "").trim())
-                .filter(s => s !== "")
+
+            todosLosPodcasts
+                .map(
+                    p =>
+                        (
+                            p.SubseccionPodcast ||
+                            ""
+                        ).trim()
+                )
+                .filter(
+                    s => s !== ""
+                )
+
         )
     ].sort();
+
 
     return `
 
         <h2 class="titulo-seccion">
+
             🎙 Podcasts
+
         </h2>
+
 
         <div class="subsecciones-podcast">
 
             ${
-            subsecciones.map(subseccion => `
+            subsecciones.map(
+                subseccion => `
 
-                <article
-                    class="tarjeta-subseccion-podcast"
-                    onclick="mostrarPodcastsSubseccion('${subseccion.replace(/'/g, "\\'")}')">
+                    <article
+                        class="tarjeta-subseccion-podcast"
+                        onclick="
+                            mostrarPodcastsSubseccion(
+                                '${subseccion.replace(/'/g, "\\'")}'
+                            )
+                        ">
 
-                    <div class="icono-subseccion-podcast">
+                        <div
+                            class="icono-subseccion-podcast">
 
-                        ${iconoSubseccionPodcast(subseccion)}
+                            ${iconoSubseccionPodcast(
+                                subseccion
+                            )}
 
-                    </div>
+                        </div>
 
-                    <div>
 
-                        <h3>
-                            ${subseccion}
-                        </h3>
+                        <div>
 
-                        <p>
+                            <h3>
 
-                            ${
-                            podcasts.filter(
-                                p =>
-                                (p.SubseccionPodcast || "").trim()
-                                === subseccion
-                            ).length
-                            }
+                                ${subseccion}
 
-                            ${
-                            podcasts.filter(
-                                p =>
-                                (p.SubseccionPodcast || "").trim()
-                                === subseccion
-                            ).length === 1
-                            ? " episodio"
-                            : " episodios"
-                            }
+                            </h3>
 
-                        </p>
 
-                    </div>
+                            <p>
 
-                </article>
+                                ${
+                                todosLosPodcasts.filter(
+                                    p =>
+                                        (
+                                            p.SubseccionPodcast ||
+                                            ""
+                                        ).trim()
+                                        ===
+                                        subseccion
+                                ).length
+                                }
 
-            `).join("")
+                                ${
+                                todosLosPodcasts.filter(
+                                    p =>
+                                        (
+                                            p.SubseccionPodcast ||
+                                            ""
+                                        ).trim()
+                                        ===
+                                        subseccion
+                                ).length === 1
+                                    ? " episodio"
+                                    : " episodios"
+                                }
+
+                            </p>
+
+                        </div>
+
+                    </article>
+
+                `
+            ).join("")
             }
 
         </div>
 
-        <div id="lista-podcasts-subseccion"></div>
+
+        <div
+            id="lista-podcasts-subseccion">
+        </div>
 
     `;
 
@@ -110,11 +153,49 @@ function mostrarPodcastsSubseccion(subseccion){
 
     if(!contenedor) return;
 
-    const lista = podcasts.filter(
-        p =>
-        (p.SubseccionPodcast || "").trim()
-        === subseccion
+
+    // ==========================================
+    // LIMPIAR EL NOMBRE DE LA SUBSECCIÓN
+    // ==========================================
+
+    subseccion =
+        subseccion
+            .replace("🎙️", "")
+            .replace("🎙", "")
+            .replace("🎭", "")
+            .replace("⚽", "")
+            .replace("📰", "")
+            .replace("🎤", "")
+            .replace("🔬", "")
+            .trim();
+
+
+    // ==========================================
+    // BUSCAR LOS PODCASTS
+    // ==========================================
+
+    const lista =
+        todosLosPodcasts.filter(
+            podcast =>
+                (podcast.SubseccionPodcast || "").trim()
+                === subseccion
+        );
+
+
+    console.log(
+        "SUBSECCIÓN:",
+        subseccion
     );
+
+    console.log(
+        "PODCASTS ENCONTRADOS:",
+        lista
+    );
+
+
+    // ==========================================
+    // MOSTRAR CABECERA
+    // ==========================================
 
     contenedor.innerHTML = `
 
@@ -142,6 +223,18 @@ function mostrarPodcastsSubseccion(subseccion){
         <div class="podcasts-lista">
 
             ${
+            lista.length === 0
+            ?
+            `
+
+                <p class="subtitulo-seccion">
+
+                    No hay podcasts en esta subsección.
+
+                </p>
+
+            `
+            :
             lista.map(podcast => `
 
                 <article
@@ -156,18 +249,24 @@ function mostrarPodcastsSubseccion(subseccion){
                         obtenerImagenPodcast(podcast)
                         ?
                         `
+
                         <img
                             class="podcast-card-imagen"
                             src="${obtenerImagenPodcast(podcast)}"
-                            alt="${podcast.Titulo}">
+                            alt="${podcast.Titulo}"
+                        >
+
                         `
                         :
                         `
-                        <div class="podcast-card-imagen podcast-sin-imagen">
+
+                        <div
+                            class="podcast-card-imagen podcast-sin-imagen">
 
                             🎙️
 
                         </div>
+
                         `
                         }
 
@@ -181,8 +280,11 @@ function mostrarPodcastsSubseccion(subseccion){
 
                             </div>
 
+
                             <div class="podcast-card-edicion">
+
                                 📅 ${obtenerNombreEdicionPodcast(podcast)}
+
                             </div>
 
 
@@ -210,7 +312,6 @@ function mostrarPodcastsSubseccion(subseccion){
 
                         </div>
 
-
                     </div>
 
 
@@ -218,11 +319,13 @@ function mostrarPodcastsSubseccion(subseccion){
                     podcast.Entradilla
                     ?
                     `
+
                     <p class="podcast-card-entradilla">
 
                         ${podcast.Entradilla}
 
                     </p>
+
                     `
                     :
                     ""
@@ -248,6 +351,10 @@ function mostrarPodcastsSubseccion(subseccion){
     `;
 
 
+    // ==========================================
+    // IR A LA SUBSECCIÓN
+    // ==========================================
+
     contenedor.scrollIntoView({
 
         behavior: "smooth",
@@ -271,22 +378,79 @@ function cerrarPodcastsSubseccion(){
 }
 
 
-function abrirPodcast(id){
+async function abrirPodcast(id){
 
     // ==========================================
     // GUARDAR ORIGEN
     // ==========================================
 
-    posicionOrigenArticulo = window.scrollY;
+    posicionOrigenArticulo =
+        window.scrollY;
 
-    origenArticulo = vistaActual;
+    origenArticulo =
+        vistaActual;
 
 
-    // Si venimos del buscador, guardar búsqueda
+    // ==========================================
+    // SI ESTAMOS DENTRO DE UNA SUBSECCIÓN
+    // DE PODCASTS
+    // ==========================================
+
+    origenPodcastSubseccion = "";
+
+    posicionPodcastSubseccion = 0;
+
+
+    if(vistaActual === "podcasts"){
+
+        const listaSubseccion =
+            document.getElementById(
+                "lista-podcasts-subseccion"
+            );
+
+
+        if(
+            listaSubseccion &&
+            listaSubseccion.innerHTML.trim() !== ""
+        ){
+
+            posicionPodcastSubseccion =
+                window.scrollY;
+
+
+            const cabecera =
+                listaSubseccion.querySelector(
+                    ".cabecera-subseccion-podcast h2"
+                );
+
+
+            if(cabecera){
+
+                origenPodcastSubseccion =
+                    cabecera.textContent
+                        .replace("🎙️", "")
+                        .replace("🎙", "")
+                        .replace("← Podcasts", "")
+                        .trim();
+
+            }
+
+        }
+
+    }
+
+
+    // ==========================================
+    // SI VENIMOS DEL BUSCADOR
+    // ==========================================
+
     if(vistaActual === "buscador"){
 
         const input =
-            document.getElementById("inputBusqueda");
+            document.getElementById(
+                "inputBusqueda"
+            );
+
 
         textoOrigenArticulo =
             input
@@ -304,27 +468,71 @@ function abrirPodcast(id){
     // BUSCAR PODCAST
     // ==========================================
 
-    const podcast = podcasts.find(
-        p => String(p.ID) === String(id)
+    const podcast =
+        todosLosPodcasts.find(
+            p =>
+                String(p.ID) ===
+                String(id)
+        );
+
+
+    if(!podcast){
+
+        console.warn(
+            "Podcast no encontrado:",
+            id
+        );
+
+        return;
+
+    }
+
+
+    console.log(
+        "PODCAST SELECCIONADO:",
+        podcast.Titulo,
+        "Edición:",
+        podcast.Edicion
     );
 
 
-    if(!podcast) return;
-
+    // ==========================================
+    // GUARDAR SUBSECCIÓN DEL PODCAST
+    // ==========================================
 
     podcastSubseccionAnterior =
-        (podcast.SubseccionPodcast || "").trim();
+        (
+            podcast.SubseccionPodcast ||
+            ""
+        ).trim();
 
 
     // ==========================================
-    // ABRIR PODCAST
+    // ABRIR LA EDICIÓN CORRESPONDIENTE
     // ==========================================
 
-    mostrarVista("podcast-" + id);
+    if(
+        podcast.Edicion &&
+        podcast.Edicion !==
+        idEdicionLeyendo
+    ){
+
+        await abrirEdicion(
+            podcast.Edicion,
+            "podcast-" + id
+        );
+
+    }else{
+
+        mostrarVista(
+            "podcast-" + id
+        );
+
+    }
 
 
     // ==========================================
-    // AL ABRIR, SIEMPRE ARRIBA
+    // ARRIBA DEL TODO
     // ==========================================
 
     requestAnimationFrame(() => {
@@ -526,6 +734,126 @@ function volverDePodcast(){
         textoOrigenArticulo || "";
 
 
+    // ==========================================
+    // VOLVER A UNA SUBSECCIÓN DE PODCASTS
+    // ==========================================
+
+    if(
+        destino === "podcasts" &&
+        podcastSubseccionAnterior
+    ){
+
+        console.log(
+            "VOLVIENDO A SUBSECCIÓN:",
+            podcastSubseccionAnterior
+        );
+
+
+        // Primero reconstruimos la página de podcasts
+
+        mostrarVista("podcasts");
+
+
+        requestAnimationFrame(() => {
+
+            requestAnimationFrame(() => {
+
+
+                // Ahora reconstruimos la subsección
+
+                mostrarPodcastsSubseccion(
+                    podcastSubseccionAnterior
+                );
+
+
+                requestAnimationFrame(() => {
+
+                    requestAnimationFrame(() => {
+
+                        window.scrollTo({
+
+                            top:
+                                posicionPodcastSubseccion || 0,
+
+                            left: 0,
+
+                            behavior: "instant"
+
+                        });
+
+                    });
+
+                });
+
+            });
+
+        });
+
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // VOLVER DESDE EL BUSCADOR
+    // ==========================================
+
+    if(destino === "buscador"){
+
+        mostrarVista("buscador");
+
+
+        requestAnimationFrame(() => {
+
+            requestAnimationFrame(() => {
+
+
+                const input =
+                    document.getElementById(
+                        "inputBusqueda"
+                    );
+
+
+                if(input){
+
+                    input.value =
+                        busqueda;
+
+                }
+
+
+                buscarNoticias();
+
+
+                requestAnimationFrame(() => {
+
+                    window.scrollTo({
+
+                        top: posicion,
+
+                        left: 0,
+
+                        behavior: "instant"
+
+                    });
+
+                });
+
+            });
+
+        });
+
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // RESTO DE CASOS
+    // ==========================================
+
     mostrarVista(destino);
 
 
@@ -533,36 +861,13 @@ function volverDePodcast(){
 
         requestAnimationFrame(() => {
 
-            if(
-                destino === "buscador" &&
-                busqueda
-            ){
+            window.scrollTo({
 
-                const input =
-                    document.getElementById("inputBusqueda");
+                top: posicion,
 
-                if(input){
+                left: 0,
 
-                    input.value = busqueda;
-
-                }
-
-                buscarNoticias();
-
-            }
-
-
-            requestAnimationFrame(() => {
-
-                window.scrollTo({
-
-                    top: posicion,
-
-                    left: 0,
-
-                    behavior: "instant"
-
-                });
+                behavior: "instant"
 
             });
 

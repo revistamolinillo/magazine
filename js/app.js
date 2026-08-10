@@ -20,6 +20,11 @@ let busquedaOrigenPodcast = "";
 let origenArticulo = "portada";
 let posicionOrigenArticulo = 0;
 let textoOrigenArticulo = "";
+let origenPodcastSubseccion = "";
+let posicionPodcastSubseccion = 0;
+let datosEdicionesCargadas = {};
+let todosLosPodcasts = [];
+let podcastSubseccionAnterior = "";
 
 async function iniciar(){
 
@@ -107,101 +112,318 @@ function mostrarVista(vista){
 
 }
 
+function obtenerImagenPortadaEdicion(datos){
+
+    if(!datos){
+        return "";
+    }
+
+
+    const noticiasEdicion =
+        datos.noticias || [];
+
+
+    // ==========================================
+    // BUSCAR LA NOTICIA MARCADA COMO PORTADA
+    // ==========================================
+
+    let noticiaPortada = null;
+
+
+    // Primero intentamos localizarla por ID
+    if(datos.portada && datos.portada.ID){
+
+        noticiaPortada =
+            noticiasEdicion.find(
+                noticia =>
+                    String(noticia.ID) ===
+                    String(datos.portada.ID)
+            );
+
+    }
+
+
+    // Si por alguna razón no existe el ID,
+    // buscamos por el título como respaldo
+
+    if(!noticiaPortada && datos.portada && datos.portada.Titulo){
+
+        noticiaPortada =
+            noticiasEdicion.find(
+                noticia =>
+                    noticia.Titulo &&
+                    noticia.Titulo.trim().toLowerCase() ===
+                    datos.portada.Titulo.trim().toLowerCase()
+            );
+
+    }
+
+
+    console.log(
+        "PORTADA DE LA EDICIÓN:",
+        datos.id,
+        datos.mes
+    );
+
+    console.log(
+        "NOTICIA PORTADA:",
+        noticiaPortada
+    );
+
+
+    // ==========================================
+    // 1. IMAGEN PRINCIPAL DE LA NOTICIA
+    // ==========================================
+
+    if(
+        noticiaPortada &&
+        noticiaPortada.ImagenPrincipal &&
+        noticiaPortada.ImagenPrincipal.trim() !== ""
+    ){
+
+        console.log(
+            "IMAGEN PORTADA → ImagenPrincipal:",
+            noticiaPortada.ImagenPrincipal
+        );
+
+        return noticiaPortada.ImagenPrincipal;
+
+    }
+
+
+    // ==========================================
+    // 2. IMAGEN PRINCIPAL GUARDADA EN PORTADA
+    // ==========================================
+
+    if(
+        datos.portada &&
+        datos.portada.ImagenPrincipal &&
+        datos.portada.ImagenPrincipal.trim() !== ""
+    ){
+
+        console.log(
+            "IMAGEN PORTADA → ImagenPrincipal portada:",
+            datos.portada.ImagenPrincipal
+        );
+
+        return datos.portada.ImagenPrincipal;
+
+    }
+
+
+    // ==========================================
+    // 3. IMAGENPORTADA
+    // ==========================================
+
+    if(
+        datos.portada &&
+        datos.portada.ImagenPortada &&
+        datos.portada.ImagenPortada.trim() !== ""
+    ){
+
+        console.log(
+            "IMAGEN PORTADA → ImagenPortada:",
+            datos.portada.ImagenPortada
+        );
+
+        return datos.portada.ImagenPortada;
+
+    }
+
+
+    // ==========================================
+    // 4. ÚLTIMO RECURSO:
+    //    PRIMERA IMAGEN DE LA NOTICIA
+    // ==========================================
+
+    if(noticiaPortada){
+
+        const imagenes =
+            obtenerImagenes(noticiaPortada);
+
+
+        if(imagenes.length > 0){
+
+            console.log(
+                "IMAGEN PORTADA → Primera imagen como respaldo:",
+                imagenes[0].id
+            );
+
+            return imagenes[0].id;
+
+        }
+
+    }
+
+
+    console.warn(
+        "IMAGEN PORTADA → No se encontró imagen para:",
+        datos.id
+    );
+
+
+    return "";
+
+}
+
 async function cargarDatos(){
 
-
     const archivoDatos =
-    window.location.pathname.includes("preview.html")
-    ? "data/preview/revista-preview.json"
-    : CONFIG.urlDatos;
+        window.location.pathname.includes("preview.html")
+        ? "data/preview/revista-preview.json"
+        : CONFIG.urlDatos;
 
-    const respuesta = await fetch(archivoDatos);
 
-    const datos = await respuesta.json();
+    const respuesta =
+        await fetch(archivoDatos);
+
+
+    const datos =
+        await respuesta.json();
+
+
+    console.log(
+        "DATOS DE LA EDICIÓN ACTUAL:",
+        datos
+    );
+
+
+    // ==========================================
+    // IDENTIFICACIÓN DE LA EDICIÓN
+    // ==========================================
+
     idEdicionActual = datos.id;
-    console.log(datos.noticias);
-    datosEdicionActual = datos;
-    idEdicionActual = datos.id;
+
     idEdicionLeyendo = datos.id;
 
-    edicion.mes = datos.mes;
+    datosEdicionActual = datos;
+
+
+    edicion.mes =
+        datos.mes || "";
+
+
+    // ==========================================
+    // PORTADA
+    // ==========================================
 
     if(datos.portada){
 
         edicion.portada.titulo =
-            datos.portada.Titulo;
+            datos.portada.Titulo || "";
+
 
         edicion.portada.entradilla =
-            datos.portada.Entradilla;
+            datos.portada.Entradilla || "";
 
-        // Buscamos la noticia que corresponde a la portada
-        const noticiaPortada = (datos.noticias || []).find(
-            noticia => noticia.Titulo === datos.portada.Titulo
-        );
 
-        if(
-            noticiaPortada &&
-            noticiaPortada.ImagenPrincipal
-        ){
+        edicion.portada.imagen =
+            obtenerImagenPortadaEdicion(datos);
 
-            edicion.portada.imagen =
-                noticiaPortada.ImagenPrincipal;
-
-        }else{
-
-            edicion.portada.imagen =
-                datos.portada.ImagenPortada;
-
-        }
 
         console.log(
-            "IMAGEN PORTADA:",
-            edicion.portada.imagen
+            "PORTADA FINAL:",
+            edicion.portada
         );
+
+    }else{
+
+        edicion.portada.titulo = "";
+
+        edicion.portada.entradilla = "";
+
+        edicion.portada.imagen = "";
 
     }
 
+
+    // ==========================================
+    // LIMPIAR NOTICIAS Y PODCASTS
+    // ==========================================
+
     noticias.length = 0;
+
     podcasts.length = 0;
 
-    datos.noticias = datos.noticias || [];
 
-    datos.noticias.forEach(noticia=>{
+    datos.noticias =
+        datos.noticias || [];
 
-        const archivos = obtenerArchivosMultimedia(noticia);
+
+    // ==========================================
+    // CLASIFICAR CONTENIDOS
+    // ==========================================
+
+    datos.noticias.forEach(noticia => {
+
+        const archivos =
+            obtenerArchivosMultimedia(noticia);
+
 
         const esPodcast =
-            (noticia.TipoContenido || "").trim().toLowerCase() === "podcast"
+            (noticia.TipoContenido || "")
+                .trim()
+                .toLowerCase() === "podcast"
             ||
-            archivos.some(a => a.tipo.startsWith("audio"));
+            archivos.some(
+                a =>
+                    a.tipo.startsWith("audio")
+            );
 
-        if (esPodcast) {
+
+        if(esPodcast){
 
             podcasts.push(noticia);
 
-        } else {
+        }else{
 
             noticias.push(noticia);
 
         }
 
     });
-        console.log("NOTICIAS");
-        console.table(noticias.map(n => ({
-            titulo: n.Titulo,
-            seccion: n.Seccion
-        })));
 
-        console.log("PODCASTS");
-        console.table(podcasts.map(n => ({
+
+    // ==========================================
+    // CONSOLA
+    // ==========================================
+
+    console.log("NOTICIAS");
+
+    console.table(
+        noticias.map(n => ({
+            id: n.ID,
+            titulo: n.Titulo,
+            seccion: n.Seccion,
+            imagenPrincipal: n.ImagenPrincipal
+        }))
+    );
+
+
+    console.log("PODCASTS");
+
+    console.table(
+        podcasts.map(n => ({
+            id: n.ID,
             titulo: n.Titulo,
             seccion: n.Seccion
-        })));
+        }))
+    );
+
+
+    // ==========================================
+    // HEMEROTECA Y BUSCADOR
+    // ==========================================
 
     await cargarHemeroteca();
-    cargarTodasLasNoticias();
 
-    console.log("Datos cargados",datos);
+    await cargarTodasLasNoticias();
+
+
+    console.log(
+        "Datos cargados:",
+        datos
+    );
 
 }
 
@@ -212,6 +434,103 @@ async function cargarHemeroteca(){
     );
 
     hemeroteca = await respuesta.json();
+
+
+    // ==========================================
+    // ACTUALIZAR AUTOMÁTICAMENTE LAS PORTADAS
+    // ==========================================
+
+    for(const edicion of hemeroteca){
+
+        try{
+
+            // ======================================
+            // CARGAR EL JSON DE LA EDICIÓN
+            // ======================================
+
+            let datosEdicion;
+
+
+            if(edicion.id === idEdicionActual){
+
+                datosEdicion =
+                    datosEdicionActual;
+
+            }else{
+
+                const respuestaEdicion =
+                    await fetch(
+                        "data/ediciones/" +
+                        edicion.id +
+                        ".json?v=" +
+                        Date.now()
+                    );
+
+
+                if(!respuestaEdicion.ok){
+
+                    console.warn(
+                        "No se pudo cargar la edición:",
+                        edicion.id
+                    );
+
+                    continue;
+
+                }
+
+
+                datosEdicion =
+                    await respuestaEdicion.json();
+
+            }
+
+
+            // ======================================
+            // OBTENER IMAGEN REAL DE PORTADA
+            // ======================================
+
+            const imagenPortada =
+                obtenerImagenPortadaEdicion(
+                    datosEdicion
+                );
+
+
+            // ======================================
+            // ACTUALIZAR LA HEMEROTECA
+            // ======================================
+
+            if(imagenPortada){
+
+                edicion.imagen =
+                    imagenPortada;
+
+
+                console.log(
+                    "HEMEROTECA → portada actualizada:",
+                    edicion.id,
+                    imagenPortada
+                );
+
+            }
+
+        }catch(error){
+
+            console.error(
+                "Error actualizando portada de:",
+                edicion.id,
+                error
+            );
+
+        }
+
+    }
+
+
+    console.log(
+        "HEMEROTECA FINAL:",
+        hemeroteca
+    );
+
 }
 
 function abrirRevista(){
@@ -431,14 +750,71 @@ function buscarNoticias(){
 
 function volverDePodcast(){
 
+    // ==========================================
+    // SI VENÍAMOS DE UNA SUBSECCIÓN DE PODCASTS
+    // ==========================================
+
+    if(
+        origenArticulo === "podcasts" &&
+        origenPodcastSubseccion
+    ){
+
+        mostrarVista("podcasts");
+
+
+        requestAnimationFrame(() => {
+
+            requestAnimationFrame(() => {
+
+                mostrarPodcastsSubseccion(
+                    origenPodcastSubseccion
+                );
+
+
+                requestAnimationFrame(() => {
+
+                    window.scrollTo({
+
+                        top:
+                            posicionPodcastSubseccion,
+
+                        left: 0,
+
+                        behavior: "instant"
+
+                    });
+
+                });
+
+            });
+
+        });
+
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // RESTO DE CASOS
+    //
+    // BUSCADOR, ETC.
+    // ==========================================
+
     const destino =
-        origenArticulo || "podcasts";
+        origenArticulo ||
+        "podcasts";
+
 
     const posicion =
-        posicionOrigenArticulo || 0;
+        posicionOrigenArticulo ||
+        0;
+
 
     const busqueda =
-        textoOrigenArticulo || "";
+        textoOrigenArticulo ||
+        "";
 
 
     mostrarVista(destino);
@@ -449,9 +825,9 @@ function volverDePodcast(){
         requestAnimationFrame(() => {
 
 
-            // ==========================================
+            // ==================================
             // SI VENÍAMOS DEL BUSCADOR
-            // ==========================================
+            // ==================================
 
             if(
                 destino === "buscador" &&
@@ -459,22 +835,27 @@ function volverDePodcast(){
             ){
 
                 const input =
-                    document.getElementById("inputBusqueda");
+                    document.getElementById(
+                        "inputBusqueda"
+                    );
+
 
                 if(input){
 
-                    input.value = busqueda;
+                    input.value =
+                        busqueda;
 
                 }
+
 
                 buscarNoticias();
 
             }
 
 
-            // ==========================================
+            // ==================================
             // RESTAURAR POSICIÓN
-            // ==========================================
+            // ==================================
 
             requestAnimationFrame(() => {
 
@@ -499,17 +880,54 @@ function volverDePodcast(){
 async function cargarTodasLasNoticias(){
 
     todasLasNoticias.length = 0;
+    todosLosPodcasts.length = 0;
 
-    const respuesta = await fetch(CONFIG.urlHemeroteca);
+    const respuesta =
+        await fetch(CONFIG.urlHemeroteca);
 
-    const ediciones = await respuesta.json();
+    const ediciones =
+        await respuesta.json();
 
-    // Añadir primero la edición actual
-    if(datosEdicionActual && datosEdicionActual.noticias){
 
-        datosEdicionActual.noticias.forEach(noticia=>{
+    // ==========================================
+    // AÑADIR EDICIÓN ACTUAL
+    // ==========================================
 
-            noticia.Edicion = datosEdicionActual.id;
+    if(
+        datosEdicionActual &&
+        datosEdicionActual.noticias
+    ){
+
+        datosEdicionActual.noticias.forEach(noticia => {
+
+            noticia.Edicion =
+                datosEdicionActual.id;
+
+
+            const archivos =
+                obtenerArchivosMultimedia(noticia);
+
+
+            const esPodcast =
+                (
+                    noticia.TipoContenido ||
+                    ""
+                )
+                .trim()
+                .toLowerCase() === "podcast"
+                ||
+                archivos.some(
+                    a =>
+                        a.tipo.startsWith("audio")
+                );
+
+
+            if(esPodcast){
+
+                todosLosPodcasts.push(noticia);
+
+            }
+
 
             todasLasNoticias.push(noticia);
 
@@ -517,37 +935,100 @@ async function cargarTodasLasNoticias(){
 
     }
 
+
+    // ==========================================
+    // AÑADIR TODAS LAS EDICIONES ANTERIORES
+    // ==========================================
+
     for(const edicion of ediciones){
 
-        const respuestaEdicion = await fetch(
-            "data/ediciones/" + edicion.id + ".json"
-        );
+        // Evitar cargar dos veces la edición actual
+        if(
+            datosEdicionActual &&
+            edicion.id === datosEdicionActual.id
+        ){
 
-        const datosEdicion = await respuestaEdicion.json();
-
-        if(datosEdicion.noticias){
-
-            datosEdicion.noticias.forEach(noticia=>{
-
-                noticia.Edicion = edicion.id;
-
-                todasLasNoticias.push(noticia);
-
-            });
+            continue;
 
         }
 
+
+        const respuestaEdicion =
+            await fetch(
+                "data/ediciones/" +
+                edicion.id +
+                ".json"
+            );
+
+
+        const datosEdicion =
+            await respuestaEdicion.json();
+
+
+        if(!datosEdicion.noticias){
+
+            continue;
+
+        }
+
+
+        datosEdicion.noticias.forEach(noticia => {
+
+            noticia.Edicion =
+                datosEdicion.id;
+
+
+            const archivos =
+                obtenerArchivosMultimedia(noticia);
+
+
+            const esPodcast =
+                (
+                    noticia.TipoContenido ||
+                    ""
+                )
+                .trim()
+                .toLowerCase() === "podcast"
+                ||
+                archivos.some(
+                    a =>
+                        a.tipo.startsWith("audio")
+                );
+
+
+            if(esPodcast){
+
+                todosLosPodcasts.push(noticia);
+
+            }
+
+
+            todasLasNoticias.push(noticia);
+
+        });
+
     }
 
+
     console.log(
-        "TOTAL BUSCADOR:",
+        "TOTAL NOTICIAS:",
         todasLasNoticias.length
     );
 
-    console.table(todasLasNoticias.map(n=>({
-        id:n.ID,
-        titulo:n.Titulo,
-        edicion:n.Edicion
-    })));
+
+    console.log(
+        "TOTAL PODCASTS:",
+        todosLosPodcasts.length
+    );
+
+
+    console.table(
+        todosLosPodcasts.map(p => ({
+            id: p.ID,
+            titulo: p.Titulo,
+            subseccion: p.SubseccionPodcast,
+            edicion: p.Edicion
+        }))
+    );
 
 }

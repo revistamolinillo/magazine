@@ -308,100 +308,261 @@ function renderCurso(curso, listaHemeroteca){
 
 }
 
-async function abrirEdicion(id, vistaFinal = "portada"){
+async function abrirEdicion(
+    id,
+    vistaFinal = "portada"
+){
 
-    document.getElementById("app").innerHTML =
-        renderCargando();
+    console.log(
+        "Abriendo edición:",
+        id
+    );
 
-    console.log("Cargando edición:", id);
 
-    let url;
+    // ==========================================
+    // BUSCAR PRIMERO EN MEMORIA
+    // ==========================================
 
-    if(id === idEdicionActual){
+    let datos =
+        datosEdicionesCargadas[id];
 
-        url = CONFIG.urlDatos;
 
-    }else{
+    // ==========================================
+    // SI NO ESTÁ EN MEMORIA, CARGAR JSON
+    // ==========================================
 
-        url = "data/ediciones/" + id + ".json";
+    if(!datos){
 
-    }
-
-    console.log("URL que voy a cargar:", url);
-
-    const respuesta = await fetch(url);
-
-    console.log("Respuesta recibida:", respuesta.status, respuesta.ok);
-
-    const datos = await respuesta.json();
-
-    console.log("JSON recibido correctamente:", datos);
-
-    idEdicionLeyendo = id;
-
-    console.log("Edición recibida:", datos);
-    console.log("PASO 1: voy a limpiar noticias y podcasts");
-
-    // Limpiar noticias y podcasts
-    noticias.length = 0;
-    podcasts.length = 0;
-
-    console.log("PASO 2: noticias y podcasts limpiados");
-
-    datos.noticias.forEach((noticia, indice) => {
-            console.log(
-            "PROCESANDO NOTICIA",
-            indice,
-            noticia.ID,
-            noticia.Titulo,
-            noticia.Seccion
+        console.log(
+            "Edición no estaba en memoria. Cargando JSON:",
+            id
         );
-        noticia.Edicion = datos.id;
 
-        const archivos = obtenerArchivosMultimedia(noticia);
 
-        const esPodcast =
-            (noticia.TipoContenido || "").trim().toLowerCase() === "podcast"
-            ||
-            archivos.some(a => a.tipo.startsWith("audio"));
+        document.getElementById("app").innerHTML =
+            renderCargando();
 
-        if (esPodcast) {
 
-            podcasts.push(noticia);
+        let url;
 
-        } else {
 
-            noticias.push(noticia);
+        if(id === idEdicionActual){
+
+            url =
+                CONFIG.urlDatos;
+
+        }else{
+
+            url =
+                "data/ediciones/" +
+                id +
+                ".json";
 
         }
 
-    });
-    console.log(
-        "PASO 3: noticias cargadas:",
-        noticias.length,
-        "podcasts:",
-        podcasts.length
+
+        console.log(
+            "URL que voy a cargar:",
+            url
+        );
+
+
+        try{
+
+            const respuesta =
+                await fetch(url);
+
+
+            if(!respuesta.ok){
+
+                throw new Error(
+                    "HTTP " + respuesta.status
+                );
+
+            }
+
+
+            datos =
+                await respuesta.json();
+
+
+            // Guardarlo para futuras consultas
+
+            datosEdicionesCargadas[id] =
+                datos;
+
+
+        }catch(error){
+
+            console.error(
+                "Error cargando edición:",
+                id,
+                error
+            );
+
+
+            document.getElementById("app").innerHTML = `
+
+                ${renderMenu()}
+
+                <main class="pagina">
+
+                    <div class="contenedor">
+
+                        <h2>
+                            ❌ No se pudo cargar la edición
+                        </h2>
+
+                        <p>
+                            ${error.message}
+                        </p>
+
+                    </div>
+
+                </main>
+
+            `;
+
+            return;
+
+        }
+
+    }else{
+
+        console.log(
+            "Edición encontrada en memoria:",
+            id
+        );
+
+    }
+
+
+    // ==========================================
+    // ACTUALIZAR EDICIÓN QUE ESTAMOS LEYENDO
+    // ==========================================
+
+    idEdicionLeyendo =
+        datos.id;
+
+
+    datosEdicionActual =
+        datos;
+
+
+    // ==========================================
+    // LIMPIAR NOTICIAS Y PODCASTS
+    // ==========================================
+
+    noticias.length = 0;
+
+    podcasts.length = 0;
+
+
+    datos.noticias =
+        datos.noticias || [];
+
+
+    // ==========================================
+    // CLASIFICAR NOTICIAS Y PODCASTS
+    // ==========================================
+
+    datos.noticias.forEach(
+        noticia => {
+
+            noticia.Edicion =
+                datos.id;
+
+
+            const archivos =
+                obtenerArchivosMultimedia(
+                    noticia
+                );
+
+
+            const esPodcast =
+                (
+                    noticia.TipoContenido || ""
+                )
+                    .trim()
+                    .toLowerCase() ===
+                    "podcast"
+                ||
+                archivos.some(
+                    a =>
+                        a.tipo.startsWith(
+                            "audio"
+                        )
+                );
+
+
+            if(esPodcast){
+
+                podcasts.push(
+                    noticia
+                );
+
+            }else{
+
+                noticias.push(
+                    noticia
+                );
+
+            }
+
+        }
     );
 
-    // Actualizar portada
-    edicion.mes = datos.mes;
+
+    // ==========================================
+    // ACTUALIZAR PORTADA
+    // ==========================================
+
+    edicion.mes =
+        datos.mes || "";
+
 
     if(datos.portada){
 
         edicion.portada.titulo =
-            datos.portada.Titulo;
+            datos.portada.Titulo || "";
+
 
         edicion.portada.entradilla =
-            datos.portada.Entradilla;
+            datos.portada.Entradilla || "";
+
 
         edicion.portada.imagen =
-            datos.portada.ImagenPortada;
+            obtenerImagenPortadaEdicion(
+                datos
+            );
+
+    }else{
+
+        edicion.portada.titulo = "";
+
+        edicion.portada.entradilla = "";
+
+        edicion.portada.imagen = "";
 
     }
 
-    if (vistaFinal === "portada") {
 
-        mostrarVista("portada");
+    console.log(
+        "EDICIÓN LISTA:",
+        datos.id,
+        datos.mes
+    );
+
+
+    // ==========================================
+    // MOSTRAR LA VISTA SOLICITADA
+    // ==========================================
+
+    if(vistaFinal){
+
+        mostrarVista(
+            vistaFinal
+        );
 
     }
 
@@ -791,16 +952,25 @@ async function irANoticia(id){
     // GUARDAR ORIGEN
     // ==========================================
 
-    posicionOrigenArticulo = window.scrollY;
+    posicionOrigenArticulo =
+        window.scrollY;
 
-    origenArticulo = vistaActual;
+
+    origenArticulo =
+        vistaActual;
 
 
-    // Si venimos del buscador, guardamos el texto
+    // ==========================================
+    // GUARDAR BÚSQUEDA
+    // ==========================================
+
     if(vistaActual === "buscador"){
 
         const input =
-            document.getElementById("inputBusqueda");
+            document.getElementById(
+                "inputBusqueda"
+            );
+
 
         textoOrigenArticulo =
             input
@@ -815,22 +985,33 @@ async function irANoticia(id){
 
 
     // ==========================================
-    // BUSCAR PUBLICACIÓN
+    // BUSCAR PUBLICACIÓN EN MEMORIA
     // ==========================================
 
     const publicacion =
         todasLasNoticias.find(
-            n => String(n.ID) === String(id)
+            noticia =>
+                String(noticia.ID) ===
+                String(id)
         );
 
 
     if(!publicacion){
 
-        console.log("No encontrada:", id);
+        console.warn(
+            "Publicación no encontrada:",
+            id
+        );
 
         return;
 
     }
+
+
+    console.log(
+        "PUBLICACIÓN SELECCIONADA:",
+        publicacion.Titulo
+    );
 
 
     // ==========================================
@@ -838,11 +1019,16 @@ async function irANoticia(id){
     // ==========================================
 
     const esPodcast =
-        (publicacion.TipoContenido || "")
+        (
+            publicacion.TipoContenido || ""
+        )
             .trim()
-            .toLowerCase() === "podcast"
+            .toLowerCase() ===
+            "podcast"
         ||
-        obtenerAudios(publicacion).length > 0;
+        obtenerAudios(
+            publicacion
+        ).length > 0;
 
 
     const vistaDestino =
@@ -852,28 +1038,82 @@ async function irANoticia(id){
 
 
     // ==========================================
-    // ABRIR
+    // ¿PERTENECE A OTRA EDICIÓN?
     // ==========================================
 
     if(
         publicacion.Edicion &&
-        publicacion.Edicion !== idEdicionLeyendo
+        publicacion.Edicion !==
+        idEdicionLeyendo
     ){
 
-        await abrirEdicion(
-            publicacion.Edicion,
-            vistaDestino
+        console.log(
+            "Cambiando a edición:",
+            publicacion.Edicion
         );
+
+
+        // ======================================
+        // LA EDICIÓN YA ESTÁ EN MEMORIA
+        // ======================================
+
+        const datosEdicion =
+            datosEdicionesCargadas[
+                publicacion.Edicion
+            ];
+
+
+        if(datosEdicion){
+
+            console.log(
+                "Edición encontrada en memoria. Sin fetch."
+            );
+
+
+            // Cambiar la edición actual
+
+            await abrirEdicion(
+                publicacion.Edicion,
+                vistaDestino
+            );
+
+
+        }else{
+
+            // ==================================
+            // CASO EXCEPCIONAL
+            // ==================================
+            // Si por alguna razón no está
+            // en memoria, abrirEdicion() la
+            // cargará.
+
+            console.log(
+                "Edición no encontrada en memoria."
+            );
+
+
+            await abrirEdicion(
+                publicacion.Edicion,
+                vistaDestino
+            );
+
+        }
 
     }else{
 
-        mostrarVista(vistaDestino);
+        // ==========================================
+        // MISMA EDICIÓN
+        // ==========================================
+
+        mostrarVista(
+            vistaDestino
+        );
 
     }
 
 
     // ==========================================
-    // AL ABRIR, SIEMPRE ARRIBA
+    // IR ARRIBA
     // ==========================================
 
     requestAnimationFrame(() => {
@@ -883,7 +1123,9 @@ async function irANoticia(id){
             window.scrollTo({
 
                 top: 0,
+
                 left: 0,
+
                 behavior: "instant"
 
             });
