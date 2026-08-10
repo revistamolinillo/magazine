@@ -255,7 +255,6 @@ function renderCurso(curso, listaHemeroteca){
             <div class="grid-hemeroteca">
 
                 ${
-
                 lista.map(edicion=>`
 
                     <article
@@ -266,7 +265,9 @@ function renderCurso(curso, listaHemeroteca){
 
                             <img
                                 src="https://drive.google.com/thumbnail?id=${edicion.imagen}&sz=w900"
-                                alt="${edicion.nombre}">
+                                alt="${edicion.nombre}"
+                                loading="lazy"
+                                decoding="async">
 
                         </div>
 
@@ -297,7 +298,6 @@ function renderCurso(curso, listaHemeroteca){
                     </article>
 
                 `).join("")
-
                 }
 
             </div>
@@ -305,7 +305,6 @@ function renderCurso(curso, listaHemeroteca){
         </div>
 
     `;
-
 }
 
 async function abrirEdicion(

@@ -638,107 +638,84 @@ async function cargarDatos(){
 
 async function cargarHemeroteca(){
 
-    const respuesta = await fetch(
-        CONFIG.urlHemeroteca + "?v=" + Date.now()
-    );
+    try{
 
-    hemeroteca = await respuesta.json();
-
-
-    // ==========================================
-    // ACTUALIZAR AUTOMÁTICAMENTE LAS PORTADAS
-    // ==========================================
-
-    for(const edicion of hemeroteca){
-
-        try{
-
-            // ======================================
-            // CARGAR EL JSON DE LA EDICIÓN
-            // ======================================
-
-            let datosEdicion;
-
-
-            if(edicion.id === idEdicionActual){
-
-                datosEdicion =
-                    datosEdicionActual;
-
-            }else{
-
-                const respuestaEdicion =
-                    await fetch(
-                        "data/ediciones/" +
-                        edicion.id +
-                        ".json?v=" +
-                        Date.now()
-                    );
-
-
-                if(!respuestaEdicion.ok){
-
-                    console.warn(
-                        "No se pudo cargar la edición:",
-                        edicion.id
-                    );
-
-                    continue;
-
-                }
-
-
-                datosEdicion =
-                    await respuestaEdicion.json();
-
+        const respuesta = await fetch(
+            CONFIG.urlHemeroteca + "?v=" + Date.now(),
+            {
+                cache: "no-store"
             }
+        );
 
 
-            // ======================================
-            // OBTENER IMAGEN REAL DE PORTADA
-            // ======================================
-
-            const imagenPortada =
-                obtenerImagenPortadaEdicion(
-                    datosEdicion
-                );
-
-
-            // ======================================
-            // ACTUALIZAR LA HEMEROTECA
-            // ======================================
-
-            if(imagenPortada){
-
-                edicion.imagen =
-                    imagenPortada;
-
-
-                console.log(
-                    "HEMEROTECA → portada actualizada:",
-                    edicion.id,
-                    imagenPortada
-                );
-
-            }
-
-        }catch(error){
+        if(!respuesta.ok){
 
             console.error(
-                "Error actualizando portada de:",
-                edicion.id,
-                error
+                "No se pudo cargar la hemeroteca:",
+                respuesta.status
             );
+
+            return;
 
         }
 
+
+        hemeroteca = await respuesta.json();
+
+
+        // ==========================================
+        // COMPROBAR DATOS
+        // ==========================================
+
+        if(!Array.isArray(hemeroteca)){
+
+            console.error(
+                "La hemeroteca no tiene un formato válido."
+            );
+
+            hemeroteca = [];
+
+            return;
+
+        }
+
+
+        // ==========================================
+        // LA HEMEROTECA YA TIENE LAS PORTADAS
+        //
+        // NO DESCARGAMOS LOS JSON DE LAS EDICIONES
+        // ==========================================
+
+        console.log(
+            "Hemeroteca cargada rápidamente:",
+            hemeroteca
+        );
+
+
+        // ==========================================
+        // MOSTRAR LAS EDICIONES
+        // ==========================================
+
+        hemeroteca.forEach(edicion => {
+
+            console.log(
+                "Edición:",
+                edicion.id,
+                "Portada:",
+                edicion.imagen
+            );
+
+        });
+
+
+    }catch(error){
+
+        console.error(
+            "Error cargando la hemeroteca:",
+            error
+        );
+
     }
-
-
-    console.log(
-        "HEMEROTECA FINAL:",
-        hemeroteca
-    );
 
 }
 
