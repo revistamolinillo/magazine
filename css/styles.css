@@ -4531,3 +4531,186 @@ No modifica el diseño de ordenador
     pointer-events: none;
 }
 
+ /* ==========================================
+    FOOTER
+    ========================================== */
+
+.footer {
+    margin-top: 70px;
+    background: #0f172a;
+    color: white;
+    padding: 50px 25px 20px;
+}
+
+
+.footer-contenido {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns:
+        1.5fr
+        1fr
+        1.5fr;
+
+    gap: 50px;
+}
+
+
+.footer-bloque {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.footer-logo {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+
+.footer-logo span {
+    display: block;
+
+    font-size: 12px;
+    letter-spacing: 3px;
+
+    opacity: .65;
+}
+
+
+.footer-bloque p {
+    margin: 5px 0 0;
+
+    color: rgba(255,255,255,.65);
+
+    line-height: 1.6;
+}
+
+
+.footer-bloque h3 {
+    margin: 0 0 8px;
+
+    font-size: 15px;
+}
+
+
+.footer-bloque a {
+    color: rgba(255,255,255,.7);
+
+    text-decoration: none;
+
+    transition:
+        color .2s ease,
+        transform .2s ease;
+}
+
+
+.footer-bloque a:hover {
+    color: white;
+    transform: translateX(3px);
+}
+
+
+/* ------------------------------------------
+   BOTÓN INSTALAR
+   ------------------------------------------ */
+
+.boton-instalar-app {
+
+    width: fit-content;
+
+    border: 1px solid rgba(255,255,255,.3);
+
+    border-radius: 12px;
+
+    padding: 11px 18px;
+
+    background: rgba(255,255,255,.08);
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease,
+        border-color .2s ease;
+}
+
+
+.boton-instalar-app:hover {
+
+    background: rgba(255,255,255,.16);
+
+    border-color: rgba(255,255,255,.6);
+
+    transform: translateY(-2px);
+}
+
+
+/* ------------------------------------------
+   PARTE INFERIOR
+   ------------------------------------------ */
+
+.footer-abajo {
+
+    max-width: 1200px;
+
+    margin: 40px auto 0;
+
+    padding-top: 20px;
+
+    border-top:
+        1px solid rgba(255,255,255,.12);
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    font-size: 12px;
+
+    color: rgba(255,255,255,.45);
+}
+
+
+/* ------------------------------------------
+   MÓVIL
+   ------------------------------------------ */
+
+@media (max-width: 700px) {
+
+    .footer {
+
+        margin-top: 50px;
+
+        padding:
+            40px 20px 20px;
+    }
+
+
+    .footer-contenido {
+
+        grid-template-columns: 1fr;
+
+        gap: 35px;
+    }
+
+
+    .footer-abajo {
+
+        flex-direction: column;
+
+        text-align: center;
+
+        align-items: center;
+    }
+
+}

@@ -14,8 +14,6 @@ function renderRevista(){
 
             ${renderNoticias()}
 
-            ${renderPodcasts()}
-
         </div>
 
     </section>

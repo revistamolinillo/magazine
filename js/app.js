@@ -1269,3 +1269,59 @@ async function copiarTexto(texto){
     }
 
 }
+
+// ==========================================
+// INSTALACIÓN PWA
+// ==========================================
+
+let instalacionPWA = null;
+
+window.addEventListener("beforeinstallprompt", (event) => {
+
+    // Evitar que Chrome muestre automáticamente el aviso
+    event.preventDefault();
+
+    // Guardamos el evento para utilizarlo después
+    instalacionPWA = event;
+
+    console.log("PWA preparada para instalar");
+
+    // Mostrar el botón
+    const boton = document.getElementById(
+        "boton-instalar-app"
+    );
+
+    if (boton) {
+        boton.style.display = "inline-flex";
+    }
+
+});
+
+async function instalarPWA(){
+
+    // Si el navegador no permite instalación
+    if (!instalacionPWA) {
+
+        alert(
+            "La instalación de la revista no está disponible en este dispositivo o navegador."
+        );
+
+        return;
+
+    }
+
+    // Mostrar ventana de instalación
+    instalacionPWA.prompt();
+
+    const resultado =
+        await instalacionPWA.userChoice;
+
+    console.log(
+        "Resultado instalación:",
+        resultado.outcome
+    );
+
+    // El evento solo puede utilizarse una vez
+    instalacionPWA = null;
+
+}
