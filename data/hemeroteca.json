@@ -1,5 +1,13 @@
 [
   {
+    "id": "E000003",
+    "curso": "2026/2027",
+    "nombre": "Noviembre",
+    "fecha": "2026-08-10T18:21:55.648Z",
+    "imagen": "1CPiwyZwBbmTVqXMkOuiUflimVhyUsOMJ",
+    "articulos": 4
+  },
+  {
     "id": "E000002",
     "curso": "2026/2027",
     "nombre": "Octubre",
