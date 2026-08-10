@@ -88,30 +88,33 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
 
     const request = event.request;
-    const url = new URL(request.url);
+
+    const url =
+        new URL(request.url);
 
 
-    // ===================================================
-    // SOLO GET
-    // ===================================================
-
-    if (request.method !== "GET") {
+    // Solo GET
+    if(request.method !== "GET"){
         return;
     }
 
 
     // ===================================================
-    // 1. HEMEROTECA
+    // JSON DINÁMICOS
     //
-    // Siempre comprobar Internet.
-    // Si falla → utilizar caché.
+    // RED PRIMERO
+    // Si falla → caché
+    //
+    // Esto permite detectar cambios.
     // ===================================================
 
-    if (
-        url.pathname.endsWith(
-            "/data/hemeroteca.json"
-        )
-    ) {
+    const esJSON =
+        url.pathname.endsWith(".json") ||
+        url.pathname.endsWith("/config.js") ||
+        url.pathname.endsWith("/estado.js");
+
+
+    if(esJSON){
 
         event.respondWith(
 
@@ -121,7 +124,7 @@ self.addEventListener("fetch", event => {
 
             .then(respuesta => {
 
-                if (respuesta.ok) {
+                if(respuesta.ok){
 
                     const copia =
                         respuesta.clone();
@@ -156,138 +159,21 @@ self.addEventListener("fetch", event => {
 
 
     // ===================================================
-    // 2. JSON DE LAS EDICIONES
-    //
-    // E000001.json
-    // E000002.json
-    // E000003.json...
-    //
-    // Siempre comprobar Internet.
-    // ===================================================
-
-    if (
-        url.pathname.includes(
-            "/data/ediciones/"
-        )
-        &&
-        url.pathname.endsWith(".json")
-    ) {
-
-        event.respondWith(
-
-            fetch(request, {
-                cache: "no-store"
-            })
-
-            .then(respuesta => {
-
-                if (respuesta.ok) {
-
-                    const copia =
-                        respuesta.clone();
-
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-
-                            cache.put(
-                                request,
-                                copia
-                            );
-
-                        });
-
-                }
-
-                return respuesta;
-
-            })
-
-            .catch(() => {
-
-                return caches.match(request);
-
-            })
-
-        );
-
-        return;
-
-    }
-
-
-    // ===================================================
-    // 3. CONFIG.JS Y ESTADO.JS
-    //
-    // Comprobar red primero.
-    // ===================================================
-
-    if (
-        url.pathname.endsWith(
-            "/data/config.js"
-        )
-        ||
-        url.pathname.endsWith(
-            "/data/estado.js"
-        )
-    ) {
-
-        event.respondWith(
-
-            fetch(request, {
-                cache: "no-store"
-            })
-
-            .then(respuesta => {
-
-                if (respuesta.ok) {
-
-                    const copia =
-                        respuesta.clone();
-
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-
-                            cache.put(
-                                request,
-                                copia
-                            );
-
-                        });
-
-                }
-
-                return respuesta;
-
-            })
-
-            .catch(() => {
-
-                return caches.match(request);
-
-            })
-
-        );
-
-        return;
-
-    }
-
-
-    // ===================================================
-    // 4. IMÁGENES
+    // IMÁGENES
     //
     // CACHÉ PRIMERO
     //
-    // Esto es importante para mantener la revista rápida.
+    // La primera vez:
+    // Internet → caché
+    //
+    // Las siguientes:
+    // caché → instantáneo
     // ===================================================
 
-    if (
-        request.destination === "image"
-        ||
-        url.hostname.includes(
-            "drive.google.com"
-        )
-    ) {
+    if(
+        request.destination === "image" ||
+        url.hostname.includes("drive.google.com")
+    ){
 
         event.respondWith(
 
@@ -295,28 +181,24 @@ self.addEventListener("fetch", event => {
 
                 .then(respuestaCache => {
 
-                    // Si ya existe → instantáneo
-                    if (respuestaCache) {
+                    if(respuestaCache){
 
                         return respuestaCache;
 
                     }
 
 
-                    // Si no existe → descargar
                     return fetch(request)
 
                         .then(respuestaRed => {
 
-                            if (
+                            if(
                                 respuestaRed &&
                                 (
-                                    respuestaRed.ok
-                                    ||
-                                    respuestaRed.type ===
-                                    "opaque"
+                                    respuestaRed.ok ||
+                                    respuestaRed.type === "opaque"
                                 )
-                            ) {
+                            ){
 
                                 const copia =
                                     respuestaRed.clone();
@@ -347,17 +229,14 @@ self.addEventListener("fetch", event => {
 
 
     // ===================================================
-    // 5. RESTO DE ARCHIVOS
+    // JS / CSS / HTML
     //
-    // HTML / JS / CSS / MANIFEST
+    // CACHÉ PRIMERO
     //
-    // IMPORTANTE:
+    // Para que la revista abra inmediatamente.
     //
-    // Estos archivos están incluidos en cada nueva
-    // versión del Service Worker.
-    //
-    // Cuando cambiemos v4 → v5 → v6...
-    // se volverán a descargar.
+    // Si no existe en caché:
+    // Internet → caché
     // ===================================================
 
     event.respondWith(
@@ -366,21 +245,50 @@ self.addEventListener("fetch", event => {
 
             .then(respuestaCache => {
 
-                if (respuestaCache) {
+                if(respuestaCache){
 
+                    // Actualización en segundo plano
+                    fetch(request, {
+                        cache: "no-store"
+                    })
+                    .then(respuestaNueva => {
+
+                        if(
+                            respuestaNueva &&
+                            respuestaNueva.ok
+                        ){
+
+                            caches.open(CACHE_NAME)
+                                .then(cache => {
+
+                                    cache.put(
+                                        request,
+                                        respuestaNueva.clone()
+                                    );
+
+                                });
+
+                        }
+
+                    })
+                    .catch(() => {});
+
+
+                    // Devolver inmediatamente
                     return respuestaCache;
 
                 }
 
 
+                // No estaba en caché
                 return fetch(request)
 
                     .then(respuestaRed => {
 
-                        if (
+                        if(
                             respuestaRed &&
                             respuestaRed.ok
-                        ) {
+                        ){
 
                             const copia =
                                 respuestaRed.clone();
@@ -409,243 +317,18 @@ self.addEventListener("fetch", event => {
 
 
 // =======================================================
-// COMPROBAR NUEVA EDICIÓN
+// MENSAJE PARA FORZAR ACTUALIZACIÓN
 // =======================================================
 
-async function comprobarNuevaEdicion() {
+self.addEventListener("message", event => {
 
-    try {
+    if(
+        event.data &&
+        event.data.tipo === "ACTUALIZAR"
+    ){
 
-        const respuesta = await fetch(
-            "./data/hemeroteca.json?v=" +
-            Date.now(),
-            {
-                cache: "no-store"
-            }
-        );
-
-
-        if (!respuesta.ok) {
-            return;
-        }
-
-
-        const hemeroteca =
-            await respuesta.json();
-
-
-        if (
-            !hemeroteca ||
-            !hemeroteca.length
-        ) {
-
-            return;
-
-        }
-
-
-        const ultimaEdicion =
-            hemeroteca[0].id;
-
-
-        console.log(
-            "Última edición publicada:",
-            ultimaEdicion
-        );
-
-
-    } catch (error) {
-
-        console.log(
-            "No se pudo comprobar la edición:",
-            error
-        );
+        self.skipWaiting();
 
     }
 
-}
-
-
-// =======================================================
-// GUARDAR EDICIÓN ACTUAL
-// =======================================================
-
-async function guardarEdicionActual(id) {
-
-    const cache =
-        await caches.open(CACHE_NAME);
-
-
-    await cache.put(
-
-        "./data/edicion-actual.txt",
-
-        new Response(id)
-
-    );
-
-}
-
-
-// =======================================================
-// OBTENER EDICIÓN GUARDADA
-// =======================================================
-
-async function obtenerEdicionGuardada() {
-
-    const cache =
-        await caches.open(CACHE_NAME);
-
-
-    const respuesta =
-        await cache.match(
-            "./data/edicion-actual.txt"
-        );
-
-
-    if (!respuesta) {
-        return null;
-    }
-
-
-    return await respuesta.text();
-
-}
-
-
-// =======================================================
-// COMPROBAR Y ACTUALIZAR EDICIÓN
-// =======================================================
-
-async function comprobarYActualizarEdicion() {
-
-    try {
-
-        const respuesta = await fetch(
-
-            "./data/hemeroteca.json?v=" +
-            Date.now(),
-
-            {
-                cache: "no-store"
-            }
-
-        );
-
-
-        if (!respuesta.ok) {
-            return;
-        }
-
-
-        const hemeroteca =
-            await respuesta.json();
-
-
-        if (
-            !hemeroteca ||
-            hemeroteca.length === 0
-        ) {
-
-            return;
-
-        }
-
-
-        const ultimaEdicion =
-            hemeroteca[0].id;
-
-
-        const edicionGuardada =
-            await obtenerEdicionGuardada();
-
-
-        console.log(
-            "Edición guardada:",
-            edicionGuardada
-        );
-
-
-        console.log(
-            "Última edición:",
-            ultimaEdicion
-        );
-
-
-        // =============================================
-        // PRIMERA INSTALACIÓN
-        // =============================================
-
-        if (!edicionGuardada) {
-
-            await guardarEdicionActual(
-                ultimaEdicion
-            );
-
-            return;
-
-        }
-
-
-        // =============================================
-        // NO HAY CAMBIOS
-        // =============================================
-
-        if (
-            edicionGuardada ===
-            ultimaEdicion
-        ) {
-
-            return;
-
-        }
-
-
-        // =============================================
-        // NUEVA EDICIÓN
-        // =============================================
-
-        console.log(
-            "🆕 NUEVA EDICIÓN DETECTADA:",
-            ultimaEdicion
-        );
-
-
-        await guardarEdicionActual(
-            ultimaEdicion
-        );
-
-
-        // =============================================
-        // AVISAR A LA REVISTA
-        // =============================================
-
-        const clientes =
-            await self.clients.matchAll();
-
-
-        clientes.forEach(cliente => {
-
-            cliente.postMessage({
-
-                tipo:
-                    "NUEVA_EDICION",
-
-                edicion:
-                    ultimaEdicion
-
-            });
-
-        });
-
-
-    } catch (error) {
-
-        console.log(
-            "Error comprobando actualización:",
-            error
-        );
-
-    }
-
-}
+});
