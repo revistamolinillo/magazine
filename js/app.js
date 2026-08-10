@@ -68,63 +68,124 @@ function mostrarVista(vista){
 
     vistaActual = vista;
 
-    const app = document.getElementById("app");
+    const app =
+        document.getElementById("app");
+
+
+    // ==========================================
+    // NOTICIA
+    // ==========================================
 
     if(vista.startsWith("noticia-")){
 
-        const id = vista.replace("noticia-","");
+        const id =
+            vista.replace("noticia-","");
 
-        return app.innerHTML =
+
+        app.innerHTML =
             renderVistaNoticia(id);
 
+
+        // Activar barra de progreso
+        requestAnimationFrame(() => {
+
+            activarProgresoLectura();
+
+        });
+
+
+        return;
+
     }
+
+
+    // ==========================================
+    // PODCAST
+    // ==========================================
+
     if(vista.startsWith("podcast-")){
 
-        const id = vista.replace("podcast-","");
+        const id =
+            vista.replace("podcast-","");
 
-        return app.innerHTML =
+
+        app.innerHTML =
             renderVistaPodcast(id);
 
+
+        // Activar barra de progreso
+        requestAnimationFrame(() => {
+
+            activarProgresoLectura();
+
+        });
+
+
+        return;
+
     }
+
+
+    // ==========================================
+    // CUALQUIER OTRA VISTA
+    // ==========================================
+
+    desactivarProgresoLectura();
+
 
     switch(vista){
 
         case "portada":
 
-            app.innerHTML = renderPortada();
+            app.innerHTML =
+                renderPortada();
+
             break;
 
 
         case "secciones":
 
-            app.innerHTML = renderSecciones();
+            app.innerHTML =
+                renderSecciones();
+
             break;
 
 
         case "hemeroteca":
 
-            app.innerHTML = renderHemeroteca();
+            app.innerHTML =
+                renderHemeroteca();
+
             break;
 
 
         case "podcasts":
 
-            app.innerHTML = renderVistaPodcasts();
+            app.innerHTML =
+                renderVistaPodcasts();
 
             break;
 
+
         case "buscador":
 
-            app.innerHTML = renderBuscador();
+            app.innerHTML =
+                renderBuscador();
+
             break;
 
     }
 
 
+    // ==========================================
+    // SECCIÓN
+    // ==========================================
+
     if(vista.startsWith("seccion-")){
 
         const nombre =
             vista.replace("seccion-","");
+
 
         app.innerHTML =
             renderVistaSeccion(nombre);

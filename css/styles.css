@@ -4373,3 +4373,161 @@ No modifica el diseño de ordenador
     }
 
 }
+
+/* =======================================================
+   ACCIONES DE NOTICIA
+   ======================================================= */
+
+.acciones-noticia{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-top:28px;
+
+    padding-top:18px;
+
+    border-top:1px solid rgba(15,23,42,0.10);
+
+}
+
+
+/* BOTONES */
+
+.acciones-noticia button{
+
+    border:none;
+
+    background:#f1f5f9;
+
+    color:#0f172a;
+
+    padding:10px 16px;
+
+    border-radius:999px;
+
+    font-family:inherit;
+
+    font-size:0.9rem;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+/* COMPARTIR */
+
+.acciones-noticia .boton-compartir{
+
+    background:#0f172a;
+
+    color:white;
+
+}
+
+
+/* COPIAR ENLACE */
+
+.acciones-noticia .boton-copiar-enlace{
+
+    background:#e2e8f0;
+
+    color:#334155;
+
+}
+
+
+/* HOVER */
+
+.acciones-noticia button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 6px 18px rgba(15,23,42,0.12);
+
+}
+
+
+.acciones-noticia .boton-compartir:hover{
+
+    background:#1e293b;
+
+}
+
+
+.acciones-noticia .boton-copiar-enlace:hover{
+
+    background:#cbd5e1;
+
+}
+
+
+/* AL PULSAR */
+
+.acciones-noticia button:active{
+
+    transform:translateY(0);
+
+}
+
+
+/* =======================================================
+   MÓVIL
+   ======================================================= */
+
+@media (max-width:600px){
+
+    .acciones-noticia{
+
+        gap:8px;
+
+        margin-top:22px;
+
+        padding-top:15px;
+
+    }
+
+
+    .acciones-noticia button{
+
+        flex:1;
+
+        padding:10px 12px;
+
+        font-size:0.85rem;
+
+    }
+
+}
+
+/* ==========================================
+   PROGRESO DE LECTURA
+   ========================================== */
+
+#barra-progreso-lectura {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 4px;
+    background: linear-gradient(
+        90deg,
+        #2563eb,
+        #38bdf8
+    );
+    z-index: 99999;
+    transition: width 0.08s linear;
+    pointer-events: none;
+}
+

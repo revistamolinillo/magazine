@@ -9,16 +9,18 @@ function renderRevista(){
 
         <div class="contenedor">
 
+
             ${renderDestacadas()}
 
             ${renderNoticias()}
+
+            ${renderPodcasts()}
 
         </div>
 
     </section>
 
     `;
-
 }
 
 function renderNoticias(){

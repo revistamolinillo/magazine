@@ -148,13 +148,17 @@ function renderHero(){
                     ${edicion.portada.entradilla}
                 </p>
 
-                <button
-                    class="hero-boton"
-                    onclick="abrirRevista()">
+                <div class="hero-botones">
 
-                    Leer revista
+                    <button
+                        class="hero-boton"
+                        onclick="abrirRevista()">
 
-                </button>
+                        Leer revista
+
+                    </button>
+
+                </div>
 
             </div>
 

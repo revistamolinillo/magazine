@@ -960,7 +960,6 @@ function renderVistaPodcast(id){
 
                     </button>
 
-
                     <button
                         class="boton-copiar-enlace"
                         onclick="copiarEnlaceNoticia('${podcast.ID}')">
@@ -1209,5 +1208,119 @@ function abrirImagenPrincipal(idNoticia){
 function volverDeSeccion(){
 
     mostrarVista("secciones");
+
+}
+
+// ==========================================
+// BARRA DE PROGRESO DE LECTURA
+// ==========================================
+
+function activarProgresoLectura(){
+
+    let barra =
+        document.getElementById(
+            "barra-progreso-lectura"
+        );
+
+    if(!barra){
+
+        barra =
+            document.createElement("div");
+
+        barra.id =
+            "barra-progreso-lectura";
+
+        document.body.appendChild(barra);
+
+    }
+
+
+    window.removeEventListener(
+        "scroll",
+        actualizarProgresoLectura
+    );
+
+
+    window.addEventListener(
+        "scroll",
+        actualizarProgresoLectura
+    );
+
+
+    actualizarProgresoLectura();
+
+}
+
+
+// ==========================================
+// ACTUALIZAR PROGRESO
+// ==========================================
+
+function actualizarProgresoLectura(){
+
+    const barra =
+        document.getElementById(
+            "barra-progreso-lectura"
+        );
+
+    if(!barra) return;
+
+
+    const alturaTotal =
+        document.documentElement.scrollHeight
+        -
+        window.innerHeight;
+
+
+    if(alturaTotal <= 0){
+
+        barra.style.width = "100%";
+
+        return;
+
+    }
+
+
+    const progreso =
+        (
+            window.scrollY /
+            alturaTotal
+        ) * 100;
+
+
+    barra.style.width =
+        Math.min(
+            100,
+            Math.max(
+                0,
+                progreso
+            )
+        ) + "%";
+
+}
+
+
+// ==========================================
+// DESACTIVAR PROGRESO
+// ==========================================
+
+function desactivarProgresoLectura(){
+
+    const barra =
+        document.getElementById(
+            "barra-progreso-lectura"
+        );
+
+    if(barra){
+
+        barra.remove();
+
+    }
+
+
+    window.removeEventListener(
+        "scroll",
+        actualizarProgresoLectura
+    );
 
 }
