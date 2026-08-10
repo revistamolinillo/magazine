@@ -192,6 +192,23 @@ function mostrarVista(vista){
 
     vistaActual = vista;
 
+    // ==========================================
+    // VOLVER ARRIBA AL CAMBIAR DE VISTA
+    // ==========================================
+
+    if(
+        !vista.startsWith("noticia-") &&
+        !vista.startsWith("podcast-")
+    ){
+
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "instant"
+        });
+
+    }
+
     const app =
         document.getElementById("app");
 
@@ -279,6 +296,11 @@ function mostrarVista(vista){
 
             app.innerHTML =
                 renderHemeroteca();
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: "instant"
+                });
 
             break;
 
@@ -722,10 +744,12 @@ async function cargarHemeroteca(){
 
 function abrirRevista(){
 
-    document.getElementById("revista").scrollIntoView({
+    mostrarVista("portada");
 
-        behavior:"smooth"
-
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "instant"
     });
 
 }

@@ -266,7 +266,6 @@ function renderCurso(curso, listaHemeroteca){
                             <img
                                 src="https://drive.google.com/thumbnail?id=${edicion.imagen}&sz=w900"
                                 alt="${edicion.nombre}"
-                                loading="lazy"
                                 decoding="async">
 
                         </div>

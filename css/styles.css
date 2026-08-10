@@ -4548,12 +4548,14 @@ No modifica el diseño de ordenador
     margin: 0 auto;
 
     display: grid;
-    grid-template-columns:
-        1.5fr
-        1fr
-        1.5fr;
 
-    gap: 50px;
+    grid-template-columns:
+        1.3fr
+        1fr
+        1fr
+        1.3fr;
+
+    gap: 35px;
 }
 
 

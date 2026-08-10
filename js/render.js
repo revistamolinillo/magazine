@@ -258,7 +258,7 @@ function renderFooter(){
 
         <!-- INSTALAR -->
 
-        <div class="footer-bloque">
+        <div class="footer-bloque footer-instalar">
 
             <h3>
                 Revista en tu dispositivo
