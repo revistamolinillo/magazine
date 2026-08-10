@@ -4714,3 +4714,252 @@ No modifica el diseño de ordenador
     }
 
 }
+
+/* ==========================================
+   MODAL INSTALACIÓN iOS
+   ========================================== */
+
+.modal-instalar-ios{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:99999;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    background:rgba(15,23,42,.75);
+
+    backdrop-filter:blur(8px);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:
+        opacity .25s ease,
+        visibility .25s ease;
+
+}
+
+
+.modal-instalar-ios.visible{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+
+.modal-instalar-ios-contenido{
+
+    position:relative;
+
+    width:min(440px,100%);
+
+    max-height:90vh;
+
+    overflow:auto;
+
+    padding:32px 26px 26px;
+
+    background:#fff;
+
+    border-radius:24px;
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.3);
+
+    transform:translateY(20px) scale(.97);
+
+    transition:transform .25s ease;
+
+}
+
+
+.modal-instalar-ios.visible
+.modal-instalar-ios-contenido{
+
+    transform:
+        translateY(0)
+        scale(1);
+
+}
+
+
+.cerrar-modal-ios{
+
+    position:absolute;
+
+    top:12px;
+
+    right:14px;
+
+    width:36px;
+
+    height:36px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:#f1f5f9;
+
+    color:#475569;
+
+    font-size:26px;
+
+    line-height:1;
+
+    cursor:pointer;
+
+}
+
+
+.icono-instalar-ios{
+
+    width:64px;
+
+    height:64px;
+
+    margin:0 auto 16px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:18px;
+
+    background:#eff6ff;
+
+    font-size:34px;
+
+}
+
+
+.modal-instalar-ios-contenido h2{
+
+    margin:0;
+
+    text-align:center;
+
+    font-size:26px;
+
+    color:#0f172a;
+
+}
+
+
+.modal-ios-intro{
+
+    margin:10px 0 25px;
+
+    text-align:center;
+
+    color:#64748b;
+
+    line-height:1.5;
+
+}
+
+
+.pasos-ios{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+
+.paso-ios{
+
+    display:flex;
+
+    gap:14px;
+
+    align-items:flex-start;
+
+}
+
+
+.numero-paso-ios{
+
+    flex:0 0 34px;
+
+    width:34px;
+
+    height:34px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    color:#fff;
+
+    font-weight:700;
+
+}
+
+
+.paso-ios strong{
+
+    color:#0f172a;
+
+}
+
+
+.paso-ios p{
+
+    margin:4px 0 0;
+
+    color:#64748b;
+
+    font-size:14px;
+
+    line-height:1.45;
+
+}
+
+
+.boton-cerrar-ios{
+
+    width:100%;
+
+    margin-top:26px;
+
+    padding:13px 18px;
+
+    border:0;
+
+    border-radius:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+}
