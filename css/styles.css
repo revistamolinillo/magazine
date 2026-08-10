@@ -5165,3 +5165,221 @@ No modifica el diseño de ordenador
     }
 
 }
+
+/* =======================================================
+   PANTALLA DE CARGA
+   ======================================================= */
+
+#pantalla-carga {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 99999;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #172554
+        );
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transition:
+        opacity 0.4s ease,
+        visibility 0.4s ease;
+
+}
+
+
+/* Cuando termina la carga */
+
+#pantalla-carga.oculta {
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+}
+
+
+/* Contenido */
+
+.carga-contenido {
+
+    text-align: center;
+
+    padding: 30px;
+
+}
+
+
+/* Logo */
+
+.carga-logo {
+
+    color: white;
+
+    font-size: 2rem;
+
+    font-weight: 800;
+
+    letter-spacing: 3px;
+
+    line-height: 1.1;
+
+}
+
+
+.carga-logo span {
+
+    display: block;
+
+    margin-top: 7px;
+
+    font-size: 0.8rem;
+
+    font-weight: 500;
+
+    letter-spacing: 7px;
+
+    opacity: 0.75;
+
+}
+
+
+/* Línea */
+
+.carga-linea {
+
+    width: 55px;
+
+    height: 3px;
+
+    margin: 25px auto 20px;
+
+    border-radius: 10px;
+
+    background: #38bdf8;
+
+    animation:
+        cargaLinea 1.5s ease-in-out infinite;
+
+}
+
+
+/* Texto */
+
+.carga-texto {
+
+    margin: 0;
+
+    color: rgba(255,255,255,0.75);
+
+    font-size: 0.9rem;
+
+    letter-spacing: 0.5px;
+
+}
+
+
+/* Puntos */
+
+.carga-puntos {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 18px;
+
+}
+
+
+.carga-puntos span {
+
+    width: 6px;
+
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #38bdf8;
+
+    animation:
+        cargaPunto 1.2s infinite ease-in-out;
+
+}
+
+
+.carga-puntos span:nth-child(2) {
+
+    animation-delay: 0.15s;
+
+}
+
+
+.carga-puntos span:nth-child(3) {
+
+    animation-delay: 0.30s;
+
+}
+
+
+@keyframes cargaPunto {
+
+    0%,
+    60%,
+    100% {
+
+        opacity: 0.25;
+
+        transform: translateY(0);
+
+    }
+
+    30% {
+
+        opacity: 1;
+
+        transform: translateY(-4px);
+
+    }
+
+}
+
+
+@keyframes cargaLinea {
+
+    0%,
+    100% {
+
+        transform: scaleX(0.6);
+
+        opacity: 0.5;
+
+    }
+
+    50% {
+
+        transform: scaleX(1);
+
+        opacity: 1;
+
+    }
+
+}
