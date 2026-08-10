@@ -82,54 +82,85 @@ self.addEventListener("activate", event => {
 // PETICIONES
 // ==========================================
 
-// ==========================================
-// PETICIONES
-// ==========================================
-
 self.addEventListener("fetch", event => {
 
-    const url = new URL(event.request.url);
+    const url = new URL(
+        event.request.url
+    );
 
 
     // ==========================================
     // HEMEROTECA
-    // Siempre intenta comprobar si hay versión nueva
     // ==========================================
 
-    if(
-        url.pathname.endsWith("/data/hemeroteca.json")
-    ){
+    if (
+        url.pathname.endsWith(
+            "/data/hemeroteca.json"
+        )
+    ) {
 
         event.respondWith(
 
-            fetch(event.request, {
-                cache: "no-store"
-            })
-            .then(respuestaRed => {
+            caches.match(
+                event.request
+            )
+            .then(respuestaCache => {
 
-                if(respuestaRed.ok){
+                // Comprobar actualización
+                // en segundo plano
 
-                    const copia =
-                        respuestaRed.clone();
+                fetch(
+                    event.request,
+                    {
+                        cache: "no-store"
+                    }
+                )
+                .then(respuestaRed => {
 
-                    caches.open(CACHE_NAME)
+                    if (
+                        respuestaRed &&
+                        respuestaRed.ok
+                    ) {
+
+                        caches.open(
+                            CACHE_NAME
+                        )
                         .then(cache => {
 
                             cache.put(
                                 event.request,
-                                copia
+                                respuestaRed.clone()
                             );
 
                         });
 
+                    }
+
+                })
+                .catch(() => {
+
+                    // Si no hay Internet,
+                    // seguimos usando la caché.
+
+                });
+
+
+                // ==================================
+                // DEVOLVER CACHÉ INMEDIATAMENTE
+                // ==================================
+
+                if (respuestaCache) {
+
+                    return respuestaCache;
+
                 }
 
-                return respuestaRed;
 
-            })
-            .catch(() => {
+                // ==================================
+                // PRIMERA CARGA
+                // ==================================
 
-                return caches.match(
+                return fetch(
                     event.request
                 );
 
@@ -144,207 +175,28 @@ self.addEventListener("fetch", event => {
 
     // ==========================================
     // RESTO DE ARCHIVOS
-    // Usar caché para que cargue rápido
+    // CACHÉ PRIMERO
     // ==========================================
 
     event.respondWith(
 
-        caches.match(event.request)
-            .then(respuestaCache => {
+        caches.match(
+            event.request
+        )
+        .then(respuestaCache => {
 
-                if(respuestaCache){
+            if (respuestaCache) {
 
-                    return respuestaCache;
+                return respuestaCache;
 
-                }
+            }
 
-                return fetch(event.request);
+            return fetch(
+                event.request
+            );
 
-            })
+        })
 
     );
 
 });
-
-// ==========================================
-// COMPROBAR NUEVA EDICIÓN
-// ==========================================
-
-async function comprobarNuevaEdicion() {
-
-    try {
-
-        const respuesta = await fetch(
-            "./data/hemeroteca.json?v=" + Date.now(),
-            {
-                cache: "no-store"
-            }
-        );
-
-        if (!respuesta.ok) return;
-
-        const hemeroteca = await respuesta.json();
-
-        if (!hemeroteca || !hemeroteca.length) return;
-
-        const ultimaEdicion =
-            hemeroteca[0].id;
-
-        console.log(
-            "Última edición publicada:",
-            ultimaEdicion
-        );
-
-    } catch (error) {
-
-        console.log(
-            "No se pudo comprobar la edición:",
-            error
-        );
-
-    }
-
-}
-
-async function guardarEdicionActual(id) {
-
-    const cache = await caches.open(CACHE_NAME);
-
-    await cache.put(
-        "./data/edicion-actual.txt",
-        new Response(id)
-    );
-
-}
-
-async function obtenerEdicionGuardada() {
-
-    const cache = await caches.open(CACHE_NAME);
-
-    const respuesta =
-        await cache.match(
-            "./data/edicion-actual.txt"
-        );
-
-    if (!respuesta) return null;
-
-    return await respuesta.text();
-
-}
-
-async function comprobarYActualizarEdicion() {
-
-    try {
-
-        const respuesta = await fetch(
-            "./data/hemeroteca.json?v=" + Date.now(),
-            {
-                cache: "no-store"
-            }
-        );
-
-        if (!respuesta.ok) return;
-
-        const hemeroteca =
-            await respuesta.json();
-
-        if (
-            !hemeroteca ||
-            hemeroteca.length === 0
-        ) {
-            return;
-        }
-
-        const ultimaEdicion =
-            hemeroteca[0].id;
-
-        const edicionGuardada =
-            await obtenerEdicionGuardada();
-
-        console.log(
-            "Edición guardada:",
-            edicionGuardada
-        );
-
-        console.log(
-            "Última edición:",
-            ultimaEdicion
-        );
-
-
-        // ==========================================
-        // PRIMERA INSTALACIÓN
-        // ==========================================
-
-        if (!edicionGuardada) {
-
-            await guardarEdicionActual(
-                ultimaEdicion
-            );
-
-            return;
-
-        }
-
-
-        // ==========================================
-        // NO HAY CAMBIOS
-        // ==========================================
-
-        if (
-            edicionGuardada ===
-            ultimaEdicion
-        ) {
-
-            return;
-
-        }
-
-
-        // ==========================================
-        // HAY UNA NUEVA EDICIÓN
-        // ==========================================
-
-        console.log(
-            "🆕 NUEVA EDICIÓN DETECTADA:",
-            ultimaEdicion
-        );
-
-
-        await guardarEdicionActual(
-            ultimaEdicion
-        );
-
-
-        // Avisar a la aplicación
-        // de que existe una nueva edición
-
-        const clientes =
-            await self.clients.matchAll();
-
-
-        clientes.forEach(cliente => {
-
-            cliente.postMessage({
-
-                tipo:
-                    "NUEVA_EDICION",
-
-                edicion:
-                    ultimaEdicion
-
-            });
-
-        });
-
-
-    } catch(error) {
-
-        console.log(
-            "Error comprobando actualización:",
-            error
-        );
-
-    }
-
-}
