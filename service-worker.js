@@ -82,7 +82,70 @@ self.addEventListener("activate", event => {
 // PETICIONES
 // ==========================================
 
+// ==========================================
+// PETICIONES
+// ==========================================
+
 self.addEventListener("fetch", event => {
+
+    const url = new URL(event.request.url);
+
+
+    // ==========================================
+    // HEMEROTECA
+    // Siempre intenta comprobar si hay versión nueva
+    // ==========================================
+
+    if(
+        url.pathname.endsWith("/data/hemeroteca.json")
+    ){
+
+        event.respondWith(
+
+            fetch(event.request, {
+                cache: "no-store"
+            })
+            .then(respuestaRed => {
+
+                if(respuestaRed.ok){
+
+                    const copia =
+                        respuestaRed.clone();
+
+                    caches.open(CACHE_NAME)
+                        .then(cache => {
+
+                            cache.put(
+                                event.request,
+                                copia
+                            );
+
+                        });
+
+                }
+
+                return respuestaRed;
+
+            })
+            .catch(() => {
+
+                return caches.match(
+                    event.request
+                );
+
+            })
+
+        );
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // RESTO DE ARCHIVOS
+    // Usar caché para que cargue rápido
+    // ==========================================
 
     event.respondWith(
 
