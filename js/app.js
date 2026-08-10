@@ -60,33 +60,124 @@ let podcastSubseccionAnterior = "";
 
 async function iniciar(){
 
-    await cargarDatos();
+    try {
+
+        await cargarDatos();
 
 
-    const parametros =
-        new URLSearchParams(
-            window.location.search
+        const parametros =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const noticia =
+            parametros.get("noticia");
+
+
+        if(noticia){
+
+            await irANoticia(
+                noticia
+            );
+
+            ocultarPantallaCarga();
+
+            return;
+
+        }
+
+
+        mostrarVista("portada");
+
+        ocultarPantallaCarga();
+
+
+    } catch(error) {
+
+        console.error(
+            "Error cargando la revista:",
+            error
+        );
+
+        mostrarErrorCarga();
+
+    }
+
+}
+
+// =======================================================
+// PANTALLA DE CARGA
+// =======================================================
+
+function ocultarPantallaCarga(){
+
+    const pantalla =
+        document.getElementById(
+            "pantalla-carga"
+        );
+
+    if(!pantalla) return;
+
+
+    pantalla.classList.add(
+        "oculta"
+    );
+
+
+    setTimeout(() => {
+
+        pantalla.remove();
+
+    }, 400);
+
+}
+
+
+// =======================================================
+// ERROR DE CARGA
+// =======================================================
+
+function mostrarErrorCarga(){
+
+    const pantalla =
+        document.getElementById(
+            "pantalla-carga"
+        );
+
+    if(!pantalla) return;
+
+
+    const texto =
+        pantalla.querySelector(
+            ".carga-texto"
         );
 
 
-    const noticia =
-        parametros.get("noticia");
+    if(texto){
 
-
-    if(noticia){
-
-        await irANoticia(
-            noticia
-        );
-
-        return;
+        texto.textContent =
+            "No se ha podido cargar la revista.";
 
     }
 
 
-    mostrarVista("portada");
+    const puntos =
+        pantalla.querySelector(
+            ".carga-puntos"
+        );
+
+
+    if(puntos){
+
+        puntos.innerHTML =
+            "⚠️";
+
+    }
 
 }
+
+
 function mostrarVista(vista){
 
     if(
