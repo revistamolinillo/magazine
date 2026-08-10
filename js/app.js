@@ -1299,8 +1299,34 @@ window.addEventListener("beforeinstallprompt", (event) => {
 
 async function instalarPWA(){
 
-    // Si el navegador no permite instalación
-    if (!instalacionPWA) {
+    // ==========================================
+    // IPHONE / IPAD
+    // ==========================================
+
+    const esIOS =
+        /iphone|ipad|ipod/i.test(
+            navigator.userAgent
+        );
+
+    if(esIOS){
+
+        alert(
+            "📱 Para instalar El Molinillo Magazine:\n\n" +
+            "1. Pulsa el botón Compartir ↗️ de Safari.\n\n" +
+            "2. Busca «Añadir a pantalla de inicio».\n\n" +
+            "3. Pulsa «Añadir».\n\n" +
+            "¡Y listo! Tendrás la revista como una aplicación."
+        );
+
+        return;
+    }
+
+
+    // ==========================================
+    // ANDROID / ORDENADOR
+    // ==========================================
+
+    if(!instalacionPWA){
 
         alert(
             "La instalación de la revista no está disponible en este dispositivo o navegador."
@@ -1310,18 +1336,20 @@ async function instalarPWA(){
 
     }
 
-    // Mostrar ventana de instalación
+
     instalacionPWA.prompt();
+
 
     const resultado =
         await instalacionPWA.userChoice;
+
 
     console.log(
         "Resultado instalación:",
         resultado.outcome
     );
 
-    // El evento solo puede utilizarse una vez
+
     instalacionPWA = null;
 
 }
