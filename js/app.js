@@ -684,6 +684,7 @@ async function cargarHemeroteca(){
 
 
         hemeroteca = await respuesta.json();
+        precargarPortadasHemeroteca();
 
 
         // ==========================================
@@ -1174,6 +1175,7 @@ async function cargarTodasLasNoticias(){
 
         const datosEdicion =
             await respuestaEdicion.json();
+            datosEdicionesCargadas[edicion.id] = datosEdicion;
 
 
         if(!datosEdicion.noticias){
@@ -1905,5 +1907,29 @@ function precargarImagenesSecciones() {
         console.log("🖼️ Precarga de imágenes iniciada");
 
     }, 1500);
+
+}
+
+function precargarPortadasHemeroteca(){
+
+    if(!Array.isArray(hemeroteca)) return;
+
+    console.log(
+        "🖼️ Precargando portadas de la hemeroteca..."
+    );
+
+    hemeroteca.forEach(edicion => {
+
+        if(!edicion.imagen) return;
+
+        const url =
+            `https://drive.google.com/thumbnail?id=${edicion.imagen}&sz=w900`;
+
+        const imagen =
+            new Image();
+
+        imagen.src = url;
+
+    });
 
 }
