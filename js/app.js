@@ -63,6 +63,7 @@ async function iniciar(){
     try {
 
         await cargarDatos();
+        precargarImagenesSecciones();
 
 
         const parametros =
@@ -1845,5 +1846,40 @@ function cerrarInstruccionesIOS(){
         modal.remove();
 
     }, 250);
+
+}
+
+// =======================================================
+// PRECARGAR IMÁGENES DE LAS SECCIONES EN SEGUNDO PLANO
+// =======================================================
+
+function precargarImagenesSecciones() {
+
+    if (!noticias || !noticias.length) {
+        return;
+    }
+
+    console.log("🖼️ Iniciando precarga de imágenes...");
+
+    // Esperamos un poco para NO ralentizar la portada
+    setTimeout(() => {
+
+        noticias.forEach(noticia => {
+
+            const url = obtenerImagenURL(noticia);
+
+            if (!url) {
+                return;
+            }
+
+            const imagen = new Image();
+
+            imagen.src = url;
+
+        });
+
+        console.log("🖼️ Precarga de imágenes iniciada");
+
+    }, 1500);
 
 }
