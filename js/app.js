@@ -1,6 +1,38 @@
 console.log("Preview cargado:", typeof revistaPreview);
 window.addEventListener("DOMContentLoaded", iniciar);
 
+// ==========================================
+// ACTUALIZACIÓN AUTOMÁTICA DE LA REVISTA
+// ==========================================
+
+if ("serviceWorker" in navigator) {
+
+    navigator.serviceWorker.addEventListener(
+        "message",
+        event => {
+
+            if (
+                event.data &&
+                event.data.tipo === "NUEVA_EDICION"
+            ) {
+
+                console.log(
+                    "🆕 Nueva edición disponible:",
+                    event.data.edicion
+                );
+
+                // Recargar los datos de la revista
+                // sin recargar toda la página
+
+                cargarDatos();
+
+            }
+
+        }
+    );
+
+}
+
 let vistaActual = "portada";
 let idEdicionActual = null;
 let idEdicionLeyendo = null;
