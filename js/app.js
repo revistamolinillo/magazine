@@ -62,9 +62,29 @@ async function iniciar(){
 
     try {
 
-        await cargarDatos();
-        precargarImagenesSecciones();
+        console.log("🚀 Iniciando El Molinillo Magazine...");
 
+        // ==========================================
+        // 1. CARGAR TODOS LOS DATOS
+        // ==========================================
+
+        await cargarDatos();
+
+        console.log("✅ Datos cargados");
+
+
+        // ==========================================
+        // 2. PRECARGAR IMÁGENES IMPORTANTES
+        // ==========================================
+
+        await precargarImagenesIniciales();
+
+        console.log("✅ Imágenes iniciales cargadas");
+
+
+        // ==========================================
+        // 3. COMPROBAR SI HAY UNA NOTICIA EN LA URL
+        // ==========================================
 
         const parametros =
             new URLSearchParams(
@@ -78,9 +98,7 @@ async function iniciar(){
 
         if(noticia){
 
-            await irANoticia(
-                noticia
-            );
+            await irANoticia(noticia);
 
             ocultarPantallaCarga();
 
@@ -89,15 +107,32 @@ async function iniciar(){
         }
 
 
+        // ==========================================
+        // 4. MOSTRAR PORTADA
+        // ==========================================
+
         mostrarVista("portada");
 
-        ocultarPantallaCarga();
+
+        // ==========================================
+        // 5. OCULTAR PANTALLA DE CARGA
+        // ==========================================
+
+        requestAnimationFrame(() => {
+
+            requestAnimationFrame(() => {
+
+                ocultarPantallaCarga();
+
+            });
+
+        });
 
 
     } catch(error) {
 
         console.error(
-            "Error cargando la revista:",
+            "❌ Error cargando la revista:",
             error
         );
 
@@ -107,6 +142,148 @@ async function iniciar(){
 
 }
 
+// =======================================================
+// PRECARGA INICIAL DE IMÁGENES
+// =======================================================
+
+async function precargarImagenesIniciales(){
+
+    const urls = [];
+
+
+    // ==========================================
+    // PORTADA
+    // ==========================================
+
+    if(
+        edicion &&
+        edicion.portada &&
+        edicion.portada.imagen
+    ){
+
+        const imagenPortada =
+            edicion.portada.imagen;
+
+
+        const urlPortada =
+            imagenPortada.startsWith("http")
+            ? imagenPortada
+            : `https://drive.google.com/thumbnail?id=${imagenPortada}&sz=w1600`;
+
+
+        urls.push(urlPortada);
+
+    }
+
+
+    // ==========================================
+    // IMÁGENES PRINCIPALES DE LAS NOTICIAS
+    // ==========================================
+
+    if(
+        Array.isArray(noticias)
+    ){
+
+        noticias.forEach(noticia => {
+
+            const url =
+                obtenerImagenURL(noticia);
+
+
+            if(
+                url &&
+                !url.startsWith("assets/")
+            ){
+
+                urls.push(url);
+
+            }
+
+        });
+
+    }
+
+
+    // ==========================================
+    // ELIMINAR DUPLICADOS
+    // ==========================================
+
+    const urlsUnicas =
+        [...new Set(urls)];
+
+
+    if(urlsUnicas.length === 0){
+
+        console.log(
+            "ℹ️ No hay imágenes que precargar"
+        );
+
+        return;
+
+    }
+
+
+    console.log(
+        `🖼️ Esperando ${urlsUnicas.length} imágenes...`
+    );
+
+
+    // ==========================================
+    // CARGAR TODAS LAS IMÁGENES
+    // ==========================================
+
+    await Promise.all(
+
+        urlsUnicas.map(url => {
+
+            return new Promise(resolve => {
+
+                const imagen =
+                    new Image();
+
+
+                imagen.onload = () => {
+
+                    console.log(
+                        "✅ Imagen cargada:",
+                        url
+                    );
+
+                    resolve();
+
+                };
+
+
+                imagen.onerror = () => {
+
+                    console.warn(
+                        "⚠️ No se pudo cargar:",
+                        url
+                    );
+
+                    // IMPORTANTE:
+                    // Una imagen que falle NO
+                    // bloquea toda la aplicación.
+
+                    resolve();
+
+                };
+
+
+                imagen.src = url;
+
+            });
+
+        })
+
+    );
+
+
+    console.log(
+        "🖼️ Precarga inicial terminada"
+    );
+
+}
 // =======================================================
 // PANTALLA DE CARGA
 // =======================================================
