@@ -214,8 +214,12 @@ function renderAudioPodcast(podcast){
                         class="podcast-player"
                         src="https://drive.google.com/file/d/${a.id}/preview"
                         allow="autoplay"
-                        loading="lazy"
-                        onload="this.parentElement.classList.add('cargado')">
+                        loading="eager"
+                        onload="
+                            setTimeout(() => {
+                                this.parentElement.classList.add('cargado');
+                            }, 300);
+                        ">
                     </iframe>
 
                 </div>

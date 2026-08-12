@@ -26,7 +26,7 @@ function renderNoticias(){
 
     return `
 
-        <h2 class="titulo-seccion">
+        <h2 class="titulo-sreccion">
             📰 Noticias
         </h2>
 
