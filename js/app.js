@@ -62,28 +62,22 @@ async function iniciar(){
 
     try {
 
-        console.log("🚀 Iniciando El Molinillo Magazine...");
-
         // ==========================================
-        // 1. CARGAR TODOS LOS DATOS
+        // 1. CARGAR DATOS
         // ==========================================
 
         await cargarDatos();
 
-        console.log("✅ Datos cargados");
-
 
         // ==========================================
-        // 2. PRECARGAR IMÁGENES IMPORTANTES
+        // 2. PREPARAR IMÁGENES IMPORTANTES
         // ==========================================
 
         await precargarImagenesIniciales();
 
-        console.log("✅ Imágenes iniciales cargadas");
-
 
         // ==========================================
-        // 3. COMPROBAR SI HAY UNA NOTICIA EN LA URL
+        // 3. COMPROBAR SI VENIMOS DE UN ENLACE
         // ==========================================
 
         const parametros =
@@ -115,7 +109,7 @@ async function iniciar(){
 
 
         // ==========================================
-        // 5. OCULTAR PANTALLA DE CARGA
+        // 5. YA PODEMOS QUITAR EL SPLASH
         // ==========================================
 
         requestAnimationFrame(() => {
@@ -132,7 +126,7 @@ async function iniciar(){
     } catch(error) {
 
         console.error(
-            "❌ Error cargando la revista:",
+            "Error cargando la revista:",
             error
         );
 
@@ -2084,6 +2078,146 @@ function precargarImagenesSecciones() {
         console.log("🖼️ Precarga de imágenes iniciada");
 
     }, 1500);
+
+}
+
+// =======================================================
+// PRECARGA DE IMÁGENES INICIALES
+// =======================================================
+
+async function precargarImagenesIniciales(){
+
+    console.log(
+        "🖼️ Preparando imágenes iniciales..."
+    );
+
+
+    const urls = [];
+
+
+    // ==========================================
+    // PORTADA DE LA EDICIÓN
+    // ==========================================
+
+    if(
+        edicion &&
+        edicion.portada &&
+        edicion.portada.imagen
+    ){
+
+        const url =
+            `https://drive.google.com/thumbnail?id=${
+                edicion.portada.imagen
+            }&sz=w1200`;
+
+        urls.push(url);
+
+    }
+
+
+    // ==========================================
+    // IMÁGENES DE LAS NOTICIAS DE LA PORTADA
+    // ==========================================
+
+    if(
+        Array.isArray(noticias) &&
+        noticias.length
+    ){
+
+        noticias.forEach(noticia => {
+
+            const url =
+                obtenerImagenURL(noticia);
+
+            if(
+                url &&
+                !url.startsWith("assets/")
+            ){
+
+                urls.push(url);
+
+            }
+
+        });
+
+    }
+
+
+    // ==========================================
+    // ELIMINAR DUPLICADAS
+    // ==========================================
+
+    const urlsUnicas =
+        [...new Set(urls)];
+
+
+    console.log(
+        "🖼️ Imágenes a preparar:",
+        urlsUnicas.length
+    );
+
+
+    if(!urlsUnicas.length){
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // CARGAR TODAS LAS IMÁGENES
+    // ==========================================
+
+    await Promise.all(
+
+        urlsUnicas.map(url => {
+
+            return new Promise(resolve => {
+
+                const img =
+                    new Image();
+
+
+                img.onload = () => {
+
+                    console.log(
+                        "✅ Imagen cargada:",
+                        url
+                    );
+
+                    resolve();
+
+                };
+
+
+                img.onerror = () => {
+
+                    console.warn(
+                        "⚠️ No se pudo cargar:",
+                        url
+                    );
+
+                    // IMPORTANTÍSIMO:
+                    // una imagen rota NO bloquea
+                    // la entrada a la revista
+
+                    resolve();
+
+                };
+
+
+                img.src = url;
+
+            });
+
+        })
+
+    );
+
+
+    console.log(
+        "🖼️ Imágenes iniciales preparadas"
+    );
 
 }
 
