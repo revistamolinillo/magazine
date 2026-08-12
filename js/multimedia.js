@@ -144,7 +144,7 @@ function obtenerMultimedia(noticia){
     }
 
 
-    if(audios.length){
+    /*if(audios.length){
 
         html += `
 
@@ -180,7 +180,7 @@ function obtenerMultimedia(noticia){
 
         `;
 
-    }
+    }*/
 
     return html;
 
@@ -189,6 +189,8 @@ function obtenerMultimedia(noticia){
 function renderAudioPodcast(podcast){
 
     const audios = obtenerAudios(podcast);
+
+    console.log("🎧 AUDIOS:", audios);
 
     if(audios.length === 0) return "";
 
@@ -214,12 +216,9 @@ function renderAudioPodcast(podcast){
                         class="podcast-player"
                         src="https://drive.google.com/file/d/${a.id}/preview"
                         allow="autoplay"
+                        allowfullscreen
                         loading="eager"
-                        onload="
-                            setTimeout(() => {
-                                this.parentElement.classList.add('cargado');
-                            }, 300);
-                        ">
+                        onload="this.parentElement.classList.add('cargado')">
                     </iframe>
 
                 </div>
