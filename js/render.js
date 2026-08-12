@@ -61,7 +61,7 @@ function renderMenu(){
 
 
             ${
-                podcasts.length
+                todosLosPodcasts.length
                 ? `
                     <a href="#"
                     onclick="
@@ -69,7 +69,7 @@ function renderMenu(){
                         cerrarMenuMovil();
                         return false;
                     ">
-                        Podcasts
+                        🎙 Podcasts
                     </a>
                 `
                 : ""
