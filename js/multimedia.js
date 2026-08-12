@@ -200,30 +200,46 @@ function renderAudioPodcast(podcast){
 
             <h3>🎧 Escucha el episodio</h3>
 
-            ${audios.map((a, indice) => `
+            ${audios.map((a, indice) => {
 
-                <div class="podcast-player-wrapper">
+                const urlPlayer =
+                    "https://drive.google.com/file/d/"
+                    + a.id
+                    + "/preview";
 
-                    <div class="podcast-player-cargando">
+                console.log(
+                    "🎧 PLAYER AUDIO:",
+                    urlPlayer
+                );
 
-                        <span class="podcast-spinner"></span>
+                return `
 
-                        Cargando reproductor...
+                    <div class="podcast-player-wrapper">
+
+                        <div class="podcast-player-cargando">
+
+                            <span class="podcast-spinner"></span>
+
+                            Cargando reproductor...
+
+                        </div>
+
+                        <iframe
+                            class="podcast-player"
+                            src="${urlPlayer}"
+                            title="Reproductor de audio"
+                            allow="autoplay"
+                            frameborder="0"
+                            onload="
+                                this.parentElement.classList.add('cargado');
+                            ">
+                        </iframe>
 
                     </div>
 
-                    <iframe
-                        class="podcast-player"
-                        src="https://drive.google.com/file/d/${a.id}/preview"
-                        allow="autoplay"
-                        allowfullscreen
-                        loading="eager"
-                        onload="this.parentElement.classList.add('cargado')">
-                    </iframe>
+                `;
 
-                </div>
-
-            `).join("")}
+            }).join("")}
 
         </div>
 

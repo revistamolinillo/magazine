@@ -5374,7 +5374,7 @@ No modifica el diseño de ordenador
 .podcast-player-wrapper {
     position: relative;
     width: 100%;
-    height: 96px;
+    height: 80px;
     max-width: 100%;
     overflow: hidden;
     border-radius: 14px;
@@ -5383,18 +5383,12 @@ No modifica el diseño de ordenador
 
 .podcast-player {
     position: absolute;
-    top: 0;
-    left: 0;
-
+    inset: 0;
     width: 100%;
-    height: 96px;
-
+    height: 80px;
     border: 0;
-
     display: block;
-
     opacity: 0;
-
     transition: opacity .25s ease;
 }
 
@@ -5408,32 +5402,41 @@ No modifica el diseño de ordenador
 
 .podcast-player-cargando {
     position: absolute;
-
     inset: 0;
-
     display: flex;
-
     align-items: center;
     justify-content: center;
-
     gap: 10px;
-
     color: #64748b;
-
     font-size: 14px;
-
     z-index: 2;
+}
+
+.podcast-spinner {
+    width: 18px;
+    height: 18px;
+    border: 3px solid #cbd5e1;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: podcast-spin .8s linear infinite;
+}
+
+@keyframes podcast-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @media (max-width: 600px) {
 
     .podcast-player-wrapper {
-        height: 90px;
+        height: 70px;
+        min-height: 70px;
         border-radius: 12px;
     }
 
     .podcast-player {
-        height: 90px;
+        height: 70px;
     }
 
 }
