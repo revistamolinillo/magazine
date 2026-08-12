@@ -242,7 +242,8 @@ function renderFooter(){
             </a>
 
             <a
-                href="mailto:revismol@gmail.com">
+                href="#"
+                onclick="contactarConNosotros(); return false;">
                 ✉️ Contacta con nosotros
             </a>
 

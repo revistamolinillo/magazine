@@ -2244,3 +2244,53 @@ function precargarPortadasHemeroteca(){
     });
 
 }
+
+function contactarConNosotros(){
+
+    const correo = "revismol@gmail.com";
+
+    const asunto =
+        encodeURIComponent(
+            "Contacto - El Molinillo Magazine"
+        );
+
+    const cuerpo =
+        encodeURIComponent(
+            "Hola, El Molinillo Magazine:\n\n"
+        );
+
+
+    // ==========================================
+    // COMPROBAR SI ES MÓVIL
+    // ==========================================
+
+    const esMovil =
+        /Android|iPhone|iPad|iPod/i.test(
+            navigator.userAgent
+        );
+
+
+    // ==========================================
+    // MÓVIL
+    // ==========================================
+
+    if(esMovil){
+
+        window.location.href =
+            `mailto:${correo}?subject=${asunto}&body=${cuerpo}`;
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // ORDENADOR
+    // ==========================================
+
+    window.open(
+        `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(correo)}&su=${asunto}&body=${cuerpo}`,
+        "_blank"
+    );
+
+}
