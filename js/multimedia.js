@@ -225,7 +225,7 @@ function renderAudioPodcast(podcast){
 
                         <button
                             class="boton-escuchar-podcast"
-                            onclick="window.open('${urlDrive}', '_blank')">
+                            onclick="window.location.href='${urlDrive}'">
 
                             🎧 Escuchar podcast
 
