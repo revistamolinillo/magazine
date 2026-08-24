@@ -194,6 +194,8 @@ function renderAudioPodcast(podcast){
 
     if(audios.length === 0) return "";
 
+    const esMovil = window.innerWidth <= 700;
+
     return `
 
         <div class="podcast-audio">
@@ -207,10 +209,31 @@ function renderAudioPodcast(podcast){
                     + a.id
                     + "/preview";
 
+                const urlDrive =
+                    "https://drive.google.com/file/d/"
+                    + a.id
+                    + "/view";
+
                 console.log(
                     "🎧 PLAYER AUDIO:",
                     urlPlayer
                 );
+
+                if(esMovil){
+
+                    return `
+
+                        <button
+                            class="boton-escuchar-podcast"
+                            onclick="window.open('${urlDrive}', '_blank')">
+
+                            🎧 Escuchar podcast
+
+                        </button>
+
+                    `;
+
+                }
 
                 return `
 
