@@ -235,7 +235,7 @@ function renderFooter(){
             </h3>
 
             <a
-                href="https://script.google.com/macros/s/AKfycbyeWfMFCQLDlM8Z02tX9c6xybe_TI699gXHU3st0-7mGCSQPz-L-2wWiYZh2XeuQykE/exec"
+                href="https://script.google.com/macros/s/AKfycbza1OgWYcOdncl0T1KAW4jnoyMUv4fmKgoehS2MvybjuCH5_BqeHxBe3Mko1f9O7CTp/exec"
                 target="_blank"
                 rel="noopener">
                 📝 Añadir noticia

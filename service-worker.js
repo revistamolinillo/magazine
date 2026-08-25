@@ -332,3 +332,4 @@ self.addEventListener("message", event => {
     }
 
 });
+
