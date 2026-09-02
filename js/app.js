@@ -918,10 +918,22 @@ function abrirRevista(){
 
     mostrarVista("portada");
 
-    window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "instant"
+    requestAnimationFrame(() => {
+
+        requestAnimationFrame(() => {
+
+            const revista =
+                document.getElementById("revista");
+
+            if(!revista) return;
+
+            revista.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        });
+
     });
 
 }
@@ -1552,7 +1564,7 @@ async function copiarTexto(texto){
             texto;
 
         document.body.appendChild(
-            textarea
+            textareaa
         );
 
         textarea.select();

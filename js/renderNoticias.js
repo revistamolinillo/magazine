@@ -26,9 +26,16 @@ function renderNoticias(){
 
     return `
 
-        <h2 class="titulo-sreccion">
-            📰 Noticias
-        </h2>
+        <div class="cabecera-seccion">
+            <div class="cabecera-seccion-contenido">
+                <span class="icono-seccion">📰</span>
+
+                <div>
+                    <h2>Noticias</h2>
+                    <p>La actualidad de nuestro centro</p>
+                </div>
+            </div>
+        </div>
 
         <div class="articulos">
 
@@ -189,9 +196,16 @@ function renderDestacadas(){
 
     return `
 
-        <h2 class="titulo-seccion">
-            ⭐ Destacadas
-        </h2>
+        <div class="cabecera-seccion">
+            <div class="cabecera-seccion-contenido">
+                <span class="icono-seccion">⭐</span>
+
+                <div>
+                    <h2>Destacadas</h2>
+                    <p>Lo más destacado de esta edición</p>
+                </div>
+            </div>
+        </div>
 
         <div class="destacadas">
 

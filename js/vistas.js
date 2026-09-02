@@ -11,7 +11,7 @@ function renderSecciones(){
         <main class="pagina">
 
             <div class="contenedor">
-
+v
                 <h1 class="titulo-seccion">
 
                     📚 Secciones

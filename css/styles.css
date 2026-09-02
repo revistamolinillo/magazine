@@ -3910,15 +3910,28 @@ No modifica el diseño de ordenador
 
     .subsecciones-podcast {
         grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        gap: 12px;
     }
 
     .tarjeta-subseccion-podcast {
-        padding: 12px;
+        padding: 14px;
+        min-width: 0;
+        gap: 10px;
     }
 
     .icono-subseccion-podcast {
         font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .tarjeta-subseccion-podcast h3 {
+        font-size: 15px;
+        line-height: 1.2;
+    }
+
+    .tarjeta-subseccion-podcast p {
+        font-size: 11px;
+        line-height: 1.3;
     }
 
     .podcast-card {
@@ -5456,6 +5469,169 @@ No modifica el diseño de ordenador
 
     .podcast-player {
         height: 70px;
+    }
+
+}
+
+/* =========================================================
+   CABECERAS DE SECCIÓN
+   ========================================================= */
+
+.cabecera-seccion {
+    width: 100%;
+
+    margin: 75px 0 35px;
+
+    padding: 22px 28px;
+
+    box-sizing: border-box;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(37, 99, 235, 0.08),
+            rgba(56, 189, 248, 0.05)
+        );
+
+    border: 1px solid rgba(37, 99, 235, 0.10);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/* Detalle de color en el lateral */
+
+.cabecera-seccion::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 6px;
+
+    background: linear-gradient(
+        180deg,
+        var(--primary),
+        var(--secondary)
+    );
+}
+
+
+/* Contenido */
+
+.cabecera-seccion-contenido {
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+}
+
+
+/* Icono */
+
+.icono-seccion {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: white;
+
+    font-size: 1.35rem;
+
+    box-shadow: 0 5px 15px rgba(15, 23, 42, 0.08);
+}
+
+
+/* Título */
+
+.cabecera-seccion h2 {
+    margin: 0;
+
+    font-size: 1.55rem;
+
+    font-weight: 850;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    color: var(--dark);
+}
+
+
+/* Subtítulo */
+
+.cabecera-seccion p {
+    margin: 5px 0 0;
+
+    font-size: 0.9rem;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   SEPARACIÓN ENTRE DESTACADAS Y NOTICIAS
+   ========================================================= */
+
+.destacadas {
+    margin-bottom: 95px;
+}
+
+
+/* =========================================================
+   MÓVIL
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .cabecera-seccion {
+        margin: 55px 0 28px;
+
+        padding: 18px 20px;
+
+        border-radius: 15px;
+    }
+
+    .cabecera-seccion-contenido {
+        gap: 13px;
+    }
+
+    .icono-seccion {
+        width: 42px;
+        height: 42px;
+
+        border-radius: 12px;
+
+        font-size: 1.15rem;
+    }
+
+    .cabecera-seccion h2 {
+        font-size: 1.2rem;
+
+        letter-spacing: 1.5px;
+    }
+
+    .cabecera-seccion p {
+        font-size: 0.8rem;
+    }
+
+    .destacadas {
+        margin-bottom: 70px;
     }
 
 }
