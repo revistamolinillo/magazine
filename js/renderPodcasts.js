@@ -35,7 +35,7 @@ function renderPodcasts(){
         </h2>
 
 
-        <div class="subsecciones-podcast">
+        <div id="subsecciones-podcast" class="subsecciones-podcast">
 
             ${
             subsecciones.map(
@@ -152,6 +152,13 @@ function mostrarPodcastsSubseccion(subseccion){
         document.getElementById("lista-podcasts-subseccion");
 
     if(!contenedor) return;
+
+        const subsecciones =
+        document.getElementById("subsecciones-podcast");
+
+    if(subsecciones){
+        subsecciones.style.display = "none";
+    }
 
 
     // ==========================================
@@ -374,6 +381,14 @@ function cerrarPodcastsSubseccion(){
     if(!contenedor) return;
 
     contenedor.innerHTML = "";
+
+
+    const subsecciones =
+        document.getElementById("subsecciones-podcast");
+
+    if(subsecciones){
+        subsecciones.style.display = "grid";
+    }
 
 }
 
