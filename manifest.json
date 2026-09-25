@@ -1,0 +1,42 @@
+{
+    "name": "El Molinillo Magazine",
+    "short_name": "Molinillo",
+    "description": "Revista digital del IES El Molinillo",
+    "lang": "es",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#131f4d",
+    "theme_color": "#131f4d",
+    "orientation": "portrait-primary",
+    "categories": ["education", "news"],
+    "icons": [
+        {
+            "src": "assets/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Podcasts",
+            "url": "./?vista=podcasts",
+            "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+        },
+        {
+            "name": "Hemeroteca",
+            "url": "./?vista=hemeroteca",
+            "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+        },
+        {
+            "name": "Buscar",
+            "url": "./?vista=buscador",
+            "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+        }
+    ]
+}

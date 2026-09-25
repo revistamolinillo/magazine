@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>El Molinillo Magazine</title>
+
+    <meta name="description" content="Revista digital del IES El Molinillo">
+
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#131f4d">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="El Molinillo Magazine">
+
+    <!-- Fuentes propias (se cargan desde la carpeta assets/fonts) -->
+    <link rel="preload" as="font" type="font/woff" href="assets/fonts/Poppins-Bold.woff" crossorigin>
+    <link rel="preload" as="font" type="font/woff" href="assets/fonts/Lora-Variable.woff" crossorigin>
+
+    <!-- Tema claro / oscuro: se decide antes de pintar para que no parpadee -->
+    <script>
+        try{
+            var tema = localStorage.getItem("molinillo-tema");
+            if(tema !== "claro" && tema !== "oscuro"){
+                tema = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+                    ? "oscuro" : "claro";
+            }
+            document.documentElement.dataset.tema = tema;
+        }catch(error){
+            document.documentElement.dataset.tema = "claro";
+        }
+    </script>
+
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+    <div id="pantalla-carga" role="status" aria-live="polite">
+
+        <div class="carga-contenido">
+
+            <svg class="carga-aspas" viewBox="0 0 100 100" aria-hidden="true">
+                <path d="M50 50 L50 6 L94 6 Z" fill="#2f9be0"/>
+                <path d="M50 50 L94 50 L94 94 Z" fill="#e5488a"/>
+                <path d="M50 50 L50 94 L6 94 Z" fill="#f2c81e"/>
+                <path d="M50 50 L6 50 L6 6 Z" fill="#2fa866"/>
+            </svg>
+
+            <div class="carga-logo">
+                El Molinillo
+                <span>Magazine</span>
+            </div>
+
+            <p class="carga-texto">
+                Preparando la revista...
+            </p>
+
+            <div class="carga-puntos"></div>
+
+        </div>
+
+    </div>
+
+    <div id="app"></div>
+
+    <noscript>
+        <p style="padding:2rem;font-family:sans-serif">
+            Para leer la revista necesitas activar JavaScript en tu navegador.
+        </p>
+    </noscript>
+
+    <!-- Vigilante de carga: si falta algún archivo o la carga se atasca,
+         lo explica en la pantalla de carga en vez de quedarse esperando -->
+    <script>
+        (function(){
+
+            var fallos = [];
+
+            window.addEventListener("error", function(evento){
+
+                var e = evento.target;
+
+                if(e && e.tagName === "SCRIPT" && e.getAttribute("src")){
+                    fallos.push(e.getAttribute("src"));
+                }
+
+            }, true);
+
+            function avisar(texto, detalle){
+
+                var pantalla = document.getElementById("pantalla-carga");
+
+                if(!pantalla || window.revistaLista) return;
+
+                pantalla.classList.add("con-error");
+
+                var t = pantalla.querySelector(".carga-texto");
+                var p = pantalla.querySelector(".carga-puntos");
+
+                if(t){
+                    t.textContent = texto;
+                    t.style.maxWidth = "28rem";
+                }
+
+                if(p){
+
+                    p.textContent = "";
+
+                    if(detalle){
+                        var d = document.createElement("p");
+                        d.textContent = detalle;
+                        d.style.cssText = "font-size:.85rem;opacity:.8;margin-bottom:1rem;overflow-wrap:anywhere;max-width:28rem";
+                        p.appendChild(d);
+                    }
+
+                    var b = document.createElement("button");
+                    b.type = "button";
+                    b.className = "boton boton-primario";
+                    b.textContent = "Intentarlo de nuevo";
+                    b.onclick = function(){ window.location.reload(); };
+                    p.appendChild(b);
+
+                }
+
+            }
+
+            window.addEventListener("load", function(){
+
+                if(fallos.length){
+
+                    avisar(
+                        "Faltan archivos de la revista. Sube de nuevo la carpeta completa.",
+                        "No se han encontrado: " + fallos.join(", ")
+                    );
+
+                }
+
+            });
+
+            setTimeout(function(){
+
+                avisar(
+                    "La revista está tardando más de lo normal. Comprueba tu conexión.",
+                    ""
+                );
+
+            }, 20000);
+
+        })();
+    </script>
+
+    <script src="data/config.js"></script>
+    <script src="data/estado.js"></script>
+
+    <script src="js/utils.js"></script>
+    <script src="js/multimedia.js"></script>
+    <script src="js/galeria.js"></script>
+
+    <script src="js/render.js"></script>
+    <script src="js/renderNoticias.js"></script>
+    <script src="js/renderPodcasts.js"></script>
+    <script src="js/vistas.js"></script>
+    <script src="js/buscador.js"></script>
+
+    <script src="js/navegacion.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,7 @@
+Fuentes incluidas en esta carpeta (subconjunto latino, alojadas en local):
+
+- Poppins (Regular, Medium, Bold) - Copyright The Poppins Project Authors
+- Lora (variable, normal y cursiva) - Copyright The Lora Project Authors
+
+Ambas se distribuyen bajo la licencia SIL Open Font License 1.1:
+https://openfontlicense.org
