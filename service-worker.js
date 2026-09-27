@@ -187,6 +187,30 @@ self.addEventListener("fetch", event => {
     }
 
     // ---------------------------------------------------
+    // IMÁGENES PROPIAS DE MARCA (iconos, logo, favicon)
+    // Red primero, igual que los datos: así un cambio se ve
+    // en la siguiente recarga, sin esperar una de más.
+    // Son archivos pequeños, así que no cuesta nada pedirlos
+    // siempre frescos. Si no hay conexión, se usa la última
+    // copia guardada.
+    // ---------------------------------------------------
+
+    const esImagenPropia =
+        url.origin === self.location.origin &&
+        (
+            url.pathname.includes("/assets/icons/") ||
+            url.pathname.includes("/assets/img/")
+        );
+
+    if(esImagenPropia){
+
+        event.respondWith(datosRedPrimero(request));
+
+        return;
+
+    }
+
+    // ---------------------------------------------------
     // IMÁGENES
     // Caché primero: tras la primera vez, se ven al instante.
     // ---------------------------------------------------
