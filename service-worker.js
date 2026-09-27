@@ -14,7 +14,7 @@ importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 // dispositivos que ya tienen la revista instalada se actualicen.
 // =======================================================
 
-const VERSION = "v10";
+const VERSION = "v11";
 
 const CACHE_APP = "molinillo-app-" + VERSION;
 
