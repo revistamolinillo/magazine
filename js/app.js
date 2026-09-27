@@ -547,6 +547,20 @@ if("serviceWorker" in navigator){
 
             if(esVersionNueva && !modoPreview){
 
+                // Si todavía se está viendo la pantalla de "Preparando
+                // la revista...", se recarga en el acto: como el
+                // usuario no ha visto nada todavía, no hay nada que
+                // "se note". Si ya se ha quitado esa pantalla (la
+                // persona ya está leyendo), se mantiene el margen de
+                // 10 segundos para no interrumpir de golpe.
+                if(!window.revistaLista){
+
+                    window.location.reload();
+
+                    return;
+
+                }
+
                 const ultima = Number(sessionStorage.getItem("molinillo-ultima-recarga") || 0);
                 const ahora = Date.now();
 
@@ -855,6 +869,14 @@ window.addEventListener("appinstalled", () => {
 // -------------------------------------------------------
 
 async function activarNotificaciones(){
+
+    if(!estaInstalada()){
+
+        toast("Esto solo está disponible con la revista instalada como app.");
+
+        return;
+
+    }
 
     if(typeof OneSignal === "undefined"){
 
