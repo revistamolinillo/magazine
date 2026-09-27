@@ -55,8 +55,10 @@
 
                 // Usa el service worker propio de la revista (ya se
                 // encarga de fusionar el de OneSignal), en vez de
-                // registrar uno nuevo aparte.
-                serviceWorkerPath: "service-worker.js",
+                // registrar uno nuevo aparte. La ruta va desde la raíz
+                // del dominio (revistamolinillo.github.io), por eso
+                // hay que incluir la carpeta "magazine/" a mano.
+                serviceWorkerPath: "magazine/service-worker.js",
                 serviceWorkerParam: { scope: "/magazine/" },
 
                 // Importante: sin esto, OneSignal muestra su propio
