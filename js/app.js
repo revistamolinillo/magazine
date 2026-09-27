@@ -518,18 +518,21 @@ function registrarServiceWorker(){
 
 if("serviceWorker" in navigator){
 
-    // Si ya había una versión instalada y llega otra nueva, se avisa
+    // Si llega una versión nueva del código (después de subir cambios),
+    // se recarga sola una vez, sin preguntar. La variable "recargando"
+    // evita que, si el aviso llegara más de una vez seguida, se
+    // dispararan varias recargas encadenadas.
     const teniaControlador = !!navigator.serviceWorker.controller;
+
+    let recargando = false;
 
     navigator.serviceWorker.addEventListener("controllerchange", () => {
 
-        if(!teniaControlador || modoPreview) return;
+        if(!teniaControlador || modoPreview || recargando) return;
 
-        toast("La revista se ha actualizado.", {
-            accion:"Recargar",
-            alAccion:() => window.location.reload(),
-            duracion:15000
-        });
+        recargando = true;
+
+        window.location.reload();
 
     });
 
