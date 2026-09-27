@@ -518,21 +518,49 @@ function registrarServiceWorker(){
 
 if("serviceWorker" in navigator){
 
-    // Si llega una versión nueva del código (después de subir cambios),
-    // se recarga sola una vez, sin preguntar. La variable "recargando"
-    // evita que, si el aviso llegara más de una vez seguida, se
-    // dispararan varias recargas encadenadas.
-    const teniaControlador = !!navigator.serviceWorker.controller;
+    // Si el propio código (VERSION) ha cambiado de verdad respecto a
+    // la última vez que se vio en este navegador, se recarga sola una
+    // vez. No se usa "controllerchange" para esto: ese aviso también
+    // puede saltar por motivos ajenos (por ejemplo, el registro
+    // interno de OneSignal), y produciría recargas sin motivo real.
+    navigator.serviceWorker.addEventListener("message", evento => {
 
-    let recargando = false;
+        if(evento.data && evento.data.tipo === "SW_VERSION"){
 
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
+            let anterior = null;
 
-        if(!teniaControlador || modoPreview || recargando) return;
+            try{
+                anterior = localStorage.getItem("molinillo-sw-version");
+            }catch(error){
+                // Si no se puede leer, simplemente no se compara
+            }
 
-        recargando = true;
+            try{
+                localStorage.setItem("molinillo-sw-version", evento.data.version);
+            }catch(error){
+                // Si no se puede guardar, no pasa nada grave
+            }
 
-        window.location.reload();
+            const esVersionNueva =
+                anterior !== null &&
+                anterior !== evento.data.version;
+
+            if(esVersionNueva && !modoPreview){
+
+                const ultima = Number(sessionStorage.getItem("molinillo-ultima-recarga") || 0);
+                const ahora = Date.now();
+
+                if(ahora - ultima >= 10000){
+
+                    sessionStorage.setItem("molinillo-ultima-recarga", String(ahora));
+
+                    window.location.reload();
+
+                }
+
+            }
+
+        }
 
     });
 
