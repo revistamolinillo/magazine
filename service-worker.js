@@ -9,7 +9,7 @@
 // dispositivos que ya tienen la revista instalada se actualicen.
 // =======================================================
 
-const VERSION = "v9";
+const VERSION = "v10";
 
 const CACHE_APP = "molinillo-app-" + VERSION;
 
