@@ -82,6 +82,35 @@
 
             });
 
+            // El botón del pie de página se comprueba justo aquí
+            // (cuando OneSignal ya está listo de verdad), y se vuelve
+            // a comprobar cada vez que cambie el estado real, aunque
+            // sea desde otra pestaña o desde los ajustes del navegador.
+            //
+            // También se reintenta un par de veces con margen: justo
+            // al arrancar, OneSignal puede tardar un instante en
+            // recuperar del todo si la persona ya estaba suscrita de
+            // antes, y si no se reintenta, el botón se queda mostrando
+            // "activar" por error hasta que se repinta la pantalla.
+            if(typeof actualizarBotonNotificaciones === "function"){
+
+                actualizarBotonNotificaciones();
+
+                setTimeout(actualizarBotonNotificaciones, 1500);
+                setTimeout(actualizarBotonNotificaciones, 4000);
+
+            }
+
+            OneSignal.User.PushSubscription.addEventListener("change", function(){
+
+                if(typeof actualizarBotonNotificaciones === "function"){
+
+                    actualizarBotonNotificaciones();
+
+                }
+
+            });
+
         });
     </script>
 
