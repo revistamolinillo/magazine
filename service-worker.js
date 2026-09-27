@@ -101,22 +101,38 @@ self.addEventListener("activate", event => {
 
     event.waitUntil(
 
-        caches.keys().then(nombres =>
+        (async () => {
 
-            Promise.all(
+            const nombres = await caches.keys();
+
+            await Promise.all(
                 nombres
                     .filter(nombre =>
                         nombre !== CACHE_APP &&
                         nombre !== CACHE_IMAGENES
                     )
                     .map(nombre => caches.delete(nombre))
-            )
+            );
 
-        )
+            await self.clients.claim();
+
+            // Avisa a las pestañas abiertas de qué versión es esta.
+            // Así, la propia página puede comparar si es una versión
+            // de verdad distinta a la última que vio (en vez de fiarse
+            // de "controllerchange", que también puede dispararse por
+            // motivos ajenos a este código, como el registro interno
+            // de OneSignal).
+            const clientes = await self.clients.matchAll({ type: "window" });
+
+            clientes.forEach(cliente => {
+
+                cliente.postMessage({ tipo: "SW_VERSION", version: VERSION });
+
+            });
+
+        })()
 
     );
-
-    self.clients.claim();
 
 });
 
