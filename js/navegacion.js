@@ -245,6 +245,8 @@ function pintarVista(vista, enfocar){
 
     actualizarBotonInstalacion();
 
+    actualizarBotonNotificaciones();
+
     // Barra de progreso solo al leer
     if(tipo === "noticia" || tipo === "podcast"){
 

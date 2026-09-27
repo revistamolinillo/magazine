@@ -819,6 +819,72 @@ window.addEventListener("appinstalled", () => {
 });
 
 
+// -------------------------------------------------------
+// NOTIFICACIONES DE NUEVAS EDICIONES (OneSignal)
+// -------------------------------------------------------
+
+async function activarNotificaciones(){
+
+    if(typeof OneSignal === "undefined"){
+
+        toast("Todavía se está cargando. Prueba otra vez en unos segundos.");
+
+        return;
+
+    }
+
+    try{
+
+        // Si el navegador ya había denegado el permiso antes, no se
+        // puede volver a preguntar desde la web: solo se puede
+        // cambiar desde los propios ajustes del navegador.
+        if(Notification.permission === "denied"){
+
+            toast("Las notificaciones están bloqueadas para esta web. Actívalas desde los ajustes del navegador.");
+
+            return;
+
+        }
+
+        await OneSignal.Notifications.requestPermission();
+
+        if(OneSignal.Notifications.permission){
+
+            toast("Listo: te avisaremos cuando salga una edición nueva");
+
+            actualizarBotonNotificaciones();
+
+        }else{
+
+            toast("No se ha activado el aviso");
+
+        }
+
+    }catch(error){
+
+        toast("No se pudo activar el aviso: " + error.message);
+
+    }
+
+}
+
+
+function actualizarBotonNotificaciones(){
+
+    const boton = document.getElementById("boton-notificaciones");
+
+    if(!boton || typeof OneSignal === "undefined") return;
+
+    if(OneSignal.Notifications.permission){
+
+        boton.innerHTML = "🔔 Avisos activados";
+        boton.disabled = true;
+
+    }
+
+}
+
+
 async function instalarPWA(){
 
     if(estaInstalada()){
