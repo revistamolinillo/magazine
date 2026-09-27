@@ -1,25 +1,2 @@
 [
-  {
-    "id": "E000003",
-    "curso": "2026/2027",
-    "nombre": "Noviembre",
-    "fecha": "2026-09-27T16:10:06.278Z",
-    "imagen": "17CAWISmKBa8E-Bb90QvZQANQBz0BAD9H",
-    "articulos": 1
-  },
-  {
-    "id": "E000002",
-    "curso": "2026/2027",
-    "nombre": "Octubre",
-    "fecha": "2026-09-27T15:58:04.766Z",
-    "articulos": 1
-  },
-  {
-    "id": "E000001",
-    "curso": "2026/2027",
-    "nombre": "Septiembre",
-    "fecha": "2026-09-27T15:43:08.578Z",
-    "imagen": "1l2MkT4wYt2BQCX1hLanS7jLVT2ybxNE8",
-    "articulos": 1
-  }
 ]
