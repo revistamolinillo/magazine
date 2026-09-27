@@ -43,6 +43,27 @@
 
     <link rel="stylesheet" href="css/styles.css">
 
+    <!-- Notificaciones de nuevas ediciones (OneSignal) -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal){
+
+            await OneSignal.init({
+
+                appId: "d7a9f758-dc52-4d31-a4b9-256708d3074e",
+
+                // Usa el service worker propio de la revista (ya se
+                // encarga de fusionar el de OneSignal), en vez de
+                // registrar uno nuevo aparte.
+                serviceWorkerPath: "service-worker.js",
+                serviceWorkerParam: { scope: "/magazine/" }
+
+            });
+
+        });
+    </script>
+
 </head>
 
 <body>

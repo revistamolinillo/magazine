@@ -1,3 +1,8 @@
+// OneSignal (notificaciones push) fusionado en este mismo service
+// worker, para no tener que registrar uno aparte. No toca nada de
+// lo que hay más abajo.
+importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
+
 // =======================================================
 // SERVICE WORKER - EL MOLINILLO MAGAZINE
 //
@@ -9,7 +14,7 @@
 // dispositivos que ya tienen la revista instalada se actualicen.
 // =======================================================
 
-const VERSION = "v9";
+const VERSION = "v10";
 
 const CACHE_APP = "molinillo-app-" + VERSION;
 
