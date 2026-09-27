@@ -9,7 +9,7 @@
 // dispositivos que ya tienen la revista instalada se actualicen.
 // =======================================================
 
-const VERSION = "v10";
+const VERSION = "v8";
 
 const CACHE_APP = "molinillo-app-" + VERSION;
 
@@ -191,8 +191,12 @@ self.addEventListener("fetch", event => {
     // Caché primero: tras la primera vez, se ven al instante.
     // ---------------------------------------------------
 
+    // Solo las imágenes que vienen de fuera (fotos de las noticias,
+    // en Google Drive) van al caché permanente. Las imágenes propias
+    // de la web (iconos, logo, favicon...) van más abajo, con el resto
+    // del código, para que se actualicen solas cuando cambian.
+
     if(
-        request.destination === "image" ||
         url.hostname.includes("drive.google.com")
     ){
 
