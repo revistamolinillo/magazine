@@ -31,7 +31,7 @@ const CONFIG = {
     "revismol@gmail.com",
 
     urlAnadirNoticia:
-    "https://script.google.com/macros/s/AKfycbza1OgWYcOdncl0T1KAW4jnoyMUv4fmKgoehS2MvybjuCH5_BqeHxBe3Mko1f9O7CTp/exec",
+    "https://script.google.com/macros/s/AKfycbwUTfhsp-Z1eQS6a6Q5Y__mW-VxJrVjR3vGbfFwkdVJm4sqKozyOow7K-tpLCLDtXE0/exec",
 
     // Deja "" mientras no exista el perfil
     urlInstagram:
