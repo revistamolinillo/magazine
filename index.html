@@ -57,7 +57,26 @@
                 // encarga de fusionar el de OneSignal), en vez de
                 // registrar uno nuevo aparte.
                 serviceWorkerPath: "service-worker.js",
-                serviceWorkerParam: { scope: "/magazine/" }
+                serviceWorkerParam: { scope: "/magazine/" },
+
+                // Importante: sin esto, OneSignal muestra su propio
+                // aviso automático a los pocos segundos de cargar la
+                // página, aparte del botón "Avisarme de ediciones
+                // nuevas". Si ese aviso se ignora varias veces (la
+                // persona sigue navegando sin hacer nada), Chrome
+                // acaba bloqueando el permiso él solo, sin que nadie
+                // haya pulsado "bloquear" a propósito. Con esto,
+                // el único que puede pedir permiso es nuestro botón.
+                promptOptions: {
+                    slidedown: {
+                        prompts: [
+                            {
+                                type: "push",
+                                autoPrompt: false
+                            }
+                        ]
+                    }
+                }
 
             });
 
