@@ -866,34 +866,46 @@ async function activarNotificaciones(){
 
     try{
 
-        // Si el navegador ya había denegado el permiso antes, no se
-        // puede volver a preguntar desde la web: solo se puede
-        // cambiar desde los propios ajustes del navegador.
-        if(Notification.permission === "denied"){
+        const yaActivadas = OneSignal.User.PushSubscription.optedIn;
 
-            toast("Las notificaciones están bloqueadas para esta web. Actívalas desde los ajustes del navegador.");
+        if(yaActivadas){
 
-            return;
+            // Ya estaban activadas: este mismo botón las desactiva
+            await OneSignal.User.PushSubscription.optOut();
 
-        }
-
-        await OneSignal.Notifications.requestPermission();
-
-        if(OneSignal.Notifications.permission){
-
-            toast("Listo: te avisaremos cuando salga una edición nueva");
-
-            actualizarBotonNotificaciones();
+            toast("Notificaciones desactivadas");
 
         }else{
 
-            toast("No se ha activado el aviso");
+            if(Notification.permission === "denied"){
+
+                toast("Las notificaciones están bloqueadas para esta web. Actívalas desde los ajustes del navegador.");
+
+                return;
+
+            }
+
+            await OneSignal.Notifications.requestPermission();
+
+            if(!OneSignal.Notifications.permission){
+
+                toast("No se ha activado el aviso");
+
+                return;
+
+            }
+
+            await OneSignal.User.PushSubscription.optIn();
+
+            toast("Listo: te avisaremos cuando salga una edición nueva");
 
         }
 
+        actualizarBotonNotificaciones();
+
     }catch(error){
 
-        toast("No se pudo activar el aviso: " + error.message);
+        toast("No se pudo cambiar el ajuste: " + error.message);
 
     }
 
@@ -906,12 +918,14 @@ function actualizarBotonNotificaciones(){
 
     if(!boton || typeof OneSignal === "undefined") return;
 
-    if(OneSignal.Notifications.permission){
+    const activadas = OneSignal.User.PushSubscription.optedIn;
 
-        boton.innerHTML = "🔔 Avisos activados";
-        boton.disabled = true;
+    boton.classList.toggle("boton-suave", !activadas);
+    boton.classList.toggle("boton-primario", activadas);
 
-    }
+    boton.innerHTML = activadas
+        ? "🔔 Avisos activados (toca para desactivar)"
+        : "🔔 Avisarme de ediciones nuevas";
 
 }
 
