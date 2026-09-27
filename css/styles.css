@@ -2121,6 +2121,16 @@ a.pie-enlace:hover{
     margin-top:1rem;
 }
 
+.pie-instalar{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+}
+
+.pie-instalar #boton-notificaciones{
+    margin-top:.6rem;
+}
+
 .pie-abajo{
     display:flex;
     flex-wrap:wrap;
