@@ -578,15 +578,21 @@ function renderFooter(){
 
                 </button>
 
-                <button
-                    id="boton-notificaciones"
-                    class="boton boton-suave"
-                    type="button"
-                    onclick="activarNotificaciones()">
+                ${
+                estaInstalada()
+                ? `
+                    <button
+                        id="boton-notificaciones"
+                        class="boton boton-suave"
+                        type="button"
+                        onclick="activarNotificaciones()">
 
-                    🔔 Avisarme de ediciones nuevas
+                        🔔 Avisarme de ediciones nuevas
 
-                </button>
+                    </button>
+                `
+                : ""
+                }
 
             </div>
 
