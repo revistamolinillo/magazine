@@ -34,6 +34,14 @@ async function iniciar(){
 
         aplicarTamanoTexto();
 
+        // Vista previa recién enviada desde el gestor: se espera a que
+        // GitHub termine de publicar el archivo nuevo antes de cargarlo
+        if(modoPreview){
+
+            await esperarPublicacionPreview();
+
+        }
+
         // 1. Datos
         await cargarDatos();
 
@@ -99,6 +107,89 @@ async function iniciar(){
         mostrarErrorCarga();
 
     }
+
+}
+
+
+// -------------------------------------------------------
+// ESPERA DE LA VISTA PREVIA
+//
+// El gestor abre preview.html?espera=90 (segundos). GitHub
+// tarda un rato en publicar el archivo nuevo de la vista previa;
+// si se cargara al momento, saldría a veces la versión anterior.
+// Aquí se enseña una cuenta atrás en la pantalla de carga y solo
+// después se cargan los datos. Sin ?espera, no espera nada.
+// -------------------------------------------------------
+
+async function esperarPublicacionPreview(){
+
+    const parametros = new URLSearchParams(window.location.search);
+
+    const segundos = parseInt(parametros.get("espera"), 10);
+
+    if(!(segundos > 0)) return;
+
+    const pantalla = document.getElementById("pantalla-carga");
+
+    if(!pantalla) return;
+
+    const contenido = pantalla.querySelector(".carga-contenido");
+    const texto = pantalla.querySelector(".carga-texto");
+    const puntos = pantalla.querySelector(".carga-puntos");
+
+    const cuenta = document.createElement("p");
+    cuenta.className = "carga-cuenta";
+
+    const nota = document.createElement("p");
+    nota.className = "carga-nota";
+    nota.textContent =
+        "Tu vista previa se está publicando. No cierres esta pestaña: se abrirá sola.";
+
+    if(contenido){
+
+        contenido.insertBefore(cuenta, puntos);
+        contenido.insertBefore(nota, puntos);
+
+    }
+
+    if(texto) texto.textContent = "Publicando la vista previa…";
+
+    // Se calcula con la hora real (no restando 1 cada segundo), así la
+    // cuenta es exacta aunque el navegador frene los avisos de una
+    // pestaña que está en segundo plano.
+    const fin = Date.now() + Math.min(segundos, 600) * 1000;
+
+    await new Promise(resolve => {
+
+        const pintar = () => {
+
+            const restante = Math.max(0, Math.ceil((fin - Date.now()) / 1000));
+
+            const minutos = Math.floor(restante / 60);
+            const resto = String(restante % 60).padStart(2, "0");
+
+            cuenta.textContent = minutos + ":" + resto;
+
+            if(restante <= 0){
+
+                clearInterval(reloj);
+
+                resolve();
+
+            }
+
+        };
+
+        const reloj = setInterval(pintar, 250);
+
+        pintar();
+
+    });
+
+    cuenta.remove();
+    nota.remove();
+
+    if(texto) texto.textContent = "Abriendo la vista previa…";
 
 }
 
