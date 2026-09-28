@@ -142,6 +142,16 @@
 
             });
 
+            // Si la vista previa se abre con ?espera=90 (desde el gestor),
+            // hay una cuenta atrás a propósito: el aviso de "tarda
+            // demasiado" solo cuenta a partir de que termine.
+            var esperaSegundos = parseInt(
+                new URLSearchParams(window.location.search).get("espera"),
+                10
+            );
+
+            if(!(esperaSegundos > 0)) esperaSegundos = 0;
+
             setTimeout(function(){
 
                 avisar(
@@ -149,7 +159,7 @@
                     ""
                 );
 
-            }, 20000);
+            }, 20000 + Math.min(esperaSegundos, 600) * 1000);
 
         })();
     </script>
