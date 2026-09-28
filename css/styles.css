@@ -407,6 +407,22 @@ mark{
     color:rgba(255,255,255,.75);
 }
 
+/* Cuenta atrás de la vista previa (solo con preview.html?espera=...) */
+
+.carga-cuenta{
+    font-size:3.2rem;
+    font-weight:700;
+    line-height:1;
+    letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums;
+}
+
+.carga-nota{
+    max-width:20rem;
+    font-size:.85rem;
+    color:rgba(255,255,255,.6);
+}
+
 .carga-puntos:empty{
     display:none;
 }
