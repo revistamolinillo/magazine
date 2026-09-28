@@ -934,20 +934,63 @@ async function activarNotificaciones(){
 }
 
 
+// Último estado conocido de los avisos en este dispositivo. Sirve para
+// pintar el interruptor bien desde el primer instante, sin esperar a
+// que OneSignal termine de cargar.
+function avisosGuardados(){
+
+    try{
+
+        return localStorage.getItem("molinillo-avisos") === "1";
+
+    }catch(error){
+
+        return false;
+
+    }
+
+}
+
+
 function actualizarBotonNotificaciones(){
 
     const boton = document.getElementById("boton-notificaciones");
 
     if(!boton || typeof OneSignal === "undefined") return;
 
-    const activadas = OneSignal.User.PushSubscription.optedIn;
+    const activadas = !!OneSignal.User.PushSubscription.optedIn;
 
-    boton.classList.toggle("boton-suave", !activadas);
-    boton.classList.toggle("boton-primario", activadas);
+    try{
 
-    boton.innerHTML = activadas
-        ? "🔔 Avisos activados (toca para desactivar)"
-        : "🔔 Avisarme de ediciones nuevas";
+        localStorage.setItem("molinillo-avisos", activadas ? "1" : "0");
+
+    }catch(error){
+
+        // Si no se puede guardar, el interruptor funciona igual
+
+    }
+
+    // Solo se cambian clases y textos (no se vuelve a crear el botón),
+    // para que el deslizador se mueva con animación.
+    boton.classList.toggle("activo", activadas);
+
+    boton.setAttribute("aria-checked", String(activadas));
+
+    const subtitulo = boton.querySelector("small");
+
+    if(subtitulo){
+
+        subtitulo.textContent = activadas ? "Activados" : "Desactivados";
+
+    }
+
+    const icono_ = boton.querySelector(".interruptor-icono");
+
+    if(icono_){
+
+        icono_.innerHTML = icono(activadas ? "campana" : "campanaOff", 20);
+
+    }
 
 }
 

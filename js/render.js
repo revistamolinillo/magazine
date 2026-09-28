@@ -439,6 +439,44 @@ function renderHero(){
 // PIE DE PÁGINA
 // -------------------------------------------------------
 
+// Interruptor de avisos de ediciones nuevas (solo en la app instalada).
+// El estado inicial sale de lo último que se guardó en este dispositivo,
+// para que no parpadee mostrando "desactivados" mientras OneSignal
+// termina de cargar.
+function renderInterruptorAvisos(){
+
+    const activados = avisosGuardados();
+
+    return `
+
+        <button
+            id="boton-notificaciones"
+            class="interruptor-avisos ${activados ? "activo" : ""}"
+            type="button"
+            role="switch"
+            aria-checked="${activados}"
+            onclick="activarNotificaciones()">
+
+            <span class="interruptor-icono">
+                ${icono(activados ? "campana" : "campanaOff", 20)}
+            </span>
+
+            <span class="interruptor-texto">
+                <strong>Avisarme de ediciones nuevas</strong>
+                <small>${activados ? "Activados" : "Desactivados"}</small>
+            </span>
+
+            <span class="interruptor-pista" aria-hidden="true">
+                <span class="interruptor-bola"></span>
+            </span>
+
+        </button>
+
+    `;
+
+}
+
+
 function renderFooter(){
 
     const instagram =
@@ -578,21 +616,7 @@ function renderFooter(){
 
                 </button>
 
-                ${
-                estaInstalada()
-                ? `
-                    <button
-                        id="boton-notificaciones"
-                        class="boton boton-suave"
-                        type="button"
-                        onclick="activarNotificaciones()">
-
-                        🔔 Avisarme de ediciones nuevas
-
-                    </button>
-                `
-                : ""
-                }
+                ${ estaInstalada() ? renderInterruptorAvisos() : "" }
 
             </div>
 
