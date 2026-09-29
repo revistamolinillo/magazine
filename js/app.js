@@ -210,6 +210,30 @@ function ocultarPantallaCarga(){
 
     setTimeout(() => pantalla.remove(), 500);
 
+    cargarOneSignal();
+
+}
+
+
+// El SDK de OneSignal se pide ahora, no antes: así, si alguna red
+// (por ejemplo la de un centro educativo, con sus propios filtros)
+// bloquea o frena esa conexión en concreto, la revista ya se ve
+// en pantalla de todas formas y no se queda esperando por ella.
+function cargarOneSignal(){
+
+    if(modoPreview) return;
+
+    if(document.querySelector('script[src*="OneSignalSDK"]')) return;
+
+    window.oneSignalCargaIniciada = Date.now();
+
+    const script = document.createElement("script");
+
+    script.src = "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
+    script.defer = true;
+
+    document.head.appendChild(script);
+
 }
 
 
@@ -971,7 +995,23 @@ async function activarNotificaciones(){
 
     if(typeof OneSignal === "undefined"){
 
-        toast("Todavía se está cargando. Prueba otra vez en unos segundos.");
+        const esperando =
+            Date.now() - (window.oneSignalCargaIniciada || Date.now());
+
+        if(esperando < 8000){
+
+            toast("Todavía se está cargando. Prueba otra vez en unos segundos.");
+
+        }else{
+
+            toast(
+                "No se ha podido conectar con el servicio de notificaciones. " +
+                "Algunas redes (por ejemplo la de un centro educativo) lo bloquean: " +
+                "prueba con datos móviles o con otra conexión.",
+                { duracion:7000 }
+            );
+
+        }
 
         return;
 
