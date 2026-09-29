@@ -31,7 +31,7 @@ try{
 // dispositivos que ya tienen la revista instalada se actualicen.
 // =======================================================
 
-const VERSION = "v13";
+const VERSION = "v14";
 
 const CACHE_APP = "molinillo-app-" + VERSION;
 
