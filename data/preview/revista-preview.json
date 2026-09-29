@@ -60,6 +60,33 @@
       "SubseccionPodcast": "",
       "TipoContenido": "NOTICIA",
       "ImagenPortada": "1vrtsgnvLaFtsght8capsEp2J7zNGDP6a"
+    },
+    {
+      "ID": "N000002",
+      "FechaEnvio": "2026-09-29T19:20:28.337Z",
+      "Estado": "APROBADA",
+      "TipoAutor": "COLABORADOR",
+      "Autor": "Miguel Angel",
+      "CursoDepartamento": "Mates",
+      "Email": "",
+      "Seccion": "",
+      "Titulo": "Prueba",
+      "Entradilla": "",
+      "Cuerpo": "",
+      "Multimedia": "17motfzsuiv7en_Qp-WwAenxJn72YgaXh|audio/mpeg|https://drive.google.com/file/d/17motfzsuiv7en_Qp-WwAenxJn72YgaXh/view?usp=drivesdk",
+      "ImagenPrincipal": "",
+      "CarpetaDrive": "1krzRzjkqZcwB8Or_DNJOWuU9heDJIsH_",
+      "Edicion": "",
+      "Portada": "NO",
+      "Destacada": "NO",
+      "Orden": 1,
+      "Observaciones": "",
+      "FechaPublicacion": "",
+      "UltimaModificacion": "2026-09-29T19:21:46.033Z",
+      "Editor": "mgoncan@g.educaand.es",
+      "Publicada": "NO",
+      "SubseccionPodcast": "Actualidad",
+      "TipoContenido": "NOTICIA"
     }
   ]
 }
