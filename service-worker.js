@@ -1,7 +1,24 @@
 // OneSignal (notificaciones push) fusionado en este mismo service
 // worker, para no tener que registrar uno aparte. No toca nada de
 // lo que hay más abajo.
-importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
+//
+// Va dentro de un try/catch a propósito: importScripts() es una
+// instrucción que, si falla (por ejemplo sin conexión en el
+// instante exacto de abrir la app instalada, algo más probable
+// justo al tocar el icono que navegando con el wifi ya asentado),
+// detiene la ejecución de TODO el archivo, no solo esta línea.
+// Sin este try/catch, un fallo aquí dejaba sin service worker a
+// toda la revista, y de ahí el "no se ha podido abrir".
+try{
+
+    importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
+
+}catch(errorOneSignal){
+
+    // Sin OneSignal esta vez, pero el resto de la revista (que es
+    // lo importante) sigue funcionando con normalidad.
+
+}
 
 // =======================================================
 // SERVICE WORKER - EL MOLINILLO MAGAZINE
@@ -14,7 +31,7 @@ importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 // dispositivos que ya tienen la revista instalada se actualicen.
 // =======================================================
 
-const VERSION = "v12";
+const VERSION = "v13";
 
 const CACHE_APP = "molinillo-app-" + VERSION;
 
