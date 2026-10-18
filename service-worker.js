@@ -31,7 +31,7 @@ try{
 // dispositivos que ya tienen la revista instalada se actualicen.
 // =======================================================
 
-const VERSION = "v14";
+const VERSION = "v15";
 
 const CACHE_APP = "molinillo-app-" + VERSION;
 
@@ -56,6 +56,7 @@ const ARCHIVOS_CACHE = [
     "./js/renderPodcasts.js",
     "./js/vistas.js",
     "./js/buscador.js",
+    "./js/compartir.js",
     "./js/navegacion.js",
     "./js/app.js",
 

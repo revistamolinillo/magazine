@@ -422,6 +422,16 @@ function renderHero(){
                 : ""
                 }
 
+                <button
+                    class="boton boton-cristal boton-grande"
+                    type="button"
+                    onclick="compartirRevista()">
+
+                    ${icono("compartir", 20)}
+                    Compartir revista
+
+                </button>
+
             </div>
 
         </div>
@@ -567,6 +577,14 @@ function renderFooter(){
                     ${icono("buscar", 18)}
                     Buscar
                 </a>
+
+                <button
+                    class="pie-enlace pie-enlace-boton"
+                    type="button"
+                    onclick="compartirRevista()">
+                    ${icono("compartir", 18)}
+                    Compartir la revista
+                </button>
 
             </div>
 

@@ -77,9 +77,20 @@ async function iniciar(){
             "buscador"
         ];
 
+        // Enlace a una edición concreta (compartida desde la hemeroteca)
+        const edicionPedida = parametros.get("edicion");
+
         if(noticia){
 
             await irANoticia(noticia, { reemplazar:true });
+
+        }else if(
+            edicionPedida &&
+            /^[A-Za-z0-9_-]+$/.test(edicionPedida) &&
+            edicionPedida !== idEdicionLeyendo
+        ){
+
+            await abrirEdicion(edicionPedida, "portada", { reemplazar:true });
 
         }else if(vistasPermitidas.includes(vista)){
 
@@ -795,113 +806,7 @@ window.addEventListener("online", () => {
 });
 
 
-// -------------------------------------------------------
-// COMPARTIR
-// -------------------------------------------------------
-
-function obtenerEnlaceNoticia(id){
-
-    const url = new URL(window.location.href);
-
-    url.search = "";
-    url.hash = "";
-
-    url.searchParams.set("noticia", id);
-
-    return url.toString();
-
-}
-
-
-async function compartirNoticia(id){
-
-    const publicacion = buscarPublicacion(id);
-
-    if(!publicacion) return;
-
-    const url = obtenerEnlaceNoticia(id);
-
-    if(navigator.share){
-
-        const resumen =
-            (publicacion.Entradilla || "").slice(0, 160) ||
-            "Mira esto en " + CONFIG.nombreRevista;
-
-        try{
-
-            await navigator.share({
-                title: publicacion.Titulo,
-                text: resumen,
-                url
-            });
-
-        }catch(error){
-
-            // La persona cerró el menú de compartir: no pasa nada
-
-        }
-
-        return;
-
-    }
-
-    copiarTexto(url);
-
-}
-
-
-async function copiarEnlaceNoticia(id){
-
-    copiarTexto(obtenerEnlaceNoticia(id));
-
-}
-
-
-async function copiarTexto(texto){
-
-    try{
-
-        await navigator.clipboard.writeText(texto);
-
-        toast("Enlace copiado");
-
-    }catch(error){
-
-        // Método alternativo para navegadores antiguos
-        const cuadro = document.createElement("textarea");
-
-        cuadro.value = texto;
-
-        cuadro.style.position = "fixed";
-        cuadro.style.opacity = "0";
-
-        document.body.appendChild(cuadro);
-
-        cuadro.select();
-
-        let copiado = false;
-
-        try{
-
-            copiado = document.execCommand("copy");
-
-        }catch(errorCopia){
-
-            copiado = false;
-
-        }
-
-        cuadro.remove();
-
-        toast(
-            copiado
-            ? "Enlace copiado"
-            : "No se pudo copiar el enlace"
-        );
-
-    }
-
-}
+// (Compartir está en js/compartir.js)
 
 
 // -------------------------------------------------------
