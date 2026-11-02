@@ -180,63 +180,384 @@ function obtenerMultimedia(noticia){
 
 // -------------------------------------------------------
 // AUDIO DE UN PODCAST
+// Reproductor personalizado con entrada y salida.
 // -------------------------------------------------------
-
+ 
+const PODCAST_INTRO = "assets/audio/intro.mp3";
+const PODCAST_OUTRO = "assets/audio/outro.mp3";
+ 
+let _reproductoresActivos = [];
+ 
+ 
 function renderAudioPodcast(podcast){
-
+ 
     const audios = obtenerAudios(podcast);
-
+ 
     if(audios.length === 0) return "";
-
+ 
     return `
-
+ 
         <div class="podcast-audio">
-
+ 
             <h3 class="titulo-bloque-pequeno">
                 ${icono("auriculares", 20)}
                 Escucha el episodio
             </h3>
-
-            ${audios.map(audio => {
-
+ 
+            ${audios.map((audio, i) => {
+ 
                 const id = encodeURIComponent(audio.id);
-
+ 
                 return `
-
-                    <div class="podcast-player-wrapper">
-
-                        <div class="podcast-player-cargando">
-                            <span class="spinner"></span>
-                            Cargando reproductor...
+ 
+                    <div class="podcast-reproductor"
+                         data-episode-id="${esc(audio.id)}">
+ 
+                        <div class="podcast-cargando-panel">
+                            <div class="podcast-eq-barras">
+                                <span></span><span></span><span></span>
+                                <span></span><span></span>
+                            </div>
+                            <p>Cargando audio...</p>
                         </div>
-
-                        <iframe
-                            class="podcast-player"
-                            src="https://drive.google.com/file/d/${id}/preview"
-                            title="Reproductor de audio"
-                            allow="autoplay"
-                            onload="this.parentElement.classList.add('cargado')">
-                        </iframe>
-
+ 
+                        <div class="podcast-controles" hidden>
+ 
+                            <button class="podcast-btn-play"
+                                    type="button"
+                                    aria-label="Reproducir">
+                                ${icono("play", 20)}
+                            </button>
+ 
+                            <div class="podcast-barra-cont">
+                                <div class="podcast-barra-bg">
+                                    <div class="podcast-barra-prog"></div>
+                                </div>
+                            </div>
+ 
+                            <span class="podcast-reloj">
+                                0:00 / 0:00
+                            </span>
+ 
+                        </div>
+ 
                     </div>
-
-                    <a
-                        class="boton boton-primario boton-escuchar-movil"
-                        href="https://drive.google.com/file/d/${id}/view"
-                        target="_blank"
-                        rel="noopener">
-
+ 
+                    <a class="boton boton-primario boton-escuchar-movil"
+                       href="https://drive.google.com/file/d/${id}/view"
+                       target="_blank" rel="noopener">
                         ${icono("auriculares", 20)}
                         Escuchar podcast
-
                     </a>
-
+ 
                 `;
-
+ 
             }).join("")}
-
+ 
         </div>
-
+ 
     `;
-
+ 
 }
+ 
+ 
+// -------------------------------------------------------
+// INICIALIZACION DE LOS REPRODUCTORES
+// Se llama cada vez que se pinta una vista.
+// -------------------------------------------------------
+ 
+function inicializarReproductores(){
+ 
+    // Limpiar reproductores anteriores (si se cambia de vista)
+    _reproductoresActivos.forEach(function(r){
+        r.segmentos.forEach(function(s){
+            s.audio.pause();
+            s.audio.removeAttribute("src");
+            s.audio.load();
+        });
+        cancelAnimationFrame(r.raf);
+    });
+    _reproductoresActivos = [];
+ 
+    // Inicializar los que haya en pantalla
+    var reproductores = document.querySelectorAll(".podcast-reproductor");
+    for(var i = 0; i < reproductores.length; i++){
+        _crearReproductor(reproductores[i]);
+    }
+ 
+}
+ 
+ 
+function _crearReproductor(contenedor){
+ 
+    var idEpisodio = contenedor.dataset.episodeId;
+    if(!idEpisodio) return;
+ 
+    var urlEpisodio =
+        "https://drive.google.com/uc?export=download&id=" + idEpisodio;
+ 
+    // -- Elementos del DOM --
+    var panelCarga = contenedor.querySelector(".podcast-cargando-panel");
+    var controles  = contenedor.querySelector(".podcast-controles");
+    var btnPlay    = contenedor.querySelector(".podcast-btn-play");
+    var barraFondo = contenedor.querySelector(".podcast-barra-bg");
+    var barraProg  = contenedor.querySelector(".podcast-barra-prog");
+    var reloj      = contenedor.querySelector(".podcast-reloj");
+ 
+    // -- Los tres segmentos: entrada, episodio, salida --
+    var segmentos = [
+        { audio: new Audio(), url: PODCAST_INTRO },
+        { audio: new Audio(), url: urlEpisodio },
+        { audio: new Audio(), url: PODCAST_OUTRO }
+    ];
+ 
+    var duraciones    = [0, 0, 0];
+    var segActual     = 0;
+    var duracionTotal = 0;
+    var sonando       = false;
+    var listo         = false;
+    var rafId         = 0;
+ 
+    // Referencia para limpieza
+    var ref = { segmentos: segmentos, raf: 0 };
+    _reproductoresActivos.push(ref);
+ 
+ 
+    // -- Formato mm:ss --
+ 
+    function fmt(s){
+        if(!isFinite(s) || s < 0) return "0:00";
+        var m  = Math.floor(s / 60);
+        var ss = Math.floor(s % 60);
+        return m + ":" + (ss < 10 ? "0" : "") + ss;
+    }
+ 
+ 
+    // -- Tiempo actual unificado --
+ 
+    function tiempoAhora(){
+        var t = 0;
+        for(var i = 0; i < segActual; i++) t += duraciones[i];
+        t += (segmentos[segActual].audio.currentTime || 0);
+        return t;
+    }
+ 
+ 
+    // -- Pintar barra y reloj --
+ 
+    function pintar(){
+        if(!listo) return;
+        var t   = tiempoAhora();
+        var pct = duracionTotal > 0 ? (t / duracionTotal) * 100 : 0;
+        barraProg.style.width = pct + "%";
+        reloj.textContent = fmt(t) + " / " + fmt(duracionTotal);
+ 
+        if(sonando){
+            rafId = requestAnimationFrame(pintar);
+            ref.raf = rafId;
+        }
+    }
+ 
+ 
+    // -- Reproducir / Pausar --
+ 
+    function reproducir(){
+        segmentos[segActual].audio.play().catch(function(){});
+        sonando = true;
+        btnPlay.innerHTML = icono("pausa", 20);
+        btnPlay.setAttribute("aria-label", "Pausar");
+        rafId = requestAnimationFrame(pintar);
+        ref.raf = rafId;
+    }
+ 
+    function pausar(){
+        segmentos[segActual].audio.pause();
+        sonando = false;
+        btnPlay.innerHTML = icono("play", 20);
+        btnPlay.setAttribute("aria-label", "Reproducir");
+        cancelAnimationFrame(rafId);
+        pintar();
+    }
+ 
+ 
+    // -- Pasar al siguiente segmento --
+ 
+    function siguiente(){
+        if(segActual < segmentos.length - 1){
+            segActual++;
+            // Saltar segmentos que no cargaron (duracion 0)
+            if(duraciones[segActual] === 0){
+                siguiente();
+                return;
+            }
+            reproducir();
+        }else{
+            // Todo terminado: volver al inicio
+            segActual = 0;
+            for(var i = 0; i < segmentos.length; i++){
+                segmentos[i].audio.currentTime = 0;
+            }
+            pausar();
+        }
+    }
+ 
+ 
+    // -- Buscar en la linea de tiempo unificada --
+ 
+    function buscar(ratio){
+        var tiempo = ratio * duracionTotal;
+ 
+        segmentos[segActual].audio.pause();
+ 
+        for(var i = 0; i < segmentos.length; i++){
+            if(duraciones[i] === 0){
+                // Segmento vacio, saltar
+                continue;
+            }
+            if(tiempo <= duraciones[i] || i === segmentos.length - 1){
+                segActual = i;
+                segmentos[i].audio.currentTime =
+                    Math.min(Math.max(0, tiempo), duraciones[i] - 0.01);
+                break;
+            }
+            tiempo -= duraciones[i];
+        }
+ 
+        if(sonando) reproducir();
+        pintar();
+    }
+ 
+ 
+    // -- Cargar los tres audios --
+ 
+    function cargar(){
+ 
+        var pendientes = segmentos.length;
+ 
+        segmentos.forEach(function(seg, i){
+ 
+            var resuelto = false;
+ 
+            function resolver(){
+                if(resuelto) return;
+                resuelto = true;
+                duraciones[i] = seg.audio.duration || 0;
+                pendientes--;
+                if(pendientes === 0) todoCargado();
+            }
+ 
+            function fallar(){
+                if(resuelto) return;
+                resuelto = true;
+                duraciones[i] = 0;
+                pendientes--;
+                if(pendientes === 0) todoCargado();
+            }
+ 
+            seg.audio.addEventListener("loadedmetadata", resolver);
+            seg.audio.addEventListener("canplay", resolver);
+            seg.audio.addEventListener("error", fallar);
+ 
+            seg.audio.addEventListener("ended", siguiente);
+ 
+            seg.audio.src = seg.url;
+            seg.audio.load();
+ 
+        });
+ 
+    }
+ 
+ 
+    function todoCargado(){
+ 
+        duracionTotal = duraciones[0] + duraciones[1] + duraciones[2];
+ 
+        // Si el episodio no cargo, mostrar error
+        if(duraciones[1] === 0){
+            var texto = panelCarga.querySelector("p");
+            if(texto) texto.textContent = "No se pudo cargar el audio.";
+            var barras = panelCarga.querySelector(".podcast-eq-barras");
+            if(barras) barras.hidden = true;
+            // Mostrar el enlace a Drive como alternativa
+            var enlace = contenedor.nextElementSibling;
+            if(enlace && enlace.classList.contains("boton-escuchar-movil")){
+                enlace.style.display = "inline-flex";
+            }
+            return;
+        }
+ 
+        listo = true;
+ 
+        panelCarga.hidden = true;
+        controles.hidden  = false;
+ 
+        // Empezar en el primer segmento con audio
+        segActual = duraciones[0] > 0 ? 0 : 1;
+ 
+        pintar();
+ 
+    }
+ 
+ 
+    // -- Eventos --
+ 
+    btnPlay.addEventListener("click", function(){
+        if(!listo) return;
+        if(sonando) pausar();
+        else reproducir();
+    });
+ 
+    barraFondo.addEventListener("click", function(e){
+        if(!listo) return;
+        var rect  = barraFondo.getBoundingClientRect();
+        var ratio = (e.clientX - rect.left) / rect.width;
+        ratio = Math.max(0, Math.min(1, ratio));
+        buscar(ratio);
+    });
+ 
+    // Permitir arrastrar en la barra
+    barraFondo.addEventListener("mousedown", function(e){
+        if(!listo) return;
+        e.preventDefault();
+ 
+        function mover(ev){
+            var rect  = barraFondo.getBoundingClientRect();
+            var ratio = (ev.clientX - rect.left) / rect.width;
+            buscar(Math.max(0, Math.min(1, ratio)));
+        }
+ 
+        function soltar(){
+            document.removeEventListener("mousemove", mover);
+            document.removeEventListener("mouseup", soltar);
+        }
+ 
+        document.addEventListener("mousemove", mover);
+        document.addEventListener("mouseup", soltar);
+    });
+ 
+    // Tactil
+    barraFondo.addEventListener("touchstart", function(e){
+        if(!listo) return;
+ 
+        function moverT(ev){
+            var touch = ev.touches[0];
+            var rect  = barraFondo.getBoundingClientRect();
+            var ratio = (touch.clientX - rect.left) / rect.width;
+            buscar(Math.max(0, Math.min(1, ratio)));
+        }
+ 
+        function soltarT(){
+            document.removeEventListener("touchmove", moverT);
+            document.removeEventListener("touchend", soltarT);
+        }
+ 
+        document.addEventListener("touchmove", moverT);
+        document.addEventListener("touchend", soltarT);
+    }, { passive: true });
+ 
+ 
+    // -- Arrancar la carga --
+    cargar();
+ 
+}
+
