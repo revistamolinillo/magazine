@@ -288,23 +288,10 @@ function inicializarReproductores(){
 }
 
 
-// URLs alternativas para descargar audio de Google Drive.
-// Google a veces bloquea una y acepta otra.
-function _urlsDrive(id){
-    return [
-        "https://drive.google.com/uc?export=download&confirm=t&id=" + id,
-        "https://drive.usercontent.google.com/download?id=" + id + "&export=download&confirm=t",
-        "https://drive.google.com/uc?export=view&id=" + id
-    ];
-}
-
-
 function _crearReproductor(contenedor){
 
     var idEpisodio = contenedor.dataset.episodeId;
     if(!idEpisodio) return;
-
-    var urlsEpisodio = _urlsDrive(idEpisodio);
 
     // -- Elementos del DOM --
     var panelCarga = contenedor.querySelector(".podcast-cargando-panel");
@@ -317,7 +304,7 @@ function _crearReproductor(contenedor){
     // -- Los tres segmentos: entrada, episodio, salida --
     var segmentos = [
         { audio: new Audio(), url: PODCAST_INTRO },
-        { audio: new Audio(), url: urlsEpisodio[0] },
+        { audio: new Audio(), url: "" },
         { audio: new Audio(), url: PODCAST_OUTRO }
     ];
 
@@ -421,7 +408,6 @@ function _crearReproductor(contenedor){
 
         for(var i = 0; i < segmentos.length; i++){
             if(duraciones[i] === 0){
-                // Segmento vacio, saltar
                 continue;
             }
             if(tiempo <= duraciones[i] || i === segmentos.length - 1){
@@ -439,16 +425,18 @@ function _crearReproductor(contenedor){
 
 
     // -- Cargar los tres audios --
-    //    El episodio (segmento 1) prueba varias URLs de Drive
-    //    si la primera falla.
+    //    Intro y outro se cargan del repositorio (local).
+    //    El episodio se carga a través de Apps Script
+    //    (que sí puede leer archivos de Drive).
 
     function cargar(){
 
-        var pendientes = segmentos.length;
-        var intentoEpisodio = 0;
+        var pendientes = 3;
 
-        segmentos.forEach(function(seg, i){
+        // --- Cargar intro (0) y outro (2): archivos locales ---
 
+        function cargarLocal(i){
+            var seg = segmentos[i];
             var resuelto = false;
 
             function resolver(){
@@ -461,18 +449,6 @@ function _crearReproductor(contenedor){
 
             function fallar(){
                 if(resuelto) return;
-
-                // Si es el episodio, intentar con la siguiente URL
-                if(i === 1){
-                    intentoEpisodio++;
-                    if(intentoEpisodio < urlsEpisodio.length){
-                        console.log("Podcast: reintentando con URL alternativa " + intentoEpisodio);
-                        seg.audio.src = urlsEpisodio[intentoEpisodio];
-                        seg.audio.load();
-                        return;
-                    }
-                }
-
                 resuelto = true;
                 duraciones[i] = 0;
                 pendientes--;
@@ -482,23 +458,82 @@ function _crearReproductor(contenedor){
             seg.audio.addEventListener("loadedmetadata", resolver);
             seg.audio.addEventListener("canplay", resolver);
             seg.audio.addEventListener("error", fallar);
-
             seg.audio.addEventListener("ended", siguiente);
 
             seg.audio.src = seg.url;
             seg.audio.load();
+        }
 
-        });
+        cargarLocal(0);
+        cargarLocal(2);
 
-        // Timeout de seguridad: si en 20s no ha resuelto
-        // todo, forzar todoCargado con lo que haya
+
+        // --- Cargar episodio (1) via proxy de Apps Script ---
+
+        var urlProxy = CONFIG.urlAnadirNoticia
+            + "?accion=audio&id=" + encodeURIComponent(idEpisodio);
+
+        console.log("Podcast: cargando audio via Apps Script...");
+
+        fetch(urlProxy)
+            .then(function(resp){ return resp.json(); })
+            .then(function(data){
+
+                if(data.error){
+                    throw new Error(data.error);
+                }
+
+                // Decodificar base64 a Blob
+                var raw = atob(data.audio);
+                var arr = new Uint8Array(raw.length);
+                for(var j = 0; j < raw.length; j++){
+                    arr[j] = raw.charCodeAt(j);
+                }
+
+                var blob = new Blob([arr], {
+                    type: data.tipo || "audio/mpeg"
+                });
+                var blobUrl = URL.createObjectURL(blob);
+
+                console.log("Podcast: audio recibido, tamano=" +
+                    arr.length + " bytes");
+
+                // Ahora cargar el blob en el elemento Audio
+                var seg = segmentos[1];
+                var resuelto = false;
+
+                function resolver(){
+                    if(resuelto) return;
+                    resuelto = true;
+                    duraciones[1] = seg.audio.duration || 0;
+                    pendientes--;
+                    if(pendientes === 0) todoCargado();
+                }
+
+                seg.audio.addEventListener("loadedmetadata", resolver);
+                seg.audio.addEventListener("canplay", resolver);
+                seg.audio.addEventListener("ended", siguiente);
+
+                seg.audio.src = blobUrl;
+                seg.audio.load();
+
+            })
+            .catch(function(err){
+                console.error("Podcast: error cargando audio:", err);
+                duraciones[1] = 0;
+                pendientes--;
+                if(pendientes === 0) todoCargado();
+            });
+
+
+        // Timeout de seguridad (30s porque el proxy tarda mas)
         setTimeout(function(){
             if(pendientes > 0){
                 console.log("Podcast: timeout de carga, pendientes=" + pendientes);
                 pendientes = 0;
                 todoCargado();
             }
-        }, 20000);
+        }, 30000);
 
     }
 
