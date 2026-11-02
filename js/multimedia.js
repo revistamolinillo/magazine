@@ -426,8 +426,8 @@ function _crearReproductor(contenedor){
 
     // -- Cargar los tres audios --
     //    Intro y outro se cargan del repositorio (local).
-    //    El episodio se carga a través de Apps Script
-    //    (que sí puede leer archivos de Drive).
+    //    El episodio se carga via JSONP a traves de Apps Script
+    //    (evita el bloqueo CORS de Google).
 
     function cargar(){
 
@@ -468,72 +468,96 @@ function _crearReproductor(contenedor){
         cargarLocal(2);
 
 
-        // --- Cargar episodio (1) via proxy de Apps Script ---
+        // --- Cargar episodio (1) via JSONP (Apps Script) ---
 
-        var urlProxy = CONFIG.urlAnadirNoticia
-            + "?accion=audio&id=" + encodeURIComponent(idEpisodio);
+        var nombreCb = "_podcastCb_" + Date.now();
 
-        console.log("Podcast: cargando audio via Apps Script...");
+        console.log("Podcast: cargando audio via Apps Script (JSONP)...");
 
-        fetch(urlProxy)
-            .then(function(resp){ return resp.json(); })
-            .then(function(data){
+        window[nombreCb] = function(data){
 
-                if(data.error){
-                    throw new Error(data.error);
-                }
+            // Limpiar callback y script
+            delete window[nombreCb];
+            var tag = document.getElementById(nombreCb);
+            if(tag) tag.remove();
 
-                // Decodificar base64 a Blob
-                var raw = atob(data.audio);
-                var arr = new Uint8Array(raw.length);
-                for(var j = 0; j < raw.length; j++){
-                    arr[j] = raw.charCodeAt(j);
-                }
-
-                var blob = new Blob([arr], {
-                    type: data.tipo || "audio/mpeg"
-                });
-                var blobUrl = URL.createObjectURL(blob);
-
-                console.log("Podcast: audio recibido, tamano=" +
-                    arr.length + " bytes");
-
-                // Ahora cargar el blob en el elemento Audio
-                var seg = segmentos[1];
-                var resuelto = false;
-
-                function resolver(){
-                    if(resuelto) return;
-                    resuelto = true;
-                    duraciones[1] = seg.audio.duration || 0;
-                    pendientes--;
-                    if(pendientes === 0) todoCargado();
-                }
-
-                seg.audio.addEventListener("loadedmetadata", resolver);
-                seg.audio.addEventListener("canplay", resolver);
-                seg.audio.addEventListener("ended", siguiente);
-
-                seg.audio.src = blobUrl;
-                seg.audio.load();
-
-            })
-            .catch(function(err){
-                console.error("Podcast: error cargando audio:", err);
+            if(data.error){
+                console.error("Podcast: error del servidor:", data.error);
                 duraciones[1] = 0;
                 pendientes--;
                 if(pendientes === 0) todoCargado();
+                return;
+            }
+
+            // Decodificar base64 a Blob
+            var raw = atob(data.audio);
+            var arr = new Uint8Array(raw.length);
+            for(var j = 0; j < raw.length; j++){
+                arr[j] = raw.charCodeAt(j);
+            }
+
+            var blob = new Blob([arr], {
+                type: data.tipo || "audio/mpeg"
             });
+            var blobUrl = URL.createObjectURL(blob);
+
+            console.log("Podcast: audio recibido, tamano=" +
+                arr.length + " bytes");
+
+            // Cargar el blob en el elemento Audio
+            var seg = segmentos[1];
+            var resuelto = false;
+
+            function resolver(){
+                if(resuelto) return;
+                resuelto = true;
+                duraciones[1] = seg.audio.duration || 0;
+                pendientes--;
+                if(pendientes === 0) todoCargado();
+            }
+
+            seg.audio.addEventListener("loadedmetadata", resolver);
+            seg.audio.addEventListener("canplay", resolver);
+            seg.audio.addEventListener("ended", siguiente);
+
+            seg.audio.src = blobUrl;
+            seg.audio.load();
+
+        };
+
+        // Crear la etiqueta <script> para JSONP
+        var script = document.createElement("script");
+        script.id = nombreCb;
+        script.src = CONFIG.urlAnadirNoticia
+            + "?accion=audio&id=" + encodeURIComponent(idEpisodio)
+            + "&callback=" + nombreCb;
+
+        script.onerror = function(){
+            console.error("Podcast: error de red al cargar audio");
+            delete window[nombreCb];
+            script.remove();
+            duraciones[1] = 0;
+            pendientes--;
+            if(pendientes === 0) todoCargado();
+        };
+
+        document.head.appendChild(script);
 
 
-        // Timeout de seguridad (30s porque el proxy tarda mas)
+        // Timeout de seguridad (45s porque el proxy puede tardar)
         setTimeout(function(){
             if(pendientes > 0){
                 console.log("Podcast: timeout de carga, pendientes=" + pendientes);
+                // Limpiar callback si sigue activo
+                if(window[nombreCb]){
+                    delete window[nombreCb];
+                    var tag = document.getElementById(nombreCb);
+                    if(tag) tag.remove();
+                }
                 pendientes = 0;
                 todoCargado();
             }
-        }, 30000);
+        }, 45000);
 
     }
 
