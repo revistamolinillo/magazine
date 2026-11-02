@@ -503,6 +503,41 @@ async function cargarHemeroteca(){
 
     }
 
+    // En vista previa, la edición publicada todavía no está en
+    // la hemeroteca (se añadirá al publicar de verdad). Para que
+    // la vista previa sea fiel, se carga revista.json y se mete
+    // como si ya estuviera en la hemeroteca.
+    if(modoPreview){
+
+        try{
+
+            const publicada = await pedirJSON(CONFIG.urlDatos);
+
+            if(
+                publicada &&
+                publicada.id &&
+                publicada.id !== idEdicionActual &&
+                !hemeroteca.some(e => e.id === publicada.id)
+            ){
+
+                hemeroteca.push({
+                    id:        publicada.id,
+                    nombre:    publicada.mes || "",
+                    curso:     publicada.curso || "",
+                    imagen:    obtenerImagenPortadaEdicion(publicada),
+                    articulos: (publicada.noticias || []).length
+                });
+
+            }
+
+        }catch(error){
+
+            console.warn("No se pudo añadir la edición publicada a la hemeroteca:", error);
+
+        }
+
+    }
+
     // Las portadas se van preparando en segundo plano
     hemeroteca.forEach(edicionLista => {
 
