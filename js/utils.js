@@ -72,6 +72,7 @@ const ICONOS = {
 
     play:
         '<polygon points="6 3 20 12 6 21 6 3"/>',
+        '<line x1="8" y1="5" x2="8" y2="19"/><line x1="16" y1="5" x2="16" y2="19"/>',
 
     video:
         '<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>',
