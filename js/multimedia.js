@@ -182,10 +182,8 @@ function obtenerMultimedia(noticia){
 // AUDIO DE UN PODCAST
 // Usa el reproductor de Google Drive (iframe /preview),
 // igual que los vídeos. Reproduce al instante.
+// El audio ya lleva la intro y salida incorporadas.
 // -------------------------------------------------------
-
-const PODCAST_INTRO = "assets/audio/intro.mp3";
-const PODCAST_OUTRO = "assets/audio/outro.mp3";
 
 
 function renderAudioPodcast(podcast){
@@ -211,30 +209,12 @@ function renderAudioPodcast(podcast){
 
                     <div class="podcast-reproductor">
 
-                        <audio class="podcast-intro-audio" preload="auto">
-                            <source src="${PODCAST_INTRO}" type="audio/mpeg">
-                        </audio>
-
-                        <audio class="podcast-outro-audio" preload="auto">
-                            <source src="${PODCAST_OUTRO}" type="audio/mpeg">
-                        </audio>
-
-                        <button class="podcast-btn-intro" type="button">
-                            ${icono("play", 18)}
-                            <span>Escuchar intro</span>
-                        </button>
-
                         <iframe
                             class="podcast-iframe-player"
                             src="https://drive.google.com/file/d/${id}/preview"
                             allow="autoplay"
                             loading="lazy">
                         </iframe>
-
-                        <button class="podcast-btn-outro" type="button">
-                            ${icono("play", 18)}
-                            <span>Escuchar salida</span>
-                        </button>
 
                     </div>
 
@@ -257,73 +237,4 @@ function renderAudioPodcast(podcast){
 
 
 // Se llama desde navegacion.js despues de pintar la vista
-function inicializarReproductores(){
-
-    var reproductores = document.querySelectorAll(".podcast-reproductor");
-
-    for(var i = 0; i < reproductores.length; i++){
-
-        (function(cont){
-
-            var introAudio = cont.querySelector(".podcast-intro-audio");
-            var outroAudio = cont.querySelector(".podcast-outro-audio");
-            var btnIntro   = cont.querySelector(".podcast-btn-intro");
-            var btnOutro   = cont.querySelector(".podcast-btn-outro");
-
-            if(btnIntro && introAudio){
-                var introSonando = false;
-
-                btnIntro.addEventListener("click", function(){
-                    if(introSonando){
-                        introAudio.pause();
-                        introSonando = false;
-                        btnIntro.querySelector("svg").outerHTML = icono("play", 18);
-                        btnIntro.querySelector("span").textContent = "Escuchar intro";
-                    }else{
-                        outroAudio.pause();
-                        introAudio.currentTime = 0;
-                        introAudio.play().catch(function(){});
-                        introSonando = true;
-                        btnIntro.querySelector("svg").outerHTML = icono("pausa", 18);
-                        btnIntro.querySelector("span").textContent = "Pausar intro";
-                    }
-                });
-
-                introAudio.addEventListener("ended", function(){
-                    introSonando = false;
-                    btnIntro.querySelector("svg").outerHTML = icono("play", 18);
-                    btnIntro.querySelector("span").textContent = "Escuchar intro";
-                });
-            }
-
-            if(btnOutro && outroAudio){
-                var outroSonando = false;
-
-                btnOutro.addEventListener("click", function(){
-                    if(outroSonando){
-                        outroAudio.pause();
-                        outroSonando = false;
-                        btnOutro.querySelector("svg").outerHTML = icono("play", 18);
-                        btnOutro.querySelector("span").textContent = "Escuchar salida";
-                    }else{
-                        introAudio.pause();
-                        outroAudio.currentTime = 0;
-                        outroAudio.play().catch(function(){});
-                        outroSonando = true;
-                        btnOutro.querySelector("svg").outerHTML = icono("pausa", 18);
-                        btnOutro.querySelector("span").textContent = "Pausar salida";
-                    }
-                });
-
-                outroAudio.addEventListener("ended", function(){
-                    outroSonando = false;
-                    btnOutro.querySelector("svg").outerHTML = icono("play", 18);
-                    btnOutro.querySelector("span").textContent = "Escuchar salida";
-                });
-            }
-
-        })(reproductores[i]);
-
-    }
-
-}
+function inicializarReproductores(){ }
