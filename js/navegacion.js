@@ -234,6 +234,7 @@ function pintarVista(vista, enfocar){
     detenerLectura();
 
     contenido.innerHTML = html + renderFooter();
+    inicializarReproductores();
 
     edicionPintada = idEdicionLeyendo;
 
