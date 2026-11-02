@@ -181,6 +181,10 @@ function obtenerMultimedia(noticia){
 // -------------------------------------------------------
 // AUDIO DE UN PODCAST
 // Reproductor personalizado con entrada y salida.
+//
+// El episodio se carga desde Drive a traves de un iframe
+// oculto que conecta con Apps Script (postMessage).
+// La intro y outro se cargan como archivos locales.
 // -------------------------------------------------------
 
 const PODCAST_INTRO = "assets/audio/intro.mp3";
@@ -188,6 +192,83 @@ const PODCAST_OUTRO = "assets/audio/outro.mp3";
 
 let _reproductoresActivos = [];
 
+
+// -------------------------------------------------------
+// PROXY DE AUDIO (iframe oculto + postMessage)
+// Se crea una sola vez y se reutiliza para todos
+// los reproductores de la pagina.
+// -------------------------------------------------------
+
+var _proxyIframe  = null;
+var _proxyListo   = false;
+var _proxyCola    = [];
+var _proxyCbs     = {};
+
+function _iniciarProxy(){
+
+    if(_proxyIframe) return;
+
+    _proxyIframe = document.createElement("iframe");
+    _proxyIframe.style.display = "none";
+    _proxyIframe.src = CONFIG.urlAnadirNoticia + "?accion=audioProxy";
+    document.body.appendChild(_proxyIframe);
+
+    window.addEventListener("message", function(evt){
+
+        var d = evt.data;
+        if(!d || !d.resp) return;
+
+        // El iframe avisa de que esta listo
+        if(d.resp === "proxyListo"){
+            console.log("Podcast: proxy de audio listo");
+            _proxyListo = true;
+            // Enviar peticiones que estaban esperando
+            _proxyCola.forEach(function(msg){
+                _proxyIframe.contentWindow.postMessage(msg, "*");
+            });
+            _proxyCola = [];
+            return;
+        }
+
+        // Respuesta con audio cargado
+        if(d.resp === "cargado" && d.id && _proxyCbs[d.id]){
+            _proxyCbs[d.id].ok(d);
+            delete _proxyCbs[d.id];
+            return;
+        }
+
+        // Respuesta con error
+        if(d.resp === "error" && d.id && _proxyCbs[d.id]){
+            _proxyCbs[d.id].err(d.error || "Error desconocido");
+            delete _proxyCbs[d.id];
+            return;
+        }
+
+    });
+
+}
+
+
+function _pedirAudio(idArchivo, onOk, onErr){
+
+    _iniciarProxy();
+
+    _proxyCbs[idArchivo] = { ok: onOk, err: onErr };
+
+    var msg = { cmd: "cargar", id: idArchivo };
+
+    if(_proxyListo){
+        _proxyIframe.contentWindow.postMessage(msg, "*");
+    }else{
+        _proxyCola.push(msg);
+    }
+
+}
+
+
+// -------------------------------------------------------
+// RENDER HTML DEL REPRODUCTOR
+// -------------------------------------------------------
 
 function renderAudioPodcast(podcast){
 
@@ -288,6 +369,10 @@ function inicializarReproductores(){
 }
 
 
+// -------------------------------------------------------
+// CREAR UN REPRODUCTOR
+// -------------------------------------------------------
+
 function _crearReproductor(contenedor){
 
     var idEpisodio = contenedor.dataset.episodeId;
@@ -382,14 +467,12 @@ function _crearReproductor(contenedor){
     function siguiente(){
         if(segActual < segmentos.length - 1){
             segActual++;
-            // Saltar segmentos que no cargaron (duracion 0)
             if(duraciones[segActual] === 0){
                 siguiente();
                 return;
             }
             reproducir();
         }else{
-            // Todo terminado: volver al inicio
             segActual = 0;
             for(var i = 0; i < segmentos.length; i++){
                 segmentos[i].audio.currentTime = 0;
@@ -407,9 +490,7 @@ function _crearReproductor(contenedor){
         segmentos[segActual].audio.pause();
 
         for(var i = 0; i < segmentos.length; i++){
-            if(duraciones[i] === 0){
-                continue;
-            }
+            if(duraciones[i] === 0) continue;
             if(tiempo <= duraciones[i] || i === segmentos.length - 1){
                 segActual = i;
                 segmentos[i].audio.currentTime =
@@ -425,15 +506,12 @@ function _crearReproductor(contenedor){
 
 
     // -- Cargar los tres audios --
-    //    Intro y outro se cargan del repositorio (local).
-    //    El episodio se carga via JSONP a traves de Apps Script
-    //    (evita el bloqueo CORS de Google).
 
     function cargar(){
 
         var pendientes = 3;
 
-        // --- Cargar intro (0) y outro (2): archivos locales ---
+        // --- Intro (0) y outro (2): archivos locales ---
 
         function cargarLocal(i){
             var seg = segmentos[i];
@@ -468,96 +546,67 @@ function _crearReproductor(contenedor){
         cargarLocal(2);
 
 
-        // --- Cargar episodio (1) via JSONP (Apps Script) ---
+        // --- Episodio (1): via proxy de Apps Script ---
 
-        var nombreCb = "_podcastCb_" + Date.now();
+        console.log("Podcast: pidiendo audio a Apps Script...");
 
-        console.log("Podcast: cargando audio via Apps Script (JSONP)...");
+        _pedirAudio(idEpisodio,
 
-        window[nombreCb] = function(data){
+            // OK: recibimos el audio en base64
+            function(data){
 
-            // Limpiar callback y script
-            delete window[nombreCb];
-            var tag = document.getElementById(nombreCb);
-            if(tag) tag.remove();
+                var raw = atob(data.audio);
+                var arr = new Uint8Array(raw.length);
+                for(var j = 0; j < raw.length; j++){
+                    arr[j] = raw.charCodeAt(j);
+                }
 
-            if(data.error){
-                console.error("Podcast: error del servidor:", data.error);
+                var blob = new Blob([arr], {
+                    type: data.tipo || "audio/mpeg"
+                });
+                var blobUrl = URL.createObjectURL(blob);
+
+                console.log("Podcast: audio recibido (" +
+                    Math.round(arr.length / 1024) + " KB)");
+
+                var seg = segmentos[1];
+                var resuelto = false;
+
+                function resolver(){
+                    if(resuelto) return;
+                    resuelto = true;
+                    duraciones[1] = seg.audio.duration || 0;
+                    pendientes--;
+                    if(pendientes === 0) todoCargado();
+                }
+
+                seg.audio.addEventListener("loadedmetadata", resolver);
+                seg.audio.addEventListener("canplay", resolver);
+                seg.audio.addEventListener("ended", siguiente);
+
+                seg.audio.src = blobUrl;
+                seg.audio.load();
+            },
+
+            // Error
+            function(error){
+                console.error("Podcast: error del proxy:", error);
                 duraciones[1] = 0;
                 pendientes--;
                 if(pendientes === 0) todoCargado();
-                return;
             }
 
-            // Decodificar base64 a Blob
-            var raw = atob(data.audio);
-            var arr = new Uint8Array(raw.length);
-            for(var j = 0; j < raw.length; j++){
-                arr[j] = raw.charCodeAt(j);
-            }
-
-            var blob = new Blob([arr], {
-                type: data.tipo || "audio/mpeg"
-            });
-            var blobUrl = URL.createObjectURL(blob);
-
-            console.log("Podcast: audio recibido, tamano=" +
-                arr.length + " bytes");
-
-            // Cargar el blob en el elemento Audio
-            var seg = segmentos[1];
-            var resuelto = false;
-
-            function resolver(){
-                if(resuelto) return;
-                resuelto = true;
-                duraciones[1] = seg.audio.duration || 0;
-                pendientes--;
-                if(pendientes === 0) todoCargado();
-            }
-
-            seg.audio.addEventListener("loadedmetadata", resolver);
-            seg.audio.addEventListener("canplay", resolver);
-            seg.audio.addEventListener("ended", siguiente);
-
-            seg.audio.src = blobUrl;
-            seg.audio.load();
-
-        };
-
-        // Crear la etiqueta <script> para JSONP
-        var script = document.createElement("script");
-        script.id = nombreCb;
-        script.src = CONFIG.urlAnadirNoticia
-            + "?accion=audio&id=" + encodeURIComponent(idEpisodio)
-            + "&callback=" + nombreCb;
-
-        script.onerror = function(){
-            console.error("Podcast: error de red al cargar audio");
-            delete window[nombreCb];
-            script.remove();
-            duraciones[1] = 0;
-            pendientes--;
-            if(pendientes === 0) todoCargado();
-        };
-
-        document.head.appendChild(script);
+        );
 
 
-        // Timeout de seguridad (45s porque el proxy puede tardar)
+        // Timeout de seguridad (60s para archivos grandes)
         setTimeout(function(){
             if(pendientes > 0){
-                console.log("Podcast: timeout de carga, pendientes=" + pendientes);
-                // Limpiar callback si sigue activo
-                if(window[nombreCb]){
-                    delete window[nombreCb];
-                    var tag = document.getElementById(nombreCb);
-                    if(tag) tag.remove();
-                }
+                console.log("Podcast: timeout, pendientes=" + pendientes);
                 pendientes = 0;
                 todoCargado();
             }
-        }, 45000);
+        }, 60000);
 
     }
 
@@ -566,13 +615,11 @@ function _crearReproductor(contenedor){
 
         duracionTotal = duraciones[0] + duraciones[1] + duraciones[2];
 
-        // Si el episodio no cargo, mostrar error
         if(duraciones[1] === 0){
             var texto = panelCarga.querySelector("p");
             if(texto) texto.textContent = "No se pudo cargar el audio.";
             var barras = panelCarga.querySelector(".podcast-eq-barras");
             if(barras) barras.hidden = true;
-            // Mostrar el enlace a Drive como alternativa
             var enlace = contenedor.nextElementSibling;
             if(enlace && enlace.classList.contains("boton-escuchar-movil")){
                 enlace.style.display = "inline-flex";
@@ -585,7 +632,6 @@ function _crearReproductor(contenedor){
         panelCarga.hidden = true;
         controles.hidden  = false;
 
-        // Empezar en el primer segmento con audio
         segActual = duraciones[0] > 0 ? 0 : 1;
 
         pintar();
@@ -609,7 +655,6 @@ function _crearReproductor(contenedor){
         buscar(ratio);
     });
 
-    // Permitir arrastrar en la barra
     barraFondo.addEventListener("mousedown", function(e){
         if(!listo) return;
         e.preventDefault();
@@ -629,7 +674,6 @@ function _crearReproductor(contenedor){
         document.addEventListener("mouseup", soltar);
     });
 
-    // Tactil
     barraFondo.addEventListener("touchstart", function(e){
         if(!listo) return;
 
@@ -650,7 +694,7 @@ function _crearReproductor(contenedor){
     }, { passive: true });
 
 
-    // -- Arrancar la carga --
+    // -- Arrancar --
     cargar();
 
 }
