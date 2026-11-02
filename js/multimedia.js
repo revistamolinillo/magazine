@@ -180,95 +180,13 @@ function obtenerMultimedia(noticia){
 
 // -------------------------------------------------------
 // AUDIO DE UN PODCAST
-// Reproductor personalizado con entrada y salida.
-//
-// El episodio se carga desde Drive a traves de un iframe
-// oculto que conecta con Apps Script (postMessage).
-// La intro y outro se cargan como archivos locales.
+// Usa el reproductor de Google Drive (iframe /preview),
+// igual que los vídeos. Reproduce al instante.
 // -------------------------------------------------------
 
 const PODCAST_INTRO = "assets/audio/intro.mp3";
 const PODCAST_OUTRO = "assets/audio/outro.mp3";
 
-let _reproductoresActivos = [];
-
-
-// -------------------------------------------------------
-// PROXY DE AUDIO (iframe oculto + postMessage)
-// Se crea una sola vez y se reutiliza para todos
-// los reproductores de la pagina.
-// -------------------------------------------------------
-
-var _proxyIframe  = null;
-var _proxyListo   = false;
-var _proxyCola    = [];
-var _proxyCbs     = {};
-
-function _iniciarProxy(){
-
-    if(_proxyIframe) return;
-
-    _proxyIframe = document.createElement("iframe");
-    _proxyIframe.style.display = "none";
-    _proxyIframe.src = CONFIG.urlAnadirNoticia + "?accion=audioProxy";
-    document.body.appendChild(_proxyIframe);
-
-    window.addEventListener("message", function(evt){
-
-        var d = evt.data;
-        if(!d || !d.resp) return;
-
-        // El iframe avisa de que esta listo
-        if(d.resp === "proxyListo"){
-            console.log("Podcast: proxy de audio listo");
-            _proxyListo = true;
-            // Enviar peticiones que estaban esperando
-            _proxyCola.forEach(function(msg){
-                _proxyIframe.contentWindow.postMessage(msg, "*");
-            });
-            _proxyCola = [];
-            return;
-        }
-
-        // Respuesta con audio cargado
-        if(d.resp === "cargado" && d.id && _proxyCbs[d.id]){
-            _proxyCbs[d.id].ok(d);
-            delete _proxyCbs[d.id];
-            return;
-        }
-
-        // Respuesta con error
-        if(d.resp === "error" && d.id && _proxyCbs[d.id]){
-            _proxyCbs[d.id].err(d.error || "Error desconocido");
-            delete _proxyCbs[d.id];
-            return;
-        }
-
-    });
-
-}
-
-
-function _pedirAudio(idArchivo, onOk, onErr){
-
-    _iniciarProxy();
-
-    _proxyCbs[idArchivo] = { ok: onOk, err: onErr };
-
-    var msg = { cmd: "cargar", id: idArchivo };
-
-    if(_proxyListo){
-        _proxyIframe.contentWindow.postMessage(msg, "*");
-    }else{
-        _proxyCola.push(msg);
-    }
-
-}
-
-
-// -------------------------------------------------------
-// RENDER HTML DEL REPRODUCTOR
-// -------------------------------------------------------
 
 function renderAudioPodcast(podcast){
 
@@ -285,42 +203,38 @@ function renderAudioPodcast(podcast){
                 Escucha el episodio
             </h3>
 
-            ${audios.map((audio, i) => {
+            ${audios.map(audio => {
 
                 const id = encodeURIComponent(audio.id);
 
                 return `
 
-                    <div class="podcast-reproductor"
-                         data-episode-id="${esc(audio.id)}">
+                    <div class="podcast-reproductor">
 
-                        <div class="podcast-cargando-panel">
-                            <div class="podcast-eq-barras">
-                                <span></span><span></span><span></span>
-                                <span></span><span></span>
-                            </div>
-                            <p>Cargando audio...</p>
-                        </div>
+                        <audio class="podcast-intro-audio" preload="auto">
+                            <source src="${PODCAST_INTRO}" type="audio/mpeg">
+                        </audio>
 
-                        <div class="podcast-controles" hidden>
+                        <audio class="podcast-outro-audio" preload="auto">
+                            <source src="${PODCAST_OUTRO}" type="audio/mpeg">
+                        </audio>
 
-                            <button class="podcast-btn-play"
-                                    type="button"
-                                    aria-label="Reproducir">
-                                ${icono("play", 20)}
-                            </button>
+                        <button class="podcast-btn-intro" type="button">
+                            ${icono("play", 18)}
+                            <span>Escuchar intro</span>
+                        </button>
 
-                            <div class="podcast-barra-cont">
-                                <div class="podcast-barra-bg">
-                                    <div class="podcast-barra-prog"></div>
-                                </div>
-                            </div>
+                        <iframe
+                            class="podcast-iframe-player"
+                            src="https://drive.google.com/file/d/${id}/preview"
+                            allow="autoplay"
+                            loading="lazy">
+                        </iframe>
 
-                            <span class="podcast-reloj">
-                                0:00 / 0:00
-                            </span>
-
-                        </div>
+                        <button class="podcast-btn-outro" type="button">
+                            ${icono("play", 18)}
+                            <span>Escuchar salida</span>
+                        </button>
 
                     </div>
 
@@ -342,359 +256,74 @@ function renderAudioPodcast(podcast){
 }
 
 
-// -------------------------------------------------------
-// INICIALIZACION DE LOS REPRODUCTORES
-// Se llama cada vez que se pinta una vista.
-// -------------------------------------------------------
-
+// Se llama desde navegacion.js despues de pintar la vista
 function inicializarReproductores(){
 
-    // Limpiar reproductores anteriores (si se cambia de vista)
-    _reproductoresActivos.forEach(function(r){
-        r.segmentos.forEach(function(s){
-            s.audio.pause();
-            s.audio.removeAttribute("src");
-            s.audio.load();
-        });
-        cancelAnimationFrame(r.raf);
-    });
-    _reproductoresActivos = [];
-
-    // Inicializar los que haya en pantalla
     var reproductores = document.querySelectorAll(".podcast-reproductor");
+
     for(var i = 0; i < reproductores.length; i++){
-        _crearReproductor(reproductores[i]);
-    }
 
-}
+        (function(cont){
 
+            var introAudio = cont.querySelector(".podcast-intro-audio");
+            var outroAudio = cont.querySelector(".podcast-outro-audio");
+            var btnIntro   = cont.querySelector(".podcast-btn-intro");
+            var btnOutro   = cont.querySelector(".podcast-btn-outro");
 
-// -------------------------------------------------------
-// CREAR UN REPRODUCTOR
-// -------------------------------------------------------
+            if(btnIntro && introAudio){
+                var introSonando = false;
 
-function _crearReproductor(contenedor){
-
-    var idEpisodio = contenedor.dataset.episodeId;
-    if(!idEpisodio) return;
-
-    // -- Elementos del DOM --
-    var panelCarga = contenedor.querySelector(".podcast-cargando-panel");
-    var controles  = contenedor.querySelector(".podcast-controles");
-    var btnPlay    = contenedor.querySelector(".podcast-btn-play");
-    var barraFondo = contenedor.querySelector(".podcast-barra-bg");
-    var barraProg  = contenedor.querySelector(".podcast-barra-prog");
-    var reloj      = contenedor.querySelector(".podcast-reloj");
-
-    // -- Los tres segmentos: entrada, episodio, salida --
-    var segmentos = [
-        { audio: new Audio(), url: PODCAST_INTRO },
-        { audio: new Audio(), url: "" },
-        { audio: new Audio(), url: PODCAST_OUTRO }
-    ];
-
-    var duraciones    = [0, 0, 0];
-    var segActual     = 0;
-    var duracionTotal = 0;
-    var sonando       = false;
-    var listo         = false;
-    var rafId         = 0;
-
-    // Referencia para limpieza
-    var ref = { segmentos: segmentos, raf: 0 };
-    _reproductoresActivos.push(ref);
-
-
-    // -- Formato mm:ss --
-
-    function fmt(s){
-        if(!isFinite(s) || s < 0) return "0:00";
-        var m  = Math.floor(s / 60);
-        var ss = Math.floor(s % 60);
-        return m + ":" + (ss < 10 ? "0" : "") + ss;
-    }
-
-
-    // -- Tiempo actual unificado --
-
-    function tiempoAhora(){
-        var t = 0;
-        for(var i = 0; i < segActual; i++) t += duraciones[i];
-        t += (segmentos[segActual].audio.currentTime || 0);
-        return t;
-    }
-
-
-    // -- Pintar barra y reloj --
-
-    function pintar(){
-        if(!listo) return;
-        var t   = tiempoAhora();
-        var pct = duracionTotal > 0 ? (t / duracionTotal) * 100 : 0;
-        barraProg.style.width = pct + "%";
-        reloj.textContent = fmt(t) + " / " + fmt(duracionTotal);
-
-        if(sonando){
-            rafId = requestAnimationFrame(pintar);
-            ref.raf = rafId;
-        }
-    }
-
-
-    // -- Reproducir / Pausar --
-
-    function reproducir(){
-        segmentos[segActual].audio.play().catch(function(){});
-        sonando = true;
-        btnPlay.innerHTML = icono("pausa", 20);
-        btnPlay.setAttribute("aria-label", "Pausar");
-        rafId = requestAnimationFrame(pintar);
-        ref.raf = rafId;
-    }
-
-    function pausar(){
-        segmentos[segActual].audio.pause();
-        sonando = false;
-        btnPlay.innerHTML = icono("play", 20);
-        btnPlay.setAttribute("aria-label", "Reproducir");
-        cancelAnimationFrame(rafId);
-        pintar();
-    }
-
-
-    // -- Pasar al siguiente segmento --
-
-    function siguiente(){
-        if(segActual < segmentos.length - 1){
-            segActual++;
-            if(duraciones[segActual] === 0){
-                siguiente();
-                return;
-            }
-            reproducir();
-        }else{
-            segActual = 0;
-            for(var i = 0; i < segmentos.length; i++){
-                segmentos[i].audio.currentTime = 0;
-            }
-            pausar();
-        }
-    }
-
-
-    // -- Buscar en la linea de tiempo unificada --
-
-    function buscar(ratio){
-        var tiempo = ratio * duracionTotal;
-
-        segmentos[segActual].audio.pause();
-
-        for(var i = 0; i < segmentos.length; i++){
-            if(duraciones[i] === 0) continue;
-            if(tiempo <= duraciones[i] || i === segmentos.length - 1){
-                segActual = i;
-                segmentos[i].audio.currentTime =
-                    Math.min(Math.max(0, tiempo), duraciones[i] - 0.01);
-                break;
-            }
-            tiempo -= duraciones[i];
-        }
-
-        if(sonando) reproducir();
-        pintar();
-    }
-
-
-    // -- Cargar los tres audios --
-
-    function cargar(){
-
-        var pendientes = 3;
-
-        // --- Intro (0) y outro (2): archivos locales ---
-
-        function cargarLocal(i){
-            var seg = segmentos[i];
-            var resuelto = false;
-
-            function resolver(){
-                if(resuelto) return;
-                resuelto = true;
-                duraciones[i] = seg.audio.duration || 0;
-                pendientes--;
-                if(pendientes === 0) todoCargado();
-            }
-
-            function fallar(){
-                if(resuelto) return;
-                resuelto = true;
-                duraciones[i] = 0;
-                pendientes--;
-                if(pendientes === 0) todoCargado();
-            }
-
-            seg.audio.addEventListener("loadedmetadata", resolver);
-            seg.audio.addEventListener("canplay", resolver);
-            seg.audio.addEventListener("error", fallar);
-            seg.audio.addEventListener("ended", siguiente);
-
-            seg.audio.src = seg.url;
-            seg.audio.load();
-        }
-
-        cargarLocal(0);
-        cargarLocal(2);
-
-
-        // --- Episodio (1): via proxy de Apps Script ---
-
-        console.log("Podcast: pidiendo audio a Apps Script...");
-
-        _pedirAudio(idEpisodio,
-
-            // OK: recibimos el audio en base64
-            function(data){
-
-                var raw = atob(data.audio);
-                var arr = new Uint8Array(raw.length);
-                for(var j = 0; j < raw.length; j++){
-                    arr[j] = raw.charCodeAt(j);
-                }
-
-                var blob = new Blob([arr], {
-                    type: data.tipo || "audio/mpeg"
+                btnIntro.addEventListener("click", function(){
+                    if(introSonando){
+                        introAudio.pause();
+                        introSonando = false;
+                        btnIntro.querySelector("svg").outerHTML = icono("play", 18);
+                        btnIntro.querySelector("span").textContent = "Escuchar intro";
+                    }else{
+                        outroAudio.pause();
+                        introAudio.currentTime = 0;
+                        introAudio.play().catch(function(){});
+                        introSonando = true;
+                        btnIntro.querySelector("svg").outerHTML = icono("pausa", 18);
+                        btnIntro.querySelector("span").textContent = "Pausar intro";
+                    }
                 });
-                var blobUrl = URL.createObjectURL(blob);
 
-                console.log("Podcast: audio recibido (" +
-                    Math.round(arr.length / 1024) + " KB)");
-
-                var seg = segmentos[1];
-                var resuelto = false;
-
-                function resolver(){
-                    if(resuelto) return;
-                    resuelto = true;
-                    duraciones[1] = seg.audio.duration || 0;
-                    pendientes--;
-                    if(pendientes === 0) todoCargado();
-                }
-
-                seg.audio.addEventListener("loadedmetadata", resolver);
-                seg.audio.addEventListener("canplay", resolver);
-                seg.audio.addEventListener("ended", siguiente);
-
-                seg.audio.src = blobUrl;
-                seg.audio.load();
-            },
-
-            // Error
-            function(error){
-                console.error("Podcast: error del proxy:", error);
-                duraciones[1] = 0;
-                pendientes--;
-                if(pendientes === 0) todoCargado();
+                introAudio.addEventListener("ended", function(){
+                    introSonando = false;
+                    btnIntro.querySelector("svg").outerHTML = icono("play", 18);
+                    btnIntro.querySelector("span").textContent = "Escuchar intro";
+                });
             }
 
-        );
+            if(btnOutro && outroAudio){
+                var outroSonando = false;
 
+                btnOutro.addEventListener("click", function(){
+                    if(outroSonando){
+                        outroAudio.pause();
+                        outroSonando = false;
+                        btnOutro.querySelector("svg").outerHTML = icono("play", 18);
+                        btnOutro.querySelector("span").textContent = "Escuchar salida";
+                    }else{
+                        introAudio.pause();
+                        outroAudio.currentTime = 0;
+                        outroAudio.play().catch(function(){});
+                        outroSonando = true;
+                        btnOutro.querySelector("svg").outerHTML = icono("pausa", 18);
+                        btnOutro.querySelector("span").textContent = "Pausar salida";
+                    }
+                });
 
-        // Timeout de seguridad (60s para archivos grandes)
-        setTimeout(function(){
-            if(pendientes > 0){
-                console.log("Podcast: timeout, pendientes=" + pendientes);
-                pendientes = 0;
-                todoCargado();
+                outroAudio.addEventListener("ended", function(){
+                    outroSonando = false;
+                    btnOutro.querySelector("svg").outerHTML = icono("play", 18);
+                    btnOutro.querySelector("span").textContent = "Escuchar salida";
+                });
             }
-        }, 60000);
+
+        })(reproductores[i]);
 
     }
-
-
-    function todoCargado(){
-
-        duracionTotal = duraciones[0] + duraciones[1] + duraciones[2];
-
-        if(duraciones[1] === 0){
-            var texto = panelCarga.querySelector("p");
-            if(texto) texto.textContent = "No se pudo cargar el audio.";
-            var barras = panelCarga.querySelector(".podcast-eq-barras");
-            if(barras) barras.hidden = true;
-            var enlace = contenedor.nextElementSibling;
-            if(enlace && enlace.classList.contains("boton-escuchar-movil")){
-                enlace.style.display = "inline-flex";
-            }
-            return;
-        }
-
-        listo = true;
-
-        panelCarga.hidden = true;
-        controles.hidden  = false;
-
-        segActual = duraciones[0] > 0 ? 0 : 1;
-
-        pintar();
-
-    }
-
-
-    // -- Eventos --
-
-    btnPlay.addEventListener("click", function(){
-        if(!listo) return;
-        if(sonando) pausar();
-        else reproducir();
-    });
-
-    barraFondo.addEventListener("click", function(e){
-        if(!listo) return;
-        var rect  = barraFondo.getBoundingClientRect();
-        var ratio = (e.clientX - rect.left) / rect.width;
-        ratio = Math.max(0, Math.min(1, ratio));
-        buscar(ratio);
-    });
-
-    barraFondo.addEventListener("mousedown", function(e){
-        if(!listo) return;
-        e.preventDefault();
-
-        function mover(ev){
-            var rect  = barraFondo.getBoundingClientRect();
-            var ratio = (ev.clientX - rect.left) / rect.width;
-            buscar(Math.max(0, Math.min(1, ratio)));
-        }
-
-        function soltar(){
-            document.removeEventListener("mousemove", mover);
-            document.removeEventListener("mouseup", soltar);
-        }
-
-        document.addEventListener("mousemove", mover);
-        document.addEventListener("mouseup", soltar);
-    });
-
-    barraFondo.addEventListener("touchstart", function(e){
-        if(!listo) return;
-
-        function moverT(ev){
-            var touch = ev.touches[0];
-            var rect  = barraFondo.getBoundingClientRect();
-            var ratio = (touch.clientX - rect.left) / rect.width;
-            buscar(Math.max(0, Math.min(1, ratio)));
-        }
-
-        function soltarT(){
-            document.removeEventListener("touchmove", moverT);
-            document.removeEventListener("touchend", soltarT);
-        }
-
-        document.addEventListener("touchmove", moverT);
-        document.addEventListener("touchend", soltarT);
-    }, { passive: true });
-
-
-    // -- Arrancar --
-    cargar();
 
 }
