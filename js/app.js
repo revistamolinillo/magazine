@@ -528,6 +528,11 @@ async function cargarHemeroteca(){
                     articulos: (publicada.noticias || []).length
                 });
 
+                // Guardar en caché para que al pulsar en ella en
+                // la hemeroteca no busque data/ediciones/ID.json
+                // (que puede no existir o tener datos antiguos)
+                datosEdicionesCargadas[publicada.id] = publicada;
+
             }
 
         }catch(error){
