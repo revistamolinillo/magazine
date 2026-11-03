@@ -1067,6 +1067,7 @@ mark{
     border:0;
     background:transparent;
     cursor:zoom-in;
+    overflow:visible;
 }
 
 .articulo-foto img{
@@ -1074,6 +1075,7 @@ mark{
     height:auto;
     display:block;
     border-radius:14px;
+    object-fit:contain;
 }
 
 .articulo-datos{
@@ -1770,6 +1772,7 @@ mark{
     padding:0;
     border:0;
     background:transparent;
+    overflow:visible;
 }
 
 button.lectura-foto{
@@ -1781,6 +1784,7 @@ button.lectura-foto{
     height:auto;
     display:block;
     border-radius:16px;
+    object-fit:contain;
 }
 
 .lectura .entradilla,
