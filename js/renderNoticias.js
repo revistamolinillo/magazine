@@ -201,9 +201,10 @@ function renderArticuloLista(noticia){
 
             <header class="articulo-cabecera">
 
-                <button
+                <div
                     class="articulo-foto"
-                    type="button"
+                    role="button"
+                    tabindex="0"
                     onclick="abrirImagenPrincipal('${esc(noticia.ID)}')"
                     aria-label="Ampliar imagen">
 
@@ -214,7 +215,7 @@ function renderArticuloLista(noticia){
                         loading="lazy"
                         decoding="async">
 
-                </button>
+                </div>
 
                 <div class="articulo-datos">
 
