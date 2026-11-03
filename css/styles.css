@@ -1389,7 +1389,7 @@ mark{
     margin-inline:auto;
     border-radius:14px;
     overflow:hidden;
-    background:var(--fondo-2);
+    background:#282828;
 }
 .podcast-reproductor + .podcast-reproductor{
     margin-top:.75rem;
@@ -1397,7 +1397,7 @@ mark{
 .podcast-iframe-player{
     display:block;
     width:100%;
-    height:140px;
+    height:200px;
     border:0;
 }
 
