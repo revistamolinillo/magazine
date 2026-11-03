@@ -535,11 +535,12 @@ function renderPublicacion(publicacion, comoPodcast){
 
                     ${comoPodcast ? "" : renderHerramientasLectura(publicacion)}
 
-                    <${tieneImagenes ? "button" : "div"}
+                    <div
                         class="lectura-foto"
                         ${
                         tieneImagenes
-                        ? `type="button"
+                        ? `role="button"
+                           tabindex="0"
                            onclick="abrirImagenPrincipal('${esc(publicacion.ID)}')"
                            aria-label="Ampliar imagen"`
                         : ""
@@ -551,7 +552,7 @@ function renderPublicacion(publicacion, comoPodcast){
                             alt="${esc(publicacion.Titulo)}"
                             decoding="async">
 
-                    </${tieneImagenes ? "button" : "div"}>
+                    </div>
 
                     ${
                     publicacion.Entradilla
