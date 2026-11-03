@@ -1063,19 +1063,21 @@ mark{
 .articulo-foto{
     display:block;
     width:100%;
+    min-width:0;
     padding:0;
     border:0;
     background:transparent;
     cursor:zoom-in;
-    overflow:visible;
+    border-radius:14px;
+    overflow:hidden;
+    -webkit-appearance:none;
+    appearance:none;
 }
 
 .articulo-foto img{
     width:100%;
     height:auto;
     display:block;
-    border-radius:14px;
-    object-fit:contain;
 }
 
 .articulo-datos{
@@ -1172,7 +1174,7 @@ mark{
     }
 
     .articulo-foto{
-        /* imagen completa, sin recorte */
+        border-radius:12px;
     }
 
 }
@@ -1768,11 +1770,15 @@ mark{
 .lectura-foto{
     display:block;
     width:100%;
+    min-width:0;
     margin-block:1.75rem 2rem;
     padding:0;
     border:0;
     background:transparent;
-    overflow:visible;
+    border-radius:16px;
+    overflow:hidden;
+    -webkit-appearance:none;
+    appearance:none;
 }
 
 button.lectura-foto{
@@ -1783,8 +1789,6 @@ button.lectura-foto{
     width:100%;
     height:auto;
     display:block;
-    border-radius:16px;
-    object-fit:contain;
 }
 
 .lectura .entradilla,
