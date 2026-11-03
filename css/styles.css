@@ -1384,21 +1384,21 @@ mark{
 
 
 /* Audio de un podcast (iframe de Google Drive) */
-
 .podcast-reproductor{
     max-width:var(--ancho-lectura);
+    margin-inline:auto;
+    border-radius:14px;
+    overflow:hidden;
+    background:var(--fondo-2);
 }
-
 .podcast-reproductor + .podcast-reproductor{
     margin-top:.75rem;
 }
-
 .podcast-iframe-player{
+    display:block;
     width:100%;
-    height:80px;
+    height:140px;
     border:0;
-    border-radius:14px;
-    background:var(--fondo-2);
 }
 
 .boton-escuchar-movil{
