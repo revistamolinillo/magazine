@@ -785,21 +785,20 @@ mark{
 .hero{
     position:relative;
     isolation:isolate;
-    display:flex;
-    align-items:flex-end;
-    min-height:min(80svh, 46rem);
+    display:grid;
+    min-height:min(65svh, 36rem);
     background:linear-gradient(135deg, #131f4d, #1e3a8a);
     color:#ffffff;
     overflow:hidden;
 }
 
 .hero-img{
-    position:absolute;
-    inset:0;
-    z-index:-2;
+    grid-area:1 / 1;
     width:100%;
-    height:100%;
-    object-fit:cover;
+    height:auto;
+    display:block;
+    align-self:center;
+    z-index:-2;
 }
 
 .hero-velo{
@@ -817,6 +816,8 @@ mark{
 }
 
 .hero-contenido{
+    grid-area:1 / 1;
+    align-self:end;
     padding-block:4rem 3.75rem;
 }
 
@@ -899,7 +900,7 @@ mark{
 @media (max-width:760px){
 
     .hero{
-        min-height:min(78svh, 40rem);
+        min-height:min(55svh, 32rem);
     }
 
     .hero-contenido{
