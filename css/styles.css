@@ -1018,7 +1018,7 @@ mark{
 
     .destacadas{
         display:grid;
-        grid-template-columns:1fr;
+        grid-template-columns:minmax(0,1fr);
         gap:1.5rem;
     }
 
@@ -1029,10 +1029,15 @@ mark{
 
 .articulos{
     display:grid;
+    /* minmax(0,1fr): sin esto la columna crece hasta el ancho mínimo
+       del contenido más ancho (p. ej. la tira de la galería) y todas
+       las noticias se salen de la pantalla en el móvil */
+    grid-template-columns:minmax(0,1fr);
     gap:clamp(3.5rem, 8vw, 5.5rem);
 }
 
 .articulo{
+    min-width:0;
     padding-top:1.75rem;
     border-top:5px solid var(--sec);
     scroll-margin-top:calc(var(--alto-cabecera) + 1rem);
@@ -1061,10 +1066,17 @@ mark{
 }
 
 .articulo-foto{
+    display:block;
+    width:100%;
+    min-width:0;
+    padding:0;
+    border:0;
+    background:transparent;
+    cursor:zoom-in;
     border-radius:14px;
     overflow:hidden;
-    cursor:zoom-in;
-    min-width:0;
+    -webkit-appearance:none;
+    appearance:none;
 }
 
 .articulo-foto img{
@@ -1162,7 +1174,7 @@ mark{
 @media (max-width:760px){
 
     .articulo-cabecera{
-        grid-template-columns:1fr;
+        grid-template-columns:minmax(0,1fr);
         gap:1.25rem;
     }
 
@@ -1761,13 +1773,20 @@ mark{
 }
 
 .lectura-foto{
+    display:block;
+    width:100%;
+    min-width:0;
     margin-block:1.75rem 2rem;
+    padding:0;
+    border:0;
+    background:transparent;
     border-radius:16px;
     overflow:hidden;
-    min-width:0;
+    -webkit-appearance:none;
+    appearance:none;
 }
 
-.lectura-foto[role="button"]{
+button.lectura-foto{
     cursor:zoom-in;
 }
 
