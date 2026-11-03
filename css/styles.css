@@ -1061,17 +1061,10 @@ mark{
 }
 
 .articulo-foto{
-    display:block;
-    width:100%;
-    min-width:0;
-    padding:0;
-    border:0;
-    background:transparent;
-    cursor:zoom-in;
     border-radius:14px;
     overflow:hidden;
-    -webkit-appearance:none;
-    appearance:none;
+    cursor:zoom-in;
+    min-width:0;
 }
 
 .articulo-foto img{
@@ -1768,20 +1761,13 @@ mark{
 }
 
 .lectura-foto{
-    display:block;
-    width:100%;
-    min-width:0;
     margin-block:1.75rem 2rem;
-    padding:0;
-    border:0;
-    background:transparent;
     border-radius:16px;
     overflow:hidden;
-    -webkit-appearance:none;
-    appearance:none;
+    min-width:0;
 }
 
-button.lectura-foto{
+.lectura-foto[role="button"]{
     cursor:zoom-in;
 }
 
