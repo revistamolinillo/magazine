@@ -1148,6 +1148,17 @@ mark{
     margin-bottom:1.2em;
 }
 
+/* Texto justificado. Los guiones automáticos (hyphens) parten las
+   palabras largas al final de línea para que en el móvil no queden
+   huecos grandes entre palabras. Funcionan porque el HTML tiene
+   lang="es". */
+.entradilla,
+.cuerpo p{
+    text-align:justify;
+    -webkit-hyphens:auto;
+    hyphens:auto;
+}
+
 .cuerpo p:first-child::first-letter{
     float:left;
     padding:.06em .12em 0 0;
